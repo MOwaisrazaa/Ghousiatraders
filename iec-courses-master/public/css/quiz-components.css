@@ -1,0 +1,10 @@
+/* Quiz Components Styles */
+
+/* Progress bars */
+.progress-large {
+    height: 25px;
+}
+
+.progress-small {
+    height: 10px;
+}

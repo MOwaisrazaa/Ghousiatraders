@@ -1,0 +1,39 @@
+MINIFIED JAVASCRIPT FILES CREATED
+==================================
+
+public/assets/js/extracted/ (16 files):
+✅ account-signin.min.js
+✅ account-signup.min.js
+✅ admin-dashboard.min.js
+✅ app-layout.min.js
+✅ auth.min.js
+✅ buttons-fix.min.js
+✅ css-validator.min.js
+✅ dashboard-route.min.js
+✅ github-buttons.min.js
+✅ livewire-dynamic-style-fix.min.js
+✅ livewire-helpers.min.js
+✅ livewire-js-interceptor.min.js
+✅ livewire-nonce-fix.min.js
+✅ livewire-style-handler.min.js
+✅ livewire-styles-fix.min.js
+✅ livewire-styles-nonce-fix.min.js
+
+public/js/ (11 files):
+✅ admin-assignments.min.js
+✅ admin-instructor-profiles.min.js
+✅ admin-questions.min.js
+✅ course-detail.min.js
+✅ dynamic-styles-handler.min.js
+✅ event-handler-fixer.min.js
+✅ lecture-detail.min.js
+✅ purchased-lecture-detail.min.js
+✅ secure-video-player.min.js
+✅ simple-secure-player.min.js
+✅ welcome.min.js
+
+TOTAL: 27 minified files created
+TOTAL SAVINGS: 92.0 KiB (50.3% reduction)
+
+All Blade templates have been updated to load these minified versions.
+

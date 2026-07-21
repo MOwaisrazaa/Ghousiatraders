@@ -1,0 +1,155 @@
+/* Layout Components Styles */
+
+/* Component display states */
+.component-hidden {
+    display: none;
+}
+
+/* Action message styles */
+.action-message-hidden {
+    display: none;
+}
+
+/* Dropdown hidden state */
+.dropdown-hidden {
+    display: none;
+}
+
+/* Modal display states */
+.modal-block {
+    display: block;
+}
+
+.modal-none {
+    display: none;
+}
+
+/* Progress bar widths */
+.progress-width-0 {
+    width: 0%;
+}
+
+.progress-width-30 {
+    width: 30%;
+}
+
+.progress-width-60 {
+    width: 60%;
+}
+
+.progress-width-80 {
+    width: 80%;
+}
+
+.progress-width-100 {
+    width: 100%;
+}
+
+/* Sidebar brand text styles */
+.sidebar-brand-text {
+    display: inline-block;
+    width: 150px;
+    white-space: normal;
+    font-size: 13px;
+}
+
+.sidebar-brand-text-compact {
+    display: inline-block;
+    width: 100px;
+    white-space: normal;
+    font-size: 13px;
+}
+
+/* Cart discount alert */
+.cart-discount-alert {
+    font-size: 0.75rem;
+}
+
+/* Video error message */
+.video-error-message {
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.sidebar {
+    min-height: 100vh;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .nav-link {
+    color: #333;
+    padding: 0.8rem 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: #f8f9fa;
+    color: #0d6efd;
+}
+
+.sidebar .nav-link i {
+    margin-right: 0.5rem;
+    width: 20px;
+    text-align: center;
+}
+
+.main-content {
+    padding: 2rem;
+}
+
+.card-stats {
+    transition: all 0.3s ease;
+}
+
+.card-stats:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Lecture list table column sizing to prevent overflow */
+.lecture-list-table {
+    table-layout: fixed !important;
+    width: 100%;
+}
+
+.lecture-list-table th,
+.lecture-list-table td {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal !important;
+}
+
+.lecture-list-table th:nth-child(1),
+.lecture-list-table td:nth-child(1) {
+    width: 30%;
+}
+
+.lecture-list-table th:nth-child(2),
+.lecture-list-table td:nth-child(2) {
+    width: 40%;
+    max-width: 0;
+}
+
+.lecture-course-cell {
+    max-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal !important;
+}
+
+.lecture-list-table th:nth-child(3),
+.lecture-list-table td:nth-child(3),
+.lecture-list-table th:nth-child(4),
+.lecture-list-table td:nth-child(4) {
+    width: 10%;
+    text-align: center;
+}
+
+.lecture-list-table th:nth-child(5),
+.lecture-list-table td:nth-child(5) {
+    width: 10%;
+    white-space: nowrap;
+}

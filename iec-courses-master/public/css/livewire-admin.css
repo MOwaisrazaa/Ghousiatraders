@@ -1,0 +1,54 @@
+/* Livewire Admin Components Styles */
+
+/* Image thumbnail preview */
+.img-thumbnail-preview {
+    max-height: 100px;
+}
+
+.img-thumbnail-200 {
+    max-height: 200px;
+}
+
+.img-thumbnail-150 {
+    max-height: 150px;
+}
+
+/* Course thumbnail */
+.course-thumbnail-50 {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+/* Toast positioning */
+.toast-position {
+    z-index: 5;
+}
+
+/* Instructor profile styles */
+.instructor-img-cover {
+    object-fit: cover;
+}
+
+.instructor-avatar {
+    width: 120px;
+    height: 120px;
+    font-size: 2.5rem;
+}
+
+/* Shopping cart table styles */
+.cart-col-30 {
+    width: 30%;
+}
+
+.cart-col-40 {
+    width: 40%;
+}
+
+.cart-col-15 {
+    width: 15%;
+}
+
+.cart-discount-alert {
+    font-size: 0.75rem;
+}

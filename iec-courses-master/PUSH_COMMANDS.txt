@@ -1,0 +1,32 @@
+GIT PUSH COMMANDS - Run when server is back online
+=====================================================
+
+These commands will push all updated branches:
+
+# Push all branches at once
+git push origin after-live after-stage develop release master
+
+# OR push individually:
+git push origin after-live
+git push origin after-stage
+git push origin develop
+git push origin release
+git push origin master
+
+BRANCH STATUS:
+==============
+✅ after-live     - 2 commits ahead (needs push)
+✅ after-stage    - Up to date
+✅ develop        - Already merged from after-stage
+✅ release        - Already merged from after-stage
+✅ master         - 9 commits ahead (needs push)
+
+WHAT WAS MERGED TO MASTER:
+===========================
+- All carousel features
+- All mobile responsive fixes
+- Grid view CSS improvements
+- Image 404 error fixes
+
+All local merges completed successfully.
+Waiting for git server connectivity to push to remote.

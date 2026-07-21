@@ -1,0 +1,80 @@
+/* Lecture Detail Component Styles */
+
+/* Instructor avatar styles */
+.instructor-avatar-img {
+    object-fit: cover;
+}
+
+.instructor-avatar-placeholder {
+    width: 80px;
+    height: 80px;
+    font-size: 1.5rem;
+}
+
+.course-instructor-avatar-placeholder {
+    width: 50px;
+    height: 50px;
+}
+
+/* Badge styles */
+.expertise-badge {
+    background-color: #f0f7ff;
+    color: #0056b3;
+    font-weight: 500;
+    font-size: 0.85rem;
+    border: 1px solid #deecff;
+}
+
+.expertise-badge-small {
+    background-color: #f0f7ff;
+    color: #0056b3;
+    font-weight: 500;
+    font-size: 0.8rem;
+    border: 1px solid #deecff;
+}
+
+.skills-badge {
+    background-color: #f8f9fa;
+    color: #212529;
+    font-weight: 500;
+    font-size: 0.85rem;
+    border: 1px solid #e2e8f0;
+}
+
+/* Rating bar styles */
+.rating-stars-container {
+    width: 80px;
+}
+
+.rating-progress-bar {
+    height: 10px;
+}
+
+.rating-progress-small {
+    height: 8px;
+}
+
+/* Progress bar width classes */
+.progress-bar-dynamic {
+    width: var(--progress-width, 0%);
+}
+
+.progress-bar-65 {
+    width: 65%;
+}
+
+.progress-bar-25 {
+    width: 25%;
+}
+
+.progress-bar-5 {
+    width: 5%;
+}
+
+.progress-bar-3 {
+    width: 3%;
+}
+
+.progress-bar-2 {
+    width: 2%;
+}

@@ -1,0 +1,174 @@
+/* Admin Instructor Profiles Styles */
+
+/* Profile image styles */
+.instructor-profile-img {
+    object-fit: cover;
+}
+
+/* Profile avatar placeholder */
+.instructor-avatar-placeholder {
+    width: 40px;
+    height: 40px;
+}
+
+/* Instructor card styles */
+.instructor-card {
+    border: 1px solid #e8e9eb;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.instructor-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(13, 110, 253, 0.12) !important;
+    border-color: #d0d7de;
+}
+
+.hover-shadow {
+    transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Decorative top bar */
+.instructor-card-header {
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px 12px 0 0;
+    position: relative;
+}
+
+.instructor-card-header .badge {
+    border: 3px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background: #ffffff !important;
+    color: #667eea !important;
+    font-weight: 600;
+}
+
+/* Avatar styles */
+.instructor-avatar {
+    width: 120px;
+    height: 120px;
+    font-size: 48px;
+    font-weight: bold;
+    margin: 0 auto;
+}
+
+.instructor-img-cover {
+    object-fit: cover;
+    border: 4px solid #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge styles */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+/* Expertise badges - light and subtle */
+.instructor-card .card-body .badge.bg-primary {
+    background-color: #e7f1ff !important;
+    color: #0d6efd;
+    border: 1px solid #b6d4fe;
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.4em 0.8em;
+    border-radius: 20px;
+}
+
+.instructor-card .card-body .badge.bg-light {
+    background-color: #f8f9fa !important;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.4em 0.8em;
+    border-radius: 20px;
+}
+
+/* Button styles */
+.instructor-card .btn-primary {
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.instructor-card .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Bio text styling */
+.instructor-card .card-text {
+    color: #4b5563;
+    line-height: 1.6;
+    font-size: 0.875rem;
+}
+
+/* Card body spacing */
+.instructor-card .card-body {
+    padding: 1.5rem;
+}
+
+/* Card title styling */
+.instructor-card .card-title {
+    color: #1f2937;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Card subtitle/title text */
+.instructor-card .text-muted {
+    color: #6b7280 !important;
+    font-size: 0.875rem;
+}
+
+/* Search input styling */
+.input-group-text {
+    cursor: pointer;
+}
+
+/* Social media buttons */
+.instructor-card .btn-outline-primary,
+.instructor-card .btn-outline-info,
+.instructor-card .btn-outline-secondary {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.instructor-card .btn-outline-primary:hover {
+    background-color: #0d6efd;
+    transform: translateY(-2px);
+}
+
+.instructor-card .btn-outline-info:hover {
+    background-color: #0dcaf0;
+    transform: translateY(-2px);
+}
+
+.instructor-card .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    transform: translateY(-2px);
+}
+
+/* Card footer styling */
+.instructor-card .card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 1rem;
+}

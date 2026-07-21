@@ -1,0 +1,114 @@
+/* Navbar Component Styles */
+
+/* Navbar color theme (blue) */
+.navbar {
+    --navbar-accent: #2563eb;
+    --bs-navbar-brand-color: #2563eb;
+    --bs-navbar-brand-hover-color: #2563eb;
+}
+
+.navbar .text-primary,
+.navbar.navbar-light .navbar-brand,
+.navbar.navbar-light .navbar-brand .brand-title,
+.navbar.navbar-light .navbar-brand .brand-title-mobile,
+.navbar.navbar-light .navbar-brand .brand-subtitle,
+.navbar .navbar-brand,
+.navbar .navbar-brand .brand-title,
+.navbar .navbar-brand .brand-title-mobile,
+.navbar .navbar-brand .brand-subtitle {
+    color: var(--navbar-accent) !important;
+}
+
+.navbar .navbar-accent {
+    color: var(--navbar-accent) !important;
+}
+
+/* Force brand text/link color in navbar */
+.navbar .navbar-brand-link,
+.navbar .navbar-brand-link .navbar-accent {
+    color: var(--navbar-accent) !important;
+}
+
+/* Highest-specificity override for brand color */
+.navbar.navbar-light .navbar-brand.navbar-brand-link,
+.navbar.navbar-light .navbar-brand.navbar-brand-link *,
+.navbar .navbar-brand.navbar-brand-link,
+.navbar .navbar-brand.navbar-brand-link * {
+    color: var(--navbar-accent) !important;
+}
+
+.navbar .btn-primary {
+    background-color: var(--navbar-accent) !important;
+    border-color: var(--navbar-accent) !important;
+}
+
+.navbar .btn-outline-primary {
+    color: var(--navbar-accent) !important;
+    border-color: var(--navbar-accent) !important;
+}
+
+.navbar .btn-outline-primary:hover {
+    background-color: var(--navbar-accent) !important;
+    color: #ffffff !important;
+}
+
+/* Brand link */
+.navbar-brand-link {
+    text-decoration: none;
+}
+
+/* Logo container */
+.logo-container {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+}
+
+/* Ensure navbar logo has no gray background */
+.navbar picture,
+.navbar .logo-container picture,
+.navbar .logo-container img {
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+.navbar .logo-container picture {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+}
+
+/* Brand text container */
+.brand-text-container {
+    background: transparent;
+}
+
+/* Brand text styles */
+.brand-title {
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    background: transparent;
+}
+
+.brand-subtitle {
+    font-size: 0.75rem;
+    line-height: 1;
+    background: transparent;
+}
+
+.brand-title-mobile {
+    font-size: 1rem;
+    background: transparent;
+}
+
+/* Search input group */
+.search-input-group-text {
+    background: transparent;
+}
+
+/* Desktop search container */
+.desktop-search-container {
+    max-width: 400px;
+}

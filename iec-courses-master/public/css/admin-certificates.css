@@ -1,0 +1,11 @@
+/* Admin Certificates Styles */
+
+/* Progress bars */
+.progress-medium {
+    height: 20px;
+}
+
+/* Certificate image */
+.certificate-image {
+    max-height: 200px;
+}

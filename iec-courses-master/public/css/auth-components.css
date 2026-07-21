@@ -1,0 +1,43 @@
+/* Auth Components Styles */
+
+/* Icon sizes */
+.icon-4rem {
+    font-size: 4rem;
+}
+
+/* Password toggle styles */
+.password-toggle-btn {
+    background: transparent;
+    border: none;
+    color: #6c757d;
+}
+
+.password-toggle-btn:hover {
+    color: #495057;
+}
+
+/* Device detection styles */
+.device-icon {
+    font-size: 1.5rem;
+}
+
+/* Form styles */
+.auth-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Background image styles */
+.auth-bg-signup {
+    background-image: url('../assets/img/illustrations/illustration-signup.jpg');
+    background-size: cover;
+}
+
+.auth-bg-signin {
+    background-image: url('../assets/img/image-sign-in.jpg');
+}
+
+/* Input group styles */
+.input-group-cursor-pointer {
+    cursor: pointer;
+}

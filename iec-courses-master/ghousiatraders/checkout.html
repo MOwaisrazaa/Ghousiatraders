@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | Ghousia Traders</title>
+    <meta name="description" content="Complete your order securely and quickly at Ghousia Traders.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:ital,wght@0,400..700;1,400..700&family=Pinyon+Script&family=Playball&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Top Utility Bar -->
+    <div class="top-bar">
+        <div class="top-bar-container">
+            <div class="top-bar-item">
+                <i data-lucide="truck" class="top-bar-icon"></i>
+                <span>Free Shipping on Orders Over PKR 5,000</span>
+            </div>
+            <div class="top-bar-item">
+                <i data-lucide="shield-check" class="top-bar-icon"></i>
+                <span>100% Genuine & Premium Quality</span>
+            </div>
+            <div class="top-bar-item">
+                <i data-lucide="phone-call" class="top-bar-icon"></i>
+                <span>Customer Support: 0321-1234567</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <!-- Line 1 (Top Line): Compact Search Bar (Centered) + Track Order (Right) -->
+        <div class="header-sub-bar">
+            <div class="header-container header-sub-container">
+                <!-- Search Input Form -->
+                <form class="header-search-form" action="shop.html" method="GET">
+                    <div class="header-search-input-wrapper">
+                        <i data-lucide="search" class="search-input-icon"></i>
+                        <input type="text" name="q" placeholder="Search baby care products, ride-on bikes, toy cars..." class="header-search-input" id="headerSearchInput">
+                        <button type="submit" class="header-search-submit-btn">Search</button>
+                    </div>
+                </form>
+
+                <!-- Track Order Button -->
+                <a href="track-order.html" class="track-order-link">
+                    <i data-lucide="truck"></i>
+                    <span>Track Order</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Line 2 (Bottom Line): Main Navbar Container (Logo + Nav Menu + User Icons) -->
+        <div class="header-container">
+            <!-- Mobile Menu Toggle (Left) -->
+            <button class="action-btn mobile-menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                <i data-lucide="menu"></i>
+            </button>
+            
+            <!-- Brand Logo -->
+            <a href="index.html" class="logo brand-logo-link">
+                <svg viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FFF3D6" />
+                            <stop offset="20%" stop-color="#F5D393" />
+                            <stop offset="40%" stop-color="#E5B252" />
+                            <stop offset="60%" stop-color="#FFF7E6" />
+                            <stop offset="80%" stop-color="#F5D393" />
+                            <stop offset="100%" stop-color="#C68C2E" />
+                        </linearGradient>
+                        <linearGradient id="bronzeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#9C7338" />
+                            <stop offset="50%" stop-color="#7A5626" />
+                            <stop offset="100%" stop-color="#5B3C14" />
+                        </linearGradient>
+                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feDropShadow dx="2" dy="3" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.65" />
+                        </filter>
+                    </defs>
+                    <g filter="url(#shadow)">
+                        <text x="160" y="54" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">Ghousia Traders</text>
+                        <text x="160" y="53" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">Ghousia Traders</text>
+                        <text x="160" y="52" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">Ghousia Traders</text>
+                        <text x="160" y="51" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#goldGrad)" text-anchor="middle">Ghousia Traders</text>
+                    </g>
+                </svg>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="babycare.html" class="nav-link">Baby Care</a>
+                <a href="bikes.html" class="nav-link">B/O Bikes</a>
+                <a href="cars.html" class="nav-link">B/O Cars</a>
+                <a href="shop.html" class="nav-link">Shop</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+            </nav>
+
+            <!-- Utility Actions -->
+            <div class="header-actions">
+                <a href="signin.html" class="action-btn" aria-label="Account"><i data-lucide="user"></i></a>
+                <a href="wishlist.html" class="action-btn badge-btn" aria-label="Wishlist" id="wishlistBtn"><i data-lucide="heart"></i><span class="badge" id="wishlistCount">8</span></a>
+                <a href="cart.html" class="action-btn badge-btn" aria-label="Cart" id="cartBtn"><i data-lucide="shopping-cart"></i><span class="badge" id="cartCount">2</span></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-bar">
+            <input type="text" placeholder="Search products..." id="searchInput">
+            <button class="search-close" id="searchClose">&times;</button>
+        </div>
+    </div>
+
+    <main>
+        <!-- Checkout Header Section -->
+        <section class="checkout-header-section" style="background-color: var(--bg-alt); padding: 40px 0 20px;">
+            <div class="section-container">
+                <nav class="breadcrumb" style="margin-bottom: 12px;">
+                    <a href="index.html">Home</a>
+                    <span class="breadcrumb-separator">&gt;</span>
+                    <a href="cart.html">Cart</a>
+                    <span class="breadcrumb-separator">&gt;</span>
+                    <span class="breadcrumb-current">Checkout</span>
+                </nav>
+                <div class="checkout-title-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+                    <div>
+                        <h1 class="section-title-serif" style="margin-bottom: 6px; text-align: left;">Checkout</h1>
+                        <p style="color: var(--text-muted); font-size: 0.95rem;">Complete your order securely and quickly.</p>
+                    </div>
+                    <!-- Step Progress Bar -->
+                    <div class="checkout-progress-steps">
+                        <div class="progress-step step-done">
+                            <span class="step-icon"><i data-lucide="shopping-cart"></i></span>
+                            <span class="step-label">Cart</span>
+                        </div>
+                        <div class="progress-line line-done"></div>
+                        <div class="progress-step step-active">
+                            <span class="step-icon"><i data-lucide="credit-card"></i></span>
+                            <span class="step-label">Checkout</span>
+                        </div>
+                        <div class="progress-line"></div>
+                        <div class="progress-step">
+                            <span class="step-icon"><i data-lucide="check"></i></span>
+                            <span class="step-label">Order Complete</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkout Form Section -->
+        <section class="checkout-body-section" style="background-color: var(--bg-light); padding: 40px 0 60px;">
+            <div class="section-container">
+                <form id="checkoutForm" onsubmit="event.preventDefault(); alert('Order Placed Successfully! Thank you for shopping with Ghousia Traders.'); window.location.href='index.html';">
+                    <div class="checkout-layout-grid">
+                        
+                        <!-- Left Columns: Form Fields -->
+                        <div class="checkout-forms-column">
+                            
+                            <!-- 1. Contact Information -->
+                            <div class="checkout-card">
+                                <div class="card-section-header">
+                                    <i data-lucide="user" class="header-icon"></i>
+                                    <h3>Contact Information</h3>
+                                </div>
+                                <div class="form-grid grid-3col">
+                                    <div class="form-group">
+                                        <label for="fullName">Full Name <span class="required">*</span></label>
+                                        <input type="text" id="fullName" placeholder="Enter your full name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="emailAddress">Email Address <span class="required">*</span></label>
+                                        <input type="email" id="emailAddress" placeholder="Enter your email address" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phoneNumber">Phone Number <span class="required">*</span></label>
+                                        <input type="tel" id="phoneNumber" placeholder="03XX XXXXXXX" pattern="[0-9]{11}" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Shipping Address -->
+                            <div class="checkout-card">
+                                <div class="card-section-header">
+                                    <i data-lucide="map-pin" class="header-icon"></i>
+                                    <h3>Shipping Address</h3>
+                                </div>
+                                <div class="form-grid grid-2col">
+                                    <div class="form-group">
+                                        <label for="address1">Address Line 1 <span class="required">*</span></label>
+                                        <input type="text" id="address1" placeholder="House number, street name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address2">Address Line 2 (Optional)</label>
+                                        <input type="text" id="address2" placeholder="Apartment, suite, unit, etc.">
+                                    </div>
+                                </div>
+                                <div class="form-grid grid-3col" style="margin-top: 16px;">
+                                    <div class="form-group">
+                                        <label for="city">City <span class="required">*</span></label>
+                                        <input type="text" id="city" placeholder="Enter your city" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="area">Area <span class="required">*</span></label>
+                                        <input type="text" id="area" placeholder="Enter your area" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="postalCode">Postal Code <span class="required">*</span></label>
+                                        <input type="text" id="postalCode" placeholder="Enter postal code" required>
+                                    </div>
+                                </div>
+                                <div class="form-grid grid-2col" style="margin-top: 16px;">
+                                    <div class="form-group">
+                                        <label for="country">Country / Region <span class="required">*</span></label>
+                                        <select id="country" required>
+                                            <option value="PK" selected>Pakistan</option>
+                                            <option value="AE">United Arab Emirates</option>
+                                            <option value="SA">Saudi Arabia</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="checkbox-group" style="margin-top: 16px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="useBilling" checked>
+                                        Use as billing address
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 3. Delivery Method -->
+                            <div class="checkout-card">
+                                <div class="card-section-header">
+                                    <i data-lucide="truck" class="header-icon"></i>
+                                    <h3>Delivery Method</h3>
+                                </div>
+                                <div class="delivery-options-grid">
+                                    <!-- Option 1: Standard -->
+                                    <label class="delivery-option-card active">
+                                        <input type="radio" name="deliveryMethod" value="standard" checked>
+                                        <span class="delivery-details">
+                                            <span class="opt-title">Standard Delivery</span>
+                                            <span class="opt-desc">Free on orders over PKR 5,000</span>
+                                            <span class="opt-time">3-5 business days</span>
+                                        </span>
+                                        <span class="opt-price">FREE</span>
+                                    </label>
+
+                                    <!-- Option 2: Express -->
+                                    <label class="delivery-option-card">
+                                        <input type="radio" name="deliveryMethod" value="express">
+                                        <span class="delivery-details">
+                                            <span class="opt-title">Express Delivery</span>
+                                            <span class="opt-desc">Get your order faster</span>
+                                            <span class="opt-time">1-2 business days</span>
+                                        </span>
+                                        <span class="opt-price">PKR 250</span>
+                                    </label>
+
+                                    <!-- Option 3: Pickup -->
+                                    <label class="delivery-option-card">
+                                        <input type="radio" name="deliveryMethod" value="pickup">
+                                        <span class="delivery-details">
+                                            <span class="opt-title">Store Pickup</span>
+                                            <span class="opt-desc">Pick up from our store</span>
+                                            <span class="opt-time">Ready in 24 hours</span>
+                                        </span>
+                                        <span class="opt-price">FREE</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 4. Payment Method -->
+                            <div class="checkout-card">
+                                <div class="card-section-header">
+                                    <i data-lucide="credit-card" class="header-icon"></i>
+                                    <h3>Payment Method</h3>
+                                </div>
+                                <div class="payment-method-split">
+                                    <!-- Left split: radio methods -->
+                                    <div class="payment-radios-column">
+                                        <label class="payment-radio-card active" id="codMethod">
+                                            <input type="radio" name="paymentMethod" value="cod" checked>
+                                            <div class="pay-logo-wrapper">
+                                                <svg class="pay-logo cod-logo" viewBox="0 0 160 50" xmlns="http://www.w3.org/2000/svg" style="width:160px; height:38px;">
+                                                    <rect width="160" height="50" rx="6" fill="#F4F6F6" stroke="#D5D8DC" stroke-width="1"/>
+                                                    <!-- Truck Body -->
+                                                    <path d="M25 15 H42 V32 H25 Z" fill="#5C3E21"/>
+                                                    <path d="M42 20 H49 L54 26 V32 H42 Z" fill="#C29F74"/>
+                                                    <circle cx="30" cy="35" r="4" fill="#333"/>
+                                                    <circle cx="48" cy="35" r="4" fill="#333"/>
+                                                    <!-- COD Text Badge -->
+                                                    <rect x="65" y="12" width="75" height="26" rx="4" fill="#2ECC71"/>
+                                                    <text x="102" y="30" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="15" fill="#FFF" text-anchor="middle">COD</text>
+                                                </svg>
+                                            </div>
+                                        </label>
+
+                                        <label class="payment-radio-card" id="cardMethod">
+                                            <input type="radio" name="paymentMethod" value="card">
+                                            <div class="pay-logo-wrapper">
+                                                <div class="card-logos-flex" style="display:flex; gap: 8px;">
+                                                    <!-- Visa Logo -->
+                                                    <svg class="pay-logo visa-logo" viewBox="0 0 75 50" xmlns="http://www.w3.org/2000/svg" style="width:70px; height:38px;">
+                                                        <rect width="75" height="50" rx="6" fill="#FFFFFF" stroke="#D5D8DC" stroke-width="1"/>
+                                                        <path d="M12 18 L18 34 H23 L29 18 H24 L21.5 29.5 L19 18 H12 Z" fill="#1A1F71"/>
+                                                        <path d="M30 18 H34 V34 H30 Z" fill="#1A1F71"/>
+                                                        <path d="M43.5 19.5 C42 18.5 40 18 38 18 C34 18 31.5 20 31.5 23.5 C31.5 28 37.5 28 37.5 30.5 C37.5 31.5 35.5 32 34 32 C32 32 30 31 29 30.5 L28 33.5 C29.5 34.5 32 35 34 35 C38.5 35 41.5 33 41.5 29.5 C41.5 25 35.5 24.5 35.5 22.5 C35.5 21.5 37 21 38.5 21 C40.5 21 42.5 21.5 43.5 22.5 L44.5 19.5 Z" fill="#1A1F71"/>
+                                                        <path d="M52.5 18 H49 L42.5 34 H47.5 L48.5 31.5 H54.5 L55 34 H60 L56 18 H52.5 Z M50 28 L51.5 23 L53.5 28 H50 Z" fill="#1A1F71"/>
+                                                        <path d="M12 18 L15 26 L16 18 Z" fill="#F7B600"/>
+                                                    </svg>
+                                                    <!-- Mastercard Logo -->
+                                                    <svg class="pay-logo mastercard-logo" viewBox="0 0 75 50" xmlns="http://www.w3.org/2000/svg" style="width:70px; height:38px;">
+                                                        <rect width="75" height="50" rx="6" fill="#FFFFFF" stroke="#D5D8DC" stroke-width="1"/>
+                                                        <circle cx="31" cy="25" r="14" fill="#EB001B" opacity="0.9"/>
+                                                        <circle cx="44" cy="25" r="14" fill="#F79E1B" opacity="0.9"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </label>
+
+                                        <label class="payment-radio-card" id="bankMethod">
+                                            <input type="radio" name="paymentMethod" value="bank">
+                                            <div class="pay-logo-wrapper">
+                                                <svg class="pay-logo bank-logo" viewBox="0 0 160 50" xmlns="http://www.w3.org/2000/svg" style="width:160px; height:38px;">
+                                                    <rect width="160" height="50" rx="6" fill="#F4F6F6" stroke="#D5D8DC" stroke-width="1"/>
+                                                    <path d="M20 38 H50 V40 H20 Z M22 25 H26 V36 H22 Z M30 25 H34 V36 H30 Z M38 25 H42 V36 H38 Z M46 25 H50 V36 H46 Z M20 22 L35 12 L50 22 Z" fill="#8C1D40"/>
+                                                    <text x="65" y="30" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#8C1D40" letter-spacing="0.5px">BANK TRANSFER</text>
+                                                </svg>
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                    <!-- Right split: card details (disabled by default for COD) -->
+                                    <div class="payment-details-column" id="cardDetailsColumn">
+                                        <div class="form-group">
+                                            <label for="cardName">Cardholder Name</label>
+                                            <input type="text" id="cardName" placeholder="Enter name on card" disabled>
+                                        </div>
+                                        <div class="form-group" style="margin-top: 12px;">
+                                            <label for="cardNumber">Card Number</label>
+                                            <div class="card-input-wrapper">
+                                                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" disabled>
+                                                <i data-lucide="credit-card" class="input-card-icon"></i>
+                                            </div>
+                                        </div>
+                                        <div class="form-grid grid-2col" style="margin-top: 12px;">
+                                            <div class="form-group">
+                                                <label for="cardExpiry">Expiry Date</label>
+                                                <input type="text" id="cardExpiry" placeholder="MM / YY" disabled>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="cardCvv">CVV <i data-lucide="help-circle" class="cvv-help-icon" style="width:14px;height:14px;vertical-align:middle;cursor:pointer;" title="3-digit security code on back of card"></i></label>
+                                                <input type="password" id="cardCvv" placeholder="123" maxlength="3" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 5. Order Notes -->
+                            <div class="checkout-card">
+                                <div class="card-section-header">
+                                    <i data-lucide="file-text" class="header-icon"></i>
+                                    <h3>Order Notes <span style="font-weight: normal; font-size: 0.85rem; color: var(--text-muted);">(Optional)</span></h3>
+                                </div>
+                                <div class="form-group">
+                                    <textarea id="orderNotes" placeholder="Add any special instructions for delivery..." maxlength="200" style="width:100%; height:100px; padding:12px; border:1px solid var(--border-color); border-radius:var(--radius-sm); outline:none; resize:none; font-family:inherit;"></textarea>
+                                    <span class="char-count" id="notesCharCount" style="display:block; text-align:right; font-size:0.75rem; color:var(--text-muted); margin-top:4px;">0/200 characters</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Order Summary & Action Buttons -->
+                        <div class="checkout-summary-column">
+                            <div class="summary-card" style="position:sticky; top:100px; padding: 24px;">
+                                <h2 class="summary-title" style="font-size:1.25rem; margin-bottom:18px;">Order Summary</h2>
+                                
+                                <!-- Checkout mini thumbnails list -->
+                                <div class="checkout-summary-products-list" style="display:flex; flex-direction:column; gap:14px; margin-bottom: 20px;">
+                                    <!-- Mini Product 1 -->
+                                    <div class="checkout-mini-prod-row" style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
+                                        <div style="display:flex; align-items:center; gap:12px;">
+                                            <div class="mini-prod-img" style="width:48px; height:48px; border:1px solid var(--border-color); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; padding:4px; background:#fff; flex-shrink:0;">
+                                                <img src="assets/baby_lotion.png" alt="Johnson's Baby Lotion" style="max-width:100%; max-height:100%; object-fit:contain;">
+                                            </div>
+                                            <div class="mini-prod-info">
+                                                <h4 style="font-size:0.85rem; font-weight:700; color:var(--primary); line-height:1.2;">Johnson's Baby Lotion</h4>
+                                                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Qty: 1</p>
+                                            </div>
+                                        </div>
+                                        <span style="font-size:0.85rem; font-weight:700; color:var(--text-dark);">PKR 1,250</span>
+                                    </div>
+
+                                    <!-- Mini Product 2 -->
+                                    <div class="checkout-mini-prod-row" style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
+                                        <div style="display:flex; align-items:center; gap:12px;">
+                                            <div class="mini-prod-img" style="width:48px; height:48px; border:1px solid var(--border-color); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; padding:4px; background:#fff; flex-shrink:0;">
+                                                <img src="assets/baby_wipes.png" alt="Baby Wipes" style="max-width:100%; max-height:100%; object-fit:contain;">
+                                            </div>
+                                            <div class="mini-prod-info">
+                                                <h4 style="font-size:0.85rem; font-weight:700; color:var(--primary); line-height:1.2;">Baby Wipes</h4>
+                                                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Qty: 2</p>
+                                            </div>
+                                        </div>
+                                        <span style="font-size:0.85rem; font-weight:700; color:var(--text-dark);">PKR 900</span>
+                                    </div>
+
+                                    <!-- Mini Product 3 -->
+                                    <div class="checkout-mini-prod-row" style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
+                                        <div style="display:flex; align-items:center; gap:12px;">
+                                            <div class="mini-prod-img" style="width:48px; height:48px; border:1px solid var(--border-color); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; padding:4px; background:#fff; flex-shrink:0;">
+                                                <img src="assets/sport_bike.png" alt="Sports B/O Bike" style="max-width:100%; max-height:100%; object-fit:contain;">
+                                            </div>
+                                            <div class="mini-prod-info">
+                                                <h4 style="font-size:0.85rem; font-weight:700; color:var(--primary); line-height:1.2;">Sports B/O Bike</h4>
+                                                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Qty: 1</p>
+                                            </div>
+                                        </div>
+                                        <span style="font-size:0.85rem; font-weight:700; color:var(--text-dark);">PKR 24,999</span>
+                                    </div>
+
+                                    <!-- Mini Product 4 -->
+                                    <div class="checkout-mini-prod-row" style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
+                                        <div style="display:flex; align-items:center; gap:12px;">
+                                            <div class="mini-prod-img" style="width:48px; height:48px; border:1px solid var(--border-color); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; padding:4px; background:#fff; flex-shrink:0;">
+                                                <img src="assets/ride_on_toys.png" alt="Mercedes B/O Car" style="max-width:100%; max-height:100%; object-fit:contain;">
+                                            </div>
+                                            <div class="mini-prod-info">
+                                                <h4 style="font-size:0.85rem; font-weight:700; color:var(--primary); line-height:1.2;">Mercedes B/O Car</h4>
+                                                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Qty: 1</p>
+                                            </div>
+                                        </div>
+                                        <span style="font-size:0.85rem; font-weight:700; color:var(--text-dark);">PKR 34,999</span>
+                                    </div>
+                                </div>
+
+                                <div class="summary-divider" style="margin: 14px 0;"></div>
+
+                                <!-- Financial Rows -->
+                                <div class="summary-row" style="margin-bottom:10px; font-size:0.9rem;">
+                                    <span class="summary-label">Subtotal (5 items)</span>
+                                    <span class="summary-val">PKR 62,148</span>
+                                </div>
+                                <div class="summary-row" style="margin-bottom:10px; font-size:0.9rem;">
+                                    <span class="summary-label">Shipping</span>
+                                    <span class="summary-val shipping-free">FREE</span>
+                                </div>
+                                <div class="summary-row" id="checkoutDiscountRow" style="margin-bottom:12px; font-size:0.9rem; color:#117A65;">
+                                    <span class="summary-label">Discount (WELCOME10)</span>
+                                    <span class="summary-val">- PKR 3,000</span>
+                                </div>
+                                <div class="summary-divider" style="margin: 14px 0;"></div>
+                                <div class="summary-row total-row" style="margin-top:0; margin-bottom:20px; font-size:1.15rem;">
+                                    <span class="summary-label">Total</span>
+                                    <span class="summary-val total-price-val" id="checkoutTotalVal">PKR 59,148</span>
+                                </div>
+
+                                <!-- Coupon code entry form -->
+                                <div class="coupon-apply-row" style="display:flex; gap:10px; margin-bottom:14px;">
+                                    <input type="text" id="couponInput" placeholder="Enter coupon code" style="flex:1; padding:10px; border:1px solid var(--border-color); border-radius:var(--radius-sm); font-size:0.85rem; outline:none; text-transform:uppercase;">
+                                    <button type="button" id="applyCouponBtn" class="btn btn-primary" style="padding:10px 18px; font-size:0.85rem; background-color:#5C3E21;">Apply</button>
+                                </div>
+                                <!-- Coupon notification alert -->
+                                <div class="coupon-applied-alert" id="couponAppliedAlert" style="display:flex; align-items:center; justify-content:space-between; background-color:#E8F8F5; border:1px solid #A3E4D7; border-radius:var(--radius-sm); padding:10px; margin-bottom:20px;">
+                                    <span style="font-size:0.8rem; color:#117A65; font-weight:600;"><i data-lucide="check" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i>WELCOME10 applied</span>
+                                    <button type="button" id="removeCouponBtn" style="background:none; border:none; color:#117A65; font-size:0.8rem; font-weight:700; cursor:pointer;">Remove</button>
+                                </div>
+
+                                <!-- Secure checkout banner -->
+                                <div class="secure-checkout-banner" style="display:flex; align-items:center; gap:10px; background:#F8F9F9; border:1px solid var(--border-color); padding:12px; border-radius:var(--radius-sm); margin-bottom:20px;">
+                                    <i data-lucide="lock" style="width:20px; height:20px; color:#5C3E21; flex-shrink:0;"></i>
+                                    <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.3;">
+                                        <strong>Secure checkout</strong><br>Your payment information is encrypted and safe with us.
+                                    </div>
+                                </div>
+
+                                <!-- Submit Form Button -->
+                                <button type="submit" class="btn btn-primary checkout-btn" style="width:100%; padding:14px; font-size:1rem; font-weight:700; background-color:#5C3E21;">
+                                    <i data-lucide="lock" style="width:16px; height:16px; margin-right:8px;"></i>Place Order
+                                </button>
+
+                                <a href="cart.html" class="return-to-cart-link" style="display:block; text-align:center; margin-top:16px; font-size:0.85rem; font-weight:700; color:var(--primary); text-decoration:none;"><i data-lucide="arrow-left" style="width:14px; height:14px; vertical-align:middle; margin-right:6px;"></i>Return to Cart</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Bottom Feature Bar -->
+        <section class="feature-bar-section">
+            <div class="section-container feature-bar-container">
+                <div class="feature-bar-grid">
+                    <div class="f-bar-item">
+                        <div class="f-bar-icon-box"><i data-lucide="shield-check"></i></div>
+                        <div class="f-bar-content"><h4>100% Genuine Products</h4><p>Original and high quality</p></div>
+                    </div>
+                    <div class="f-bar-item">
+                        <div class="f-bar-icon-box"><i data-lucide="truck"></i></div>
+                        <div class="f-bar-content"><h4>Fast Delivery</h4><p>Across Pakistan</p></div>
+                    </div>
+                    <div class="f-bar-item">
+                        <div class="f-bar-icon-box"><i data-lucide="refresh-cw"></i></div>
+                        <div class="f-bar-content"><h4>Easy Returns</h4><p>Within 7 Days</p></div>
+                    </div>
+                    <div class="f-bar-item">
+                        <div class="f-bar-icon-box"><i data-lucide="lock"></i></div>
+                        <div class="f-bar-content"><h4>Secure Payments</h4><p>Safe & reliable</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter -->
+        <section class="pre-footer-cta-section homepage-newsletter">
+            <div class="section-container">
+                <div class="newsletter-fullwidth-card">
+                    <div class="cta-icon-container"><i data-lucide="mail" class="cta-icon"></i></div>
+                    <div class="cta-content">
+                        <h3 class="cta-title">Stay Updated with Ghousia Traders</h3>
+                        <p class="cta-desc">Subscribe to our newsletter for exclusive offers, new arrivals, and parenting tips.</p>
+                        <form class="newsletter-form" id="newsletterForm">
+                            <input type="email" placeholder="Enter your email address" required id="newsletterEmail">
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </form>
+                        <div class="newsletter-msg" id="newsletterMsg"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" id="contact">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col brand-col">
+                                                                    <a href="index.html" class="logo brand-logo-link">
+                <svg viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <!-- Premium Gold Metallic Gradient -->
+                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FCE0AD" />
+                            <stop offset="20%" stop-color="#DFAC4D" />
+                            <stop offset="40%" stop-color="#C68B29" />
+                            <stop offset="60%" stop-color="#FDF1D6" />
+                            <stop offset="80%" stop-color="#DFAC4D" />
+                            <stop offset="100%" stop-color="#8E5B10" />
+                        </linearGradient>
+                        <!-- Dark Gold/Bronze for 3D extrusion sides -->
+                        <linearGradient id="bronzeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#5A3E1B" />
+                            <stop offset="50%" stop-color="#402B12" />
+                            <stop offset="100%" stop-color="#2D1D0B" />
+                        </linearGradient>
+                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feDropShadow dx="2" dy="3" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.65" />
+                        </filter>
+                    </defs>
+                    
+                    <!-- Calligraphic Cursive 3D Text "Ghousia Traders" (Larger, Centered, No Underlines) -->
+                    <g filter="url(#shadow)">
+                        <!-- 3D Extrusion Layers (Dark Bronze) -->
+                        <text x="160" y="54" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">Ghousia Traders</text>
+                        <text x="160" y="53" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">Ghousia Traders</text>
+                        <text x="160" y="52" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">Ghousia Traders</text>
+                        
+                        <!-- Front Face (Gold Gradient) -->
+                        <text x="160" y="51" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#goldGrad)" text-anchor="middle">Ghousia Traders</text>
+                    </g>
+                </svg>
+            </a>
+                    <p class="brand-desc">Your trusted destination for premium baby care products and exciting ride-on toys. Quality you can trust, happiness they deserve.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                        <a href="#" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+                        <a href="#" aria-label="TikTok"><svg class="tiktok-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.09-1.5-1.06-.8-1.8-1.95-2.22-3.23v8.52c0 2.45-.76 4.95-2.58 6.56-2.12 1.88-5.3 2.24-7.79 1.12-2.52-1.12-4.22-3.7-4.14-6.48.06-2.92 2.05-5.63 4.95-6.19 1.01-.2 2.07-.1 3.06.2v4.09c-.83-.26-1.74-.32-2.56-.05-1.14.37-2.01 1.47-2.04 2.68-.05 1.5.95 2.9 2.43 3.19 1.55.3 3.2-.55 3.59-2.05.07-.28.09-.57.09-.86V.02z"/></svg></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="babycare.html">Baby Care</a></li>
+                        <li><a href="bikes.html">B/O Bikes</a></li>
+                        <li><a href="cars.html">B/O Cars</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Customer Service</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">My Account</a></li>
+                        <li><a href="#">Order Tracking</a></li>
+                        <li><a href="#">Wishlist</a></li>
+                        <li><a href="#">Returns & Exchanges</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col contact-col">
+                    <h4 class="footer-title">Contact Us</h4>
+                    <ul class="contact-info-list">
+                        <li><i data-lucide="phone"></i><span>0321-1234567</span></li>
+                        <li><i data-lucide="mail"></i><span>info@ghousiatraders.com</span></li>
+                        <li><i data-lucide="map-pin"></i><span>Shop # 12, Main Market, DHA Phase 6, Lahore, Pakistan</span></li>
+                        <li><i data-lucide="clock"></i><span>Mon - Sat: 10:00 AM - 8:00 PM <br>Sunday: Closed</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright"><p>&copy; 2024 Ghousia Traders. All Rights Reserved.</p></div>
+                <div class="payments-accepted">
+                    <span class="payment-label">We Accept</span>
+                    <div class="payment-logos">
+                        <svg class="pay-logo-img" viewBox="0 0 75 50" xmlns="http://www.w3.org/2000/svg" style="width:50px; height:30px;"><rect width="75" height="50" rx="4" fill="#FFF" stroke="#D5D8DC" stroke-width="1"/><path d="M12 18 L18 34 H23 L29 18 H24 L21.5 29.5 L19 18 H12 Z" fill="#1A1F71"/><path d="M30 18 H34 V34 H30 Z" fill="#1A1F71"/><path d="M43.5 19.5 C42 18.5 40 18 38 18 C34 18 31.5 20 31.5 23.5 C31.5 28 37.5 28 37.5 30.5 C37.5 31.5 35.5 32 34 32 C32 32 30 31 29 30.5 L28 33.5 C29.5 34.5 32 35 34 35 C38.5 35 41.5 33 41.5 29.5 C41.5 25 35.5 24.5 35.5 22.5 C35.5 21.5 37 21 38.5 21 C40.5 21 42.5 21.5 43.5 22.5 L44.5 19.5 Z" fill="#1A1F71"/><path d="M52.5 18 H49 L42.5 34 H47.5 L48.5 31.5 H54.5 L55 34 H60 L56 18 H52.5 Z M50 28 L51.5 23 L53.5 28 H50 Z" fill="#1A1F71"/><path d="M12 18 L15 26 L16 18 Z" fill="#F7B600"/></svg>
+                        <svg class="pay-logo-img" viewBox="0 0 75 50" xmlns="http://www.w3.org/2000/svg" style="width:50px; height:30px;"><rect width="75" height="50" rx="4" fill="#FFF" stroke="#D5D8DC" stroke-width="1"/><circle cx="31" cy="25" r="14" fill="#EB001B" opacity="0.9"/><circle cx="44" cy="25" r="14" fill="#F79E1B" opacity="0.9"/></svg>
+                        <img class="pay-logo-img" src="assets/meezan-logo.png" alt="Meezan Bank" style="width:50px; height:30px; object-fit:contain; vertical-align:middle;">
+                        <img class="pay-logo-img" src="assets/easypaisa-logo.png" alt="Easypaisa" style="width:50px; height:30px; object-fit:contain; vertical-align:middle;">
+                        <img class="pay-logo-img" src="assets/jazzcash-logo.png" alt="JazzCash" style="width:50px; height:30px; object-fit:contain; vertical-align:middle;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
