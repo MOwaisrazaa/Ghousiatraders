@@ -1,160 +1,126 @@
-<div class="cart" data-cart-page>
-  <section class="section section--ivory">
-    <div class="container cart__grid cart__grid--table">
-      <section class="cart-table" aria-label="Cart items">
-        <div class="cart-table__head" aria-hidden="true">
-          <div class="cart-table__h cart-table__h--product">Product</div>
-          <div class="cart-table__h">Price</div>
-          <div class="cart-table__h">Quantity</div>
-          <div class="cart-table__h">Subtotal</div>
-        </div>
-
-        <div class="cart-table__body">
-          @if($cartitems->count() > 0)
-            @foreach($cartitems as $cartitem)
-              @php
-                $name = $cartitem->course ? $cartitem->course->name : ($cartitem->lecture ? $cartitem->lecture->name : 'Item');
-                $img = null;
-                if ($cartitem->course && $cartitem->course->image_path) {
-                    $img = asset($cartitem->course->image_path);
-                }
-                if (!$img && $cartitem->lecture && $cartitem->lecture->image_path) {
-                    $img = asset($cartitem->lecture->image_path);
-                }
-                if (!$img) {
-                    $img = asset('polani/assets/product-noir.svg');
-                }
-                $price = (float) ($cartitem->price ?? 0);
-                $quantity = (int) ($cartitem->quantity ?? 1);
-              @endphp
-
-              <div class="cart-row">
-                <button
-                  class="cart-row__remove"
-                  type="button"
-                  aria-label="Remove"
-                  wire:click="removeFromCart({{ $cartitem->id }})"
-                >
-                  ×
-                </button>
-
-                <div class="cart-row__product">
-                  <img class="cart-row__img" src="{{ $img }}" alt="{{ $name }}" loading="lazy" />
-                  <div class="cart-row__info">
-                    <div class="cart-row__name">{{ $name }}</div>
-                    <div class="cart-row__meta">{{ $cartitem->course ? 'Extrait de Parfum' : 'Item' }}</div>
-                    <div class="cart-row__meta">Size: {{ $cartitem->course && str_contains(strtolower($cartitem->course->name), 'candle') ? '200g' : '100ml' }}</div>
-                  </div>
-                </div>
-
-                <div class="cart-row__price">Rs {{ number_format($price, 2) }}</div>
-
-                <div class="qty qty--boxed" aria-label="Quantity">
-                  <button type="button" aria-label="Decrease" wire:click="decrementQuantity({{ $cartitem->id }})" wire:loading.attr="disabled">−</button>
-                  <input type="number" min="1" max="99" value="{{ $quantity }}" readonly />
-                  <button type="button" aria-label="Increase" wire:click="incrementQuantity({{ $cartitem->id }})" wire:loading.attr="disabled">+</button>
-                </div>
-
-                <div class="cart-row__subtotal">Rs {{ number_format($price * $quantity, 2) }}</div>
-              </div>
-            @endforeach
-          @else
-            <div class="cart-empty">
-              <div>
-                <p class="cart-empty__title">Your cart is empty.</p>
-                <p class="muted">Add a Polani fragrance to continue to checkout.</p>
-              </div>
-              <a class="btn btn--ink" href="{{ route('polani.collection') }}">Continue shopping</a>
-            </div>
-          @endif
-        </div>
-
+<div class="cart-body-section" style="background-color: var(--bg-light); padding: 60px 0;">
+    <div class="section-container">
         @if($cartitems->count() > 0)
-          <div class="cart-actions">
-            <a class="cart-actions__link" href="{{ route('polani.collection') }}">← Continue shopping</a>
-            <button class="btn btn--ghost btn--dark cart-actions__btn" type="button" wire:click="loadCartItems" wire:loading.attr="disabled">
-              <span wire:loading.remove>Update cart ↻</span>
-              <span wire:loading>Updating…</span>
-            </button>
-          </div>
+            <div class="cart-layout-grid">
+                <!-- Left: Items list -->
+                <div class="cart-main-content">
+                    <div class="cart-table-header">
+                        <span class="th-product">Product</span>
+                        <span class="th-price">Price</span>
+                        <span class="th-quantity">Quantity</span>
+                        <span class="th-subtotal">Subtotal</span>
+                    </div>
+
+                    <div class="cart-items-list" id="cartItemsList">
+                        @foreach($cartitems as $cartitem)
+                            @php
+                                $name = $cartitem->course ? $cartitem->course->name : ($cartitem->lecture ? $cartitem->lecture->name : 'Item');
+                                $img = null;
+                                if ($cartitem->course && $cartitem->course->image_path) {
+                                    $img = asset($cartitem->course->image_path);
+                                }
+                                if (!$img && $cartitem->lecture && $cartitem->lecture->image_path) {
+                                    $img = asset($cartitem->lecture->image_path);
+                                }
+                                if (!$img) {
+                                    $img = asset('ghousiatraders/assets/baby_products.png');
+                                }
+                                $price = (float) ($cartitem->price ?? 0);
+                                $quantity = (int) ($cartitem->quantity ?? 1);
+                            @endphp
+
+                            <div class="cart-item-row" data-id="{{ $cartitem->id }}">
+                                <div class="td-product">
+                                    <div class="cart-item-img">
+                                        <img src="{{ $img }}" alt="{{ $name }}">
+                                    </div>
+                                    <div class="cart-item-detail">
+                                        <h3>{{ $name }}</h3>
+                                        <p>{{ $cartitem->course ? 'Ride-On Toy / Baby Care' : 'Item' }}</p>
+                                        <span class="stock-badge">In Stock</span>
+                                    </div>
+                                </div>
+                                <div class="td-price">
+                                    <span class="price-label">Price:</span>
+                                    <span class="val-price">PKR {{ number_format($price) }}</span>
+                                </div>
+                                <div class="td-quantity">
+                                    <div class="quantity-control">
+                                        <button class="qty-btn qty-minus" type="button" aria-label="Decrease quantity" wire:click="decrementQuantity({{ $cartitem->id }})" wire:loading.attr="disabled">—</button>
+                                        <input type="number" value="{{ $quantity }}" min="1" class="qty-input" readonly>
+                                        <button class="qty-btn qty-plus" type="button" aria-label="Increase quantity" wire:click="incrementQuantity({{ $cartitem->id }})" wire:loading.attr="disabled">+</button>
+                                    </div>
+                                </div>
+                                <div class="td-subtotal">
+                                    <span class="subtotal-label">Subtotal:</span>
+                                    <span class="val-subtotal">PKR {{ number_format($price * $quantity) }}</span>
+                                    <button class="remove-item-btn" type="button" aria-label="Remove item" wire:click="removeFromCart({{ $cartitem->id }})">
+                                        <i data-lucide="x"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Actions below list -->
+                    <div class="cart-action-buttons" style="margin-top: 30px; display: flex; gap: 15px;">
+                        <a href="{{ route('polani.collection') }}" class="btn btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                            <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+                            <span>Continue Shopping</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right: Summary -->
+                <div class="cart-summary-sidebar">
+                    <div class="summary-card">
+                        <h2 class="summary-title">Order Summary</h2>
+                        <div class="summary-row">
+                            <span class="summary-label" id="summaryItemsCount">Subtotal ({{ $cartitems->count() }} items)</span>
+                            <span class="summary-val" id="summarySubtotal">PKR {{ number_format((float)$totalAmount) }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Shipping</span>
+                            <span class="summary-val shipping-free">PKR 0</span>
+                        </div>
+                        <div class="shipping-qualify-msg">
+                            You qualify for free shipping!
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row total-row">
+                            <span class="summary-label">Total</span>
+                            <span class="summary-val total-price-val" id="summaryTotal">PKR {{ number_format((float)$totalAmount) }}</span>
+                        </div>
+                        
+                        <button class="btn btn-primary checkout-btn" type="button" wire:click="checkout" wire:loading.attr="disabled" style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 8px;">
+                            <i data-lucide="lock" style="width: 16px; height: 16px;"></i>
+                            <span wire:loading.remove>Proceed to Checkout</span>
+                            <span wire:loading>Processing…</span>
+                        </button>
+                        
+                        <div class="accepted-payment-methods">
+                            <span class="payment-title">We Accept</span>
+                            <div class="payment-methods-grid">
+                                <svg class="pay-logo-img" viewBox="0 0 75 50" xmlns="http://www.w3.org/2000/svg" style="width:50px; height:30px;"><rect width="75" height="50" rx="4" fill="#FFF" stroke="#D5D8DC" stroke-width="1"/><path d="M12 18 L18 34 H23 L29 18 H24 L21.5 29.5 L19 18 H12 Z" fill="#1A1F71"/><path d="M30 18 H34 V34 H30 Z" fill="#1A1F71"/><path d="M43.5 19.5 C42 18.5 40 18 38 18 C34 18 31.5 20 31.5 23.5 C31.5 28 37.5 28 37.5 30.5 C37.5 31.5 35.5 32 34 32 C32 32 30 31 29 30.5 L28 33.5 C29.5 34.5 32 35 34 35 C38.5 35 41.5 33 41.5 29.5 C41.5 25 35.5 24.5 35.5 22.5 C35.5 21.5 37 21 38.5 21 C40.5 21 42.5 21.5 43.5 22.5 L44.5 19.5 Z" fill="#1A1F71"/><path d="M52.5 18 H49 L42.5 34 H47.5 L48.5 31.5 H54.5 L55 34 H60 L56 18 H52.5 Z M50 28 L51.5 23 L53.5 28 H50 Z" fill="#1A1F71"/><path d="M12 18 L15 26 L16 18 Z" fill="#F7B600"/></svg>
+                                <svg class="pay-logo-img" viewBox="0 0 75 50" xmlns="http://www.w3.org/2000/svg" style="width:50px; height:30px;"><rect width="75" height="50" rx="4" fill="#FFF" stroke="#D5D8DC" stroke-width="1"/><circle cx="31" cy="25" r="14" fill="#EB001B" opacity="0.9"/><circle cx="44" cy="25" r="14" fill="#F79E1B" opacity="0.9"/></svg>
+                                <img class="pay-logo-img" src="{{ asset('ghousiatraders/assets/meezan-logo.png') }}" alt="Meezan Bank" style="width: 50px; height: 30px; object-fit: contain;">
+                                <img class="pay-logo-img" src="{{ asset('ghousiatraders/assets/easypaisa-logo.png') }}" alt="Easypaisa" style="width: 50px; height: 30px; object-fit: contain;">
+                                <img class="pay-logo-img" src="{{ asset('ghousiatraders/assets/jazzcash-logo.png') }}" alt="JazzCash" style="width: 50px; height: 30px; object-fit: contain;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <!-- Empty State -->
+            <div class="wishlist-empty-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); width: 100%;">
+                <div class="empty-icon-wrapper" style="width: 80px; height: 80px; background-color: #FAF5F5; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <i data-lucide="shopping-cart" style="width: 36px; height: 36px;"></i>
+                </div>
+                <h2 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--text-dark); margin-bottom: 10px;">Your cart is empty</h2>
+                <p style="color: var(--text-muted); margin-bottom: 25px; max-width: 400px;">Explore our catalog of premium baby care and exciting ride-on toys to start shopping!</p>
+                <a href="{{ route('polani.collection') }}" class="btn btn-primary" style="text-decoration: none;">Go to Shop</a>
+            </div>
         @endif
-      </section>
-
-      <aside class="cart__summary" aria-label="Order Summary">
-        <div class="summary summary--cart">
-          <div class="summary__title">Order Summary</div>
-          <div class="summary__row">
-            <span>Subtotal (<span>{{ $cartitems->count() }}</span> items)</span>
-            <span>Rs {{ number_format((float)$totalAmount, 2) }}</span>
-          </div>
-          <div class="summary__row"><span>Shipping</span><span class="muted">Calculated at checkout</span></div>
-          <div class="summary__row summary__row--total summary__row--cart-total">
-            <span>Total</span><span class="summary__total">Rs {{ number_format((float)$totalAmount, 2) }}</span>
-          </div>
-
-          <button class="btn btn--ink w-100" type="button" wire:click="checkout" wire:loading.attr="disabled">
-            <span wire:loading.remove>Proceed to checkout</span>
-            <span wire:loading>Processing…</span>
-          </button>
-          <a class="btn btn--ghost btn--dark w-100" href="{{ route('checkout') }}">Buy it now</a>
-
-          <div class="secure">
-            <div class="secure__title">
-              <span class="icon" aria-hidden="true" data-icon="lock-dark"></span>
-              Secure checkout
-            </div>
-            <div class="secure__sub muted">We accept</div>
-            <div class="secure__payments" aria-label="Payments">
-              <span class="pay pay--logo" data-icon="visa" aria-hidden="true"></span>
-              <span class="pay pay--logo" data-icon="mc" aria-hidden="true"></span>
-              <span class="pay pay--logo" data-icon="amex" aria-hidden="true"></span>
-              <span class="pay pay--logo" data-icon="paypal" aria-hidden="true"></span>
-              <span class="pay pay--logo" data-icon="applepay" aria-hidden="true"></span>
-            </div>
-          </div>
-
-          <form class="coupon coupon--row" data-coupon>
-            <div class="coupon__label muted">Have a coupon code?</div>
-            <button class="coupon__btn" type="submit">APPLY COUPON →</button>
-          </form>
-        </div>
-      </aside>
     </div>
-  </section>
-
-  <section class="section section--ivory section--tight">
-    <div class="container trust">
-      <div class="trust__grid">
-        <div class="trust__item">
-          <span class="icon trust__icon" aria-hidden="true" data-icon="gift"></span>
-          <div>
-            <div class="trust__title">Luxury Packaging</div>
-            <div class="trust__text">Beautifully wrapped for you</div>
-          </div>
-        </div>
-        <div class="trust__item">
-          <span class="icon trust__icon" aria-hidden="true" data-icon="truck"></span>
-          <div>
-            <div class="trust__title">Free Shipping</div>
-            <div class="trust__text">On orders above Rs 27,500</div>
-          </div>
-        </div>
-        <div class="trust__item">
-          <span class="icon trust__icon" aria-hidden="true" data-icon="badge"></span>
-          <div>
-            <div class="trust__title">100% Authentic</div>
-            <div class="trust__text">Original &amp; authentic products</div>
-          </div>
-        </div>
-        <div class="trust__item">
-          <span class="icon trust__icon" aria-hidden="true" data-icon="headset"></span>
-          <div>
-            <div class="trust__title">Dedicated Support</div>
-            <div class="trust__text">We're here to help you always</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 </div>
-

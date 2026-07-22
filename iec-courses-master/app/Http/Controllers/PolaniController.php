@@ -539,14 +539,14 @@ class PolaniController extends Controller
 
     public function about()
     {
-        return view('polani.about', [
+        return view('ghousiatraders.about', [
             'cartCount' => $this->cartCount(),
         ]);
     }
 
     public function contact()
     {
-        return view('polani.contact', [
+        return view('ghousiatraders.contact', [
             'cartCount' => $this->cartCount(),
         ]);
     }
@@ -612,7 +612,7 @@ class PolaniController extends Controller
 
     public function cart()
     {
-        return view('polani.cart', [
+        return view('ghousiatraders.cart', [
             'cartCount' => $this->cartCount(),
         ]);
     }
