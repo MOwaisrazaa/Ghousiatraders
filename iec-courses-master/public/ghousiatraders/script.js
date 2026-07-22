@@ -4,6 +4,61 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Wishlist Cookie/Storage Helpers
+    function getWishlist() {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('wishlist='));
+        if (cookieValue) {
+            try {
+                return decodeURIComponent(cookieValue.split('=')[1]).split(',').filter(Boolean);
+            } catch(e) {
+                return [];
+            }
+        }
+        return [];
+    }
+
+    function setWishlist(wishlist) {
+        document.cookie = "wishlist=" + encodeURIComponent(wishlist.join(",")) + "; path=/; max-age=31536000";
+    }
+
+    function toggleWishlist(slug) {
+        let wishlist = getWishlist();
+        const index = wishlist.indexOf(slug);
+        if (index > -1) {
+            wishlist.splice(index, 1);
+        } else {
+            wishlist.push(slug);
+        }
+        setWishlist(wishlist);
+        return wishlist;
+    }
+
+    // Initialize Wishlist States on Load
+    const initialWishlist = getWishlist();
+    const globalWishlistCount = document.getElementById('wishlistCount');
+    if (globalWishlistCount) {
+        globalWishlistCount.textContent = initialWishlist.length;
+    }
+    
+    document.querySelectorAll('.action-wishlist').forEach(btn => {
+        const slug = btn.getAttribute('data-product-slug');
+        if (slug && initialWishlist.includes(slug)) {
+            btn.classList.add('active');
+            btn.style.backgroundColor = '#E27B8A';
+            btn.style.color = '#FFFFFF';
+            btn.style.borderColor = '#E27B8A';
+        }
+    });
+
+    document.querySelectorAll('.wishlist-heart').forEach(heart => {
+        const slug = heart.getAttribute('data-product-slug');
+        if (slug && initialWishlist.includes(slug)) {
+            heart.classList.add('active');
+        }
+    });
+
     // Scroll listener for sticky header transition & sub-bar auto-hide
     const mainHeader = document.querySelector('.main-header');
     const headerSubBar = document.querySelector('.header-sub-bar');
@@ -303,22 +358,25 @@ document.addEventListener('DOMContentLoaded', () => {
     cardWishlistBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
+            const slug = btn.getAttribute('data-product-slug');
+            if (!slug) return;
+            
+            const updated = toggleWishlist(slug);
             btn.classList.toggle('active');
-            const icon = btn.querySelector('i');
-            if (wishlistCount) {
-                let currentVal = parseInt(wishlistCount.textContent) || 0;
-                if (btn.classList.contains('active')) {
-                    currentVal += 1;
-                    btn.style.backgroundColor = '#E27B8A';
-                    btn.style.color = '#FFFFFF';
-                    btn.style.borderColor = '#E27B8A';
-                } else {
-                    currentVal = Math.max(0, currentVal - 1);
-                    btn.style.backgroundColor = '';
-                    btn.style.color = '';
-                    btn.style.borderColor = '';
-                }
-                wishlistCount.textContent = currentVal;
+            
+            if (btn.classList.contains('active')) {
+                btn.style.backgroundColor = '#E27B8A';
+                btn.style.color = '#FFFFFF';
+                btn.style.borderColor = '#E27B8A';
+            } else {
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+                btn.style.borderColor = '';
+            }
+            
+            const globalWishCount = document.getElementById('wishlistCount');
+            if (globalWishCount) {
+                globalWishCount.textContent = updated.length;
             }
         });
     });
@@ -367,17 +425,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const wishlistHearts = document.querySelectorAll('.wishlist-heart');
     wishlistHearts.forEach(heart => {
         heart.addEventListener('click', () => {
+            const slug = heart.getAttribute('data-product-slug');
+            if (!slug) return;
+            
+            const updated = toggleWishlist(slug);
             heart.classList.toggle('active');
             
-            // Update global wishlist count
-            if (wishlistCount) {
-                let val = parseInt(wishlistCount.textContent) || 0;
-                if (heart.classList.contains('active')) {
-                    val += 1;
-                } else {
-                    val = Math.max(0, val - 1);
-                }
-                wishlistCount.textContent = val;
+            const globalWishCount = document.getElementById('wishlistCount');
+            if (globalWishCount) {
+                globalWishCount.textContent = updated.length;
             }
         });
     });
@@ -723,6 +779,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (deleteBtn) {
                 const card = deleteBtn.closest('.wishlist-card');
                 if (card) {
+                    const slug = card.getAttribute('data-product-slug');
+                    if (slug) {
+                        toggleWishlist(slug);
+                    }
                     card.style.opacity = '0';
                     card.style.transform = 'translateY(15px) scale(0.95)';
                     card.style.transition = 'all 0.4s ease';
@@ -740,6 +800,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (heartBtn) {
                 const card = heartBtn.closest('.wishlist-card');
                 if (card) {
+                    const slug = card.getAttribute('data-product-slug');
+                    if (slug) {
+                        toggleWishlist(slug);
+                    }
                     card.style.opacity = '0';
                     card.style.transform = 'translateY(15px) scale(0.95)';
                     card.style.transition = 'all 0.4s ease';
@@ -755,6 +819,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clearWishlistBtn) {
             clearWishlistBtn.addEventListener('click', () => {
                 if (confirm('Are you sure you want to clear your entire wishlist?')) {
+                    setWishlist([]); // clear cookie
                     const cards = wishlistGrid.querySelectorAll('.wishlist-card');
                     cards.forEach(card => card.remove());
                     updateWishlistCounters();

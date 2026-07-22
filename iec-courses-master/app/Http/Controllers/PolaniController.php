@@ -417,9 +417,19 @@ class PolaniController extends Controller
         );
     }
 
-    public function wishlist()
+    public function wishlist(\Illuminate\Http\Request $request)
     {
+        $wishlistCookie = $request->cookie('wishlist') ?? '';
+        $wishlistCookie = rawurldecode($wishlistCookie);
+        $slugs = array_filter(explode(',', $wishlistCookie));
+
+        $products = collect();
+        if (!empty($slugs)) {
+            $products = \App\Models\Course::whereIn('slug', $slugs)->get();
+        }
+
         return view('ghousiatraders.wishlist', [
+            'products' => $products,
             'cartCount' => $this->cartCount(),
         ]);
     }
