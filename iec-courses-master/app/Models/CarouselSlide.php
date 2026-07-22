@@ -166,67 +166,67 @@ class CarouselSlide extends Model
     {
         $map = [
             'home' => [
-                'title' => 'More Than A Fragrance, It\'s A Statement.',
-                'subtitle' => 'Handcrafted extrait de parfum made for timeless elegance.',
-                'cta_text' => 'Discover Collection',
-                'cta_url' => route('polani.collection'),
-                'image_name' => 'hero-noir-elixir',
+                'title' => 'Baby Care Essentials',
+                'subtitle' => 'Soft, safe and everyday essentials for your baby\'s comfort, care and happy little moments.',
+                'cta_text' => 'Explore Baby Care',
+                'cta_url' => route('polani.babycare'),
+                'image_name' => 'baby-care-banner',
             ],
             'collection' => [
-                'title' => 'Explore Our Collections',
-                'subtitle' => 'Discover all Polani fragrance families in one elegant place.',
+                'title' => 'Explore Our Shop',
+                'subtitle' => 'Discover all premium baby care products and exciting ride-on toys in one place.',
                 'cta_text' => 'Shop Now',
                 'cta_url' => route('polani.collection'),
-                'image_name' => 'home_banner_1',
+                'image_name' => 'shop_hero',
             ],
             'women' => [
-                'title' => 'Women',
-                'subtitle' => 'Elegant, refined and statement-making fragrances designed for her.',
-                'cta_text' => 'Shop Women',
-                'cta_url' => route('polani.women'),
-                'image_name' => 'cat-women',
+                'title' => 'Baby Care Items',
+                'subtitle' => 'Premium quality baby products for gentle care.',
+                'cta_text' => 'Shop Baby Care',
+                'cta_url' => route('polani.babycare'),
+                'image_name' => 'baby-care-banner',
             ],
             'attars' => [
-                'title' => 'Attars',
-                'subtitle' => 'Rich oil-based attars with long-lasting depth and warmth.',
-                'cta_text' => 'Shop Attars',
-                'cta_url' => route('polani.attars'),
-                'image_name' => 'cat-attars',
+                'title' => 'Battery-Operated Ride-On Bikes',
+                'subtitle' => 'Exciting rechargeable bikes for kids adventure and fun.',
+                'cta_text' => 'Shop B/O Bikes',
+                'cta_url' => route('polani.bikes'),
+                'image_name' => 'shop_hero',
             ],
             'oud' => [
-                'title' => 'Oud',
-                'subtitle' => 'Luxurious oud blends with a bold, captivating trail.',
-                'cta_text' => 'Shop Oud',
-                'cta_url' => route('polani.oud'),
-                'image_name' => 'cat-oud',
+                'title' => 'Battery-Operated Ride-On Cars',
+                'subtitle' => 'Premium luxury electric cars for double the joy.',
+                'cta_text' => 'Shop B/O Cars',
+                'cta_url' => route('polani.cars'),
+                'image_name' => 'shop_hero',
             ],
             'scented-candles' => [
-                'title' => 'Scented Candles',
-                'subtitle' => 'Warm, ambient candles crafted for elegant spaces.',
-                'cta_text' => 'Shop Candles',
-                'cta_url' => route('polani.scented-candles'),
-                'image_name' => 'cart_banner',
+                'title' => 'Premium Toys',
+                'subtitle' => 'Little essentials, big joy.',
+                'cta_text' => 'Shop Now',
+                'cta_url' => route('polani.collection'),
+                'image_name' => 'shop_hero',
             ],
             'product' => [
-                'title' => 'Signature Product',
-                'subtitle' => 'Discover a curated Polani fragrance experience.',
-                'cta_text' => 'Shop Collection',
+                'title' => 'Product Detail',
+                'subtitle' => 'Premium ride-on toys and baby care essentials.',
+                'cta_text' => 'Explore Catalog',
                 'cta_url' => route('polani.collection'),
-                'image_name' => 'product-noir-elixir',
+                'image_name' => 'shop_hero',
             ],
             'cart' => [
                 'title' => 'Your Cart',
-                'subtitle' => 'Review your selected Polani fragrances before checkout.',
+                'subtitle' => 'Review your selected items before placing order.',
                 'cta_text' => 'Continue Shopping',
                 'cta_url' => route('polani.collection'),
-                'image_name' => 'cart_banner',
+                'image_name' => 'wishlist_hero',
             ],
             'checkout' => [
                 'title' => 'Checkout',
-                'subtitle' => 'Complete your purchase securely and smoothly.',
+                'subtitle' => 'Complete your purchase securely.',
                 'cta_text' => 'Review Cart',
                 'cta_url' => route('shopping-cart'),
-                'image_name' => 'cart_banner',
+                'image_name' => 'wishlist_hero',
             ],
             'contact' => [
                 'title' => 'We\'re Here To Help You',
@@ -237,24 +237,24 @@ class CarouselSlide extends Model
             ],
             'track-order' => [
                 'title' => 'Track Your Order',
-                'subtitle' => 'Enter your order number and checkout details to see progress.',
+                'subtitle' => 'Enter your order number to see progress.',
                 'cta_text' => 'Track Order',
                 'cta_url' => route('polani.track-order'),
-                'image_name' => 'cart_banner',
+                'image_name' => 'wishlist_hero',
             ],
             'order-status' => [
                 'title' => 'Order Confirmed',
-                'subtitle' => 'Your Polani order has been placed successfully.',
+                'subtitle' => 'Your Ghousia Traders order has been placed successfully.',
                 'cta_text' => 'Track Order',
                 'cta_url' => route('polani.track-order'),
-                'image_name' => 'hero-noir-elixir',
+                'image_name' => 'wishlist_hero',
             ],
             'about' => [
-                'title' => 'About Polani',
-                'subtitle' => 'Built around timeless blends, premium ingredients, and modern luxury.',
+                'title' => 'About Ghousia Traders',
+                'subtitle' => 'Built around quality products, customer trust, and little smiles.',
                 'cta_text' => 'Shop Now',
                 'cta_url' => route('polani.collection'),
-                'image_name' => 'story-packaging',
+                'image_name' => 'shop_hero',
             ],
         ];
 
@@ -265,7 +265,6 @@ class CarouselSlide extends Model
         return new self(array_merge([
             'id' => 0,
             'page_key' => $pageKey,
-            'order' => 1,
             'is_active' => true,
         ], $map[$pageKey]));
     }
@@ -283,6 +282,18 @@ class CarouselSlide extends Model
         // Seeded/fallback slides use hero-dashboard images in main img directory
         if (str_starts_with($this->image_name, 'carousel-slide-')) {
             return asset("assets/img/carousel/{$this->image_name}-{$size}.{$format}");
+        }
+
+        // Custom theme fallback images for Ghousia Traders
+        $themeFallbacks = [
+            'baby-care-banner' => 'ghousiatraders/assets/baby-care-banner.jpg',
+            'shop_hero'        => 'ghousiatraders/assets/shop_hero.png',
+            'wishlist_hero'    => 'ghousiatraders/assets/wishlist_hero.png',
+            'contact-hero'     => 'ghousiatraders/assets/contact-hero.png',
+        ];
+
+        if (isset($themeFallbacks[$this->image_name])) {
+            return asset($themeFallbacks[$this->image_name]);
         }
 
         return asset("assets/img/{$this->image_name}-{$size}.{$format}");

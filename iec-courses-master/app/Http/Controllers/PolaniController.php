@@ -206,7 +206,7 @@ class PolaniController extends Controller
             ->map(fn (Course $course) => $this->productViewModel($course))
             ->values();
 
-        return view('polani.category', [
+        return view('ghousiatraders.category', [
             'pageTitle' => $title,
             'pageDescription' => $description,
             'heroImage' => $heroImage,
@@ -222,9 +222,39 @@ class PolaniController extends Controller
     {
         $products = Course::query()
             ->with('category')
+            ->whereHas('category', function ($query) {
+                $query->whereIn('slug', ['baby-care', 'bo-bikes', 'bo-cars']);
+            })
             ->latest('id')
             ->take(8)
             ->get();
+
+        $babyCareProducts = Course::query()
+            ->with('category')
+            ->whereHas('category', function ($query) {
+                $query->where('slug', 'baby-care');
+            })
+            ->latest('id')
+            ->get()
+            ->map(fn (Course $course) => $this->productViewModel($course));
+
+        $bikesProducts = Course::query()
+            ->with('category')
+            ->whereHas('category', function ($query) {
+                $query->where('slug', 'bo-bikes');
+            })
+            ->latest('id')
+            ->get()
+            ->map(fn (Course $course) => $this->productViewModel($course));
+
+        $carsProducts = Course::query()
+            ->with('category')
+            ->whereHas('category', function ($query) {
+                $query->where('slug', 'bo-cars');
+            })
+            ->latest('id')
+            ->get()
+            ->map(fn (Course $course) => $this->productViewModel($course));
 
         $blogs = Blog::latest('id')->take(3)->get();
 
@@ -244,12 +274,11 @@ class PolaniController extends Controller
                 ];
             });
 
-        return view('polani.home', [
+        return view('ghousiatraders.home', [
             'products' => $products->map(fn (Course $course) => $this->productViewModel($course)),
-            'signatureProduct' => $this->productViewModel(
-                Course::with('category')->where('slug', 'qasr-al-oud')->first()
-                    ?? Course::with('category')->latest('id')->first()
-            ),
+            'babyCareProducts' => $babyCareProducts,
+            'bikesProducts' => $bikesProducts,
+            'carsProducts' => $carsProducts,
             'blogs' => $blogs,
             'cartCount' => $this->cartCount(),
             'homepageSections' => $homepageSections,
@@ -262,6 +291,9 @@ class PolaniController extends Controller
 
         $products = Course::query()
             ->with('category')
+            ->whereHas('category', function ($q) {
+                $q->whereIn('slug', ['baby-care', 'bo-bikes', 'bo-cars']);
+            })
             ->when($query !== '', function ($builder) use ($query) {
                 $builder->where(function ($inner) use ($query) {
                     $inner->where('name', 'like', '%' . $query . '%')
@@ -275,9 +307,10 @@ class PolaniController extends Controller
 
         $products->getCollection()->transform(fn (Course $course) => $this->productViewModel($course));
 
-        return view('polani.collection', [
+        return view('ghousiatraders.shop', [
             'products' => $products,
             'cartCount' => $this->cartCount(),
+            'searchQuery' => $query,
         ]);
     }
 
@@ -346,6 +379,49 @@ class PolaniController extends Controller
             'center',
             'scented-candles'
         );
+    }
+
+    public function babycare()
+    {
+        return $this->categoryPage(
+            'Baby Care',
+            'Baby Care Items — Ghousia Traders',
+            'Deeply hydrating baby lotions, pure water wipes, soft spout sippy cups and complete feeding sets designed for gentle daily care.',
+            'ghousiatraders/assets/baby-care-banner.jpg',
+            'center',
+            'baby-care'
+        );
+    }
+
+    public function bikes()
+    {
+        return $this->categoryPage(
+            'B/O Bikes',
+            'B/O Bikes — Ghousia Traders',
+            'Exciting battery-operated sports superbikes, touring trail motorbikes and retro Vespa ride-on scooters for child adventure and fun.',
+            'ghousiatraders/assets/shop_hero.png',
+            'center',
+            'bo-bikes'
+        );
+    }
+
+    public function cars()
+    {
+        return $this->categoryPage(
+            'B/O Cars',
+            'B/O Cars — Ghousia Traders',
+            'Premium battery-operated AMG Mercedes ride-on cars, heavy duty 4WD Jeep Wranglers, Land Cruisers and luxury Range Rover electric cars.',
+            'ghousiatraders/assets/shop_hero.png',
+            'center',
+            'bo-cars'
+        );
+    }
+
+    public function wishlist()
+    {
+        return view('ghousiatraders.wishlist', [
+            'cartCount' => $this->cartCount(),
+        ]);
     }
 
     public function trackOrder(Request $request)
