@@ -732,29 +732,40 @@ class PolaniController extends Controller
         $price = (float) ($product->weekly_price ?? 0);
 
         if (auth()->check()) {
-            Shoppingcart::updateOrCreate(
-                ['user_id' => auth()->id(), 'course_id' => $product->id],
-                ['price' => $price, 'price_type' => null]
-            );
+            $existing = Shoppingcart::where('user_id', auth()->id())
+                ->where('course_id', $product->id)
+                ->first();
+
+            if ($existing) {
+                $existing->quantity = (int) $existing->quantity + 1;
+                $existing->price = $price;
+                $existing->save();
+            } else {
+                Shoppingcart::create([
+                    'user_id' => auth()->id(),
+                    'course_id' => $product->id,
+                    'price' => $price,
+                    'quantity' => 1
+                ]);
+            }
         } else {
             $cart = $this->sessionCart();
             $existingIndex = collect($cart)->search(fn ($item) => (int) ($item['course_id'] ?? 0) === (int) $product->id);
 
-            $payload = [
-                'id' => $product->id,
-                'course_id' => $product->id,
-                'lecture_id' => null,
-                'name' => $product->name,
-                'type' => 'Product',
-                'price' => $price,
-                'quantity' => 1,
-                'image_path' => $product->image_path,
-            ];
-
             if ($existingIndex !== false) {
-                $cart[$existingIndex] = $payload;
+                $cart[$existingIndex]['quantity'] = (int) ($cart[$existingIndex]['quantity'] ?? 1) + 1;
+                $cart[$existingIndex]['price'] = $price;
             } else {
-                $cart[] = $payload;
+                $cart[] = [
+                    'id' => $product->id,
+                    'course_id' => $product->id,
+                    'lecture_id' => null,
+                    'name' => $product->name,
+                    'type' => 'Product',
+                    'price' => $price,
+                    'quantity' => 1,
+                    'image_path' => $product->image_path,
+                ];
             }
 
             $this->saveSessionCart($cart);

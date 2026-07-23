@@ -477,107 +477,109 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 11. Shopping Cart Page: Interactive Calculations
-    const cartRows = document.querySelectorAll('.cart-item-row');
-    const summaryItemsCount = document.getElementById('summaryItemsCount');
-    const summarySubtotal = document.getElementById('summarySubtotal');
-    const summaryTotal = document.getElementById('summaryTotal');
-    const cartItemsList = document.getElementById('cartItemsList');
-    const clearCartBtn = document.getElementById('clearCartBtn');
+    // 11. Shopping Cart Page: Interactive Calculations (Bypassed if Laravel Livewire data-cart-page exists)
+    if (!document.querySelector('[data-cart-page]')) {
+        const cartRows = document.querySelectorAll('.cart-item-row');
+        const summaryItemsCount = document.getElementById('summaryItemsCount');
+        const summarySubtotal = document.getElementById('summarySubtotal');
+        const summaryTotal = document.getElementById('summaryTotal');
+        const cartItemsList = document.getElementById('cartItemsList');
+        const clearCartBtn = document.getElementById('clearCartBtn');
 
-    function updateCartTotals() {
-        let totalItems = 0;
-        let grandSubtotal = 0;
-        const activeRows = document.querySelectorAll('.cart-item-row');
+        const updateCartTotals = function() {
+            let totalItems = 0;
+            let grandSubtotal = 0;
+            const activeRows = document.querySelectorAll('.cart-item-row');
 
-        activeRows.forEach(row => {
-            const price = parseInt(row.getAttribute('data-price')) || 0;
+            activeRows.forEach(row => {
+                const price = parseInt(row.getAttribute('data-price')) || 0;
+                const qtyInput = row.querySelector('.qty-input');
+                const qty = qtyInput ? parseInt(qtyInput.value) : 1;
+                
+                totalItems += qty;
+                const subtotal = price * qty;
+                grandSubtotal += subtotal;
+
+                const subtotalVal = row.querySelector('.val-subtotal');
+                if (subtotalVal) {
+                    subtotalVal.textContent = `PKR ${subtotal.toLocaleString()}`;
+                }
+            });
+
+            // Update summary elements
+            if (summaryItemsCount) {
+                summaryItemsCount.textContent = `Subtotal (${totalItems} item${totalItems !== 1 ? 's' : ''})`;
+            }
+            if (summarySubtotal) {
+                summarySubtotal.textContent = `PKR ${grandSubtotal.toLocaleString()}`;
+            }
+            if (summaryTotal) {
+                summaryTotal.textContent = `PKR ${grandSubtotal.toLocaleString()}`;
+            }
+
+            // Update header badge count
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                cartCount.textContent = totalItems;
+            }
+
+            // If cart is empty, show empty state
+            if (activeRows.length === 0 && cartItemsList) {
+                cartItemsList.innerHTML = `
+                    <div class="empty-cart-state" style="text-align: center; padding: 60px 20px; background-color: var(--bg-card); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+                        <i data-lucide="shopping-bag" style="width: 60px; height: 60px; color: var(--text-muted); margin-bottom: 20px;"></i>
+                        <h3 style="font-size: 1.4rem; color: var(--primary); margin-bottom: 10px; font-weight: 700;">Your Cart is Empty</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 30px;">Looks like you haven't added any products to your cart yet.</p>
+                        <a href="shop.html" class="btn btn-primary">Start Shopping</a>
+                    </div>
+                `;
+                lucide.createIcons();
+                
+                // Hide clear cart button
+                if (clearCartBtn) clearCartBtn.style.display = 'none';
+            }
+        };
+
+        // Set up listeners for cart row buttons
+        cartRows.forEach(row => {
+            const minusBtn = row.querySelector('.qty-minus');
+            const plusBtn = row.querySelector('.qty-plus');
             const qtyInput = row.querySelector('.qty-input');
-            const qty = qtyInput ? parseInt(qtyInput.value) : 1;
-            
-            totalItems += qty;
-            const subtotal = price * qty;
-            grandSubtotal += subtotal;
+            const removeBtn = row.querySelector('.remove-item-btn');
 
-            const subtotalVal = row.querySelector('.val-subtotal');
-            if (subtotalVal) {
-                subtotalVal.textContent = `PKR ${subtotal.toLocaleString()}`;
+            if (minusBtn && qtyInput) {
+                minusBtn.addEventListener('click', () => {
+                    let currentVal = parseInt(qtyInput.value) || 1;
+                    if (currentVal > 1) {
+                        qtyInput.value = currentVal - 1;
+                        updateCartTotals();
+                    }
+                });
+            }
+
+            if (plusBtn && qtyInput) {
+                plusBtn.addEventListener('click', () => {
+                    let currentVal = parseInt(qtyInput.value) || 1;
+                    qtyInput.value = currentVal + 1;
+                    updateCartTotals();
+                });
+            }
+
+            if (removeBtn) {
+                removeBtn.addEventListener('click', () => {
+                    row.remove();
+                    updateCartTotals();
+                });
             }
         });
 
-        // Update summary elements
-        if (summaryItemsCount) {
-            summaryItemsCount.textContent = `Subtotal (${totalItems} item${totalItems !== 1 ? 's' : ''})`;
-        }
-        if (summarySubtotal) {
-            summarySubtotal.textContent = `PKR ${grandSubtotal.toLocaleString()}`;
-        }
-        if (summaryTotal) {
-            summaryTotal.textContent = `PKR ${grandSubtotal.toLocaleString()}`;
-        }
-
-        // Update header badge count
-        const cartCount = document.getElementById('cartCount');
-        if (cartCount) {
-            cartCount.textContent = totalItems;
-        }
-
-        // If cart is empty, show empty state
-        if (activeRows.length === 0 && cartItemsList) {
-            cartItemsList.innerHTML = `
-                <div class="empty-cart-state" style="text-align: center; padding: 60px 20px; background-color: var(--bg-card); border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
-                    <i data-lucide="shopping-bag" style="width: 60px; height: 60px; color: var(--text-muted); margin-bottom: 20px;"></i>
-                    <h3 style="font-size: 1.4rem; color: var(--primary); margin-bottom: 10px; font-weight: 700;">Your Cart is Empty</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 30px;">Looks like you haven't added any products to your cart yet.</p>
-                    <a href="shop.html" class="btn btn-primary">Start Shopping</a>
-                </div>
-            `;
-            lucide.createIcons();
-            
-            // Hide clear cart button
-            if (clearCartBtn) clearCartBtn.style.display = 'none';
-        }
-    }
-
-    // Set up listeners for cart row buttons
-    cartRows.forEach(row => {
-        const minusBtn = row.querySelector('.qty-minus');
-        const plusBtn = row.querySelector('.qty-plus');
-        const qtyInput = row.querySelector('.qty-input');
-        const removeBtn = row.querySelector('.remove-item-btn');
-
-        if (minusBtn && qtyInput) {
-            minusBtn.addEventListener('click', () => {
-                let currentVal = parseInt(qtyInput.value) || 1;
-                if (currentVal > 1) {
-                    qtyInput.value = currentVal - 1;
-                    updateCartTotals();
-                }
-            });
-        }
-
-        if (plusBtn && qtyInput) {
-            plusBtn.addEventListener('click', () => {
-                let currentVal = parseInt(qtyInput.value) || 1;
-                qtyInput.value = currentVal + 1;
+        if (clearCartBtn && cartItemsList) {
+            clearCartBtn.addEventListener('click', () => {
+                const rows = document.querySelectorAll('.cart-item-row');
+                rows.forEach(r => r.remove());
                 updateCartTotals();
             });
         }
-
-        if (removeBtn) {
-            removeBtn.addEventListener('click', () => {
-                row.remove();
-                updateCartTotals();
-            });
-        }
-    });
-
-    if (clearCartBtn && cartItemsList) {
-        clearCartBtn.addEventListener('click', () => {
-            const rows = document.querySelectorAll('.cart-item-row');
-            rows.forEach(r => r.remove());
-            updateCartTotals();
-        });
     }
 
     // 12. Checkout Page: Delivery & Payment options toggle, coupon validation, notes count
@@ -848,6 +850,15 @@ document.addEventListener('DOMContentLoaded', () => {
             heroDots.forEach(d => d.classList.remove('active'));
             dot.classList.add('active');
         });
+    });
+
+    // Listen to Livewire's cartUpdated event to update header badge dynamically
+    window.addEventListener('cartUpdated', (event) => {
+        const newCount = event.detail.count;
+        const cartCountBadge = document.getElementById('cartCount');
+        if (cartCountBadge && newCount !== undefined) {
+            cartCountBadge.textContent = newCount;
+        }
     });
 
     // Initial Lucide icons initialization

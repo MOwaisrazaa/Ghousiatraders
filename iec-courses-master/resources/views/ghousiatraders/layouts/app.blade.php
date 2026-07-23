@@ -16,6 +16,7 @@
     
     <!-- Storefront Stylesheet -->
     <link rel="stylesheet" href="{{ asset('ghousiatraders/style.css') }}">
+    @livewireStyles
     @stack('head')
 </head>
 <body class="ghousia-storefront">
@@ -30,13 +31,14 @@
     @include('ghousiatraders.partials.footer')
 
     <!-- Theme JS -->
-    <script src="{{ asset('ghousiatraders/script.js') }}"></script>
+    <script src="{{ asset('ghousiatraders/script.js') }}?v={{ filemtime(public_path('ghousiatraders/script.js')) }}"></script>
     <script>
         // Initialize Lucide Icons
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
     </script>
+    @livewireScripts
     @stack('scripts')
 </body>
 </html>

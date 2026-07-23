@@ -28,6 +28,7 @@ class Shoppingcart extends Component
     private function saveSessionCart(array $items): void
     {
         session()->put('polani_cart', array_values($items));
+        session()->save();
     }
 
     public function loadCartItems()
@@ -88,8 +89,9 @@ class Shoppingcart extends Component
     public function calculateTotalAmount()
     {
         $this->totalAmount = collect($this->cartitems)->sum(function ($item) {
-            $price = (float) ($item->price ?? 0);
-            $quantity = (int) ($item->quantity ?? 1);
+            $isObject = is_object($item);
+            $price = (float) ($isObject ? ($item->price ?? 0) : ($item['price'] ?? 0));
+            $quantity = (int) ($isObject ? ($item->quantity ?? 1) : ($item['quantity'] ?? 1));
 
             return $price * $quantity;
         });
@@ -156,18 +158,32 @@ class Shoppingcart extends Component
 
     public function removeFromCart($itemId)
     {
+        \Log::info('removeFromCart called', [
+            'itemId' => $itemId,
+            'auth_check' => auth()->check(),
+            'user_id' => auth()->id()
+        ]);
+
         if (auth()->check()) {
-            Cart::where('id', $itemId)
-                ->where('user_id', auth()->id())
-                ->delete();
+            $deletedCount = Cart::where(function ($query) use ($itemId) {
+                $query->where('id', $itemId)
+                      ->orWhere('course_id', $itemId);
+            })->where('user_id', auth()->id())
+              ->delete();
+            \Log::info('Database cart item deleted', [
+                'itemId' => $itemId,
+                'deleted_count' => $deletedCount
+            ]);
         } else {
             $cart = $this->sessionCart();
+            \Log::info('Session cart before remove', ['cart' => $cart]);
             $cart = array_values(array_filter($cart, fn ($item) => (int) ($item['course_id'] ?? 0) !== (int) $itemId));
+            \Log::info('Session cart after remove', ['cart' => $cart]);
             $this->saveSessionCart($cart);
         }
 
         $this->loadCartItems();
-        $this->dispatch('cartUpdated');
+        $this->dispatch('cartUpdated', count: collect($this->cartitems)->sum('quantity'));
     }
 
     public function checkout()
@@ -206,8 +222,21 @@ class Shoppingcart extends Component
         ]);
     }
 
+    public function clearCart()
+    {
+        if (auth()->check()) {
+            Cart::where('user_id', auth()->id())->delete();
+        } else {
+            session()->forget('polani_cart');
+        }
+
+        $this->loadCartItems();
+        $this->dispatch('cartUpdated', count: 0);
+    }
+
     public function render()
     {
+        $this->loadCartItems();
         return view('livewire.shoppingcart', [
             'cartitems' => $this->cartitems,
             'totalAmount' => $this->totalAmount,

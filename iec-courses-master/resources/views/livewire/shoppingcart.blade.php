@@ -1,4 +1,4 @@
-<div class="cart-body-section" style="background-color: var(--bg-light); padding: 60px 0;">
+<div class="cart-body-section" data-cart-page style="background-color: var(--bg-light); padding: 60px 0;">
     <div class="section-container">
         @if($cartitems->count() > 0)
             <div class="cart-layout-grid">
@@ -14,29 +14,36 @@
                     <div class="cart-items-list" id="cartItemsList">
                         @foreach($cartitems as $cartitem)
                             @php
-                                $name = $cartitem->course ? $cartitem->course->name : ($cartitem->lecture ? $cartitem->lecture->name : 'Item');
+                                $isObject = is_object($cartitem);
+                                $itemId = $isObject ? ($cartitem->id ?? null) : ($cartitem['id'] ?? null);
+                                $courseObj = $isObject ? ($cartitem->course ?? null) : ($cartitem['course'] ?? null);
+                                $courseObj = is_array($courseObj) ? (object) $courseObj : $courseObj;
+                                $lectureObj = $isObject ? ($cartitem->lecture ?? null) : ($cartitem['lecture'] ?? null);
+                                $lectureObj = is_array($lectureObj) ? (object) $lectureObj : $lectureObj;
+
+                                $name = $courseObj ? ($courseObj->name ?? 'Item') : ($lectureObj ? ($lectureObj->name ?? 'Item') : 'Item');
                                 $img = null;
-                                if ($cartitem->course && $cartitem->course->image_path) {
-                                    $img = asset($cartitem->course->image_path);
+                                if ($courseObj && !empty($courseObj->image_path)) {
+                                    $img = asset($courseObj->image_path);
                                 }
-                                if (!$img && $cartitem->lecture && $cartitem->lecture->image_path) {
-                                    $img = asset($cartitem->lecture->image_path);
+                                if (!$img && $lectureObj && !empty($lectureObj->image_path)) {
+                                    $img = asset($lectureObj->image_path);
                                 }
                                 if (!$img) {
                                     $img = asset('ghousiatraders/assets/baby_products.png');
                                 }
-                                $price = (float) ($cartitem->price ?? 0);
-                                $quantity = (int) ($cartitem->quantity ?? 1);
+                                $price = (float) ($isObject ? ($cartitem->price ?? 0) : ($cartitem['price'] ?? 0));
+                                $quantity = (int) ($isObject ? ($cartitem->quantity ?? 1) : ($cartitem['quantity'] ?? 1));
                             @endphp
 
-                            <div class="cart-item-row" data-id="{{ $cartitem->id }}">
+                            <div class="cart-item-row" data-id="{{ $itemId }}" data-price="{{ $price }}">
                                 <div class="td-product">
                                     <div class="cart-item-img">
                                         <img src="{{ $img }}" alt="{{ $name }}">
                                     </div>
                                     <div class="cart-item-detail">
                                         <h3>{{ $name }}</h3>
-                                        <p>{{ $cartitem->course ? 'Ride-On Toy / Baby Care' : 'Item' }}</p>
+                                        <p>{{ $courseObj ? 'Ride-On Toy / Baby Care' : 'Item' }}</p>
                                         <span class="stock-badge">In Stock</span>
                                     </div>
                                 </div>
@@ -46,15 +53,15 @@
                                 </div>
                                 <div class="td-quantity">
                                     <div class="quantity-control">
-                                        <button class="qty-btn qty-minus" type="button" aria-label="Decrease quantity" wire:click="decrementQuantity({{ $cartitem->id }})" wire:loading.attr="disabled">—</button>
+                                        <button class="qty-btn qty-minus" type="button" aria-label="Decrease quantity" wire:click="decrementQuantity({{ $itemId }})" wire:loading.attr="disabled">—</button>
                                         <input type="number" value="{{ $quantity }}" min="1" class="qty-input" readonly>
-                                        <button class="qty-btn qty-plus" type="button" aria-label="Increase quantity" wire:click="incrementQuantity({{ $cartitem->id }})" wire:loading.attr="disabled">+</button>
+                                        <button class="qty-btn qty-plus" type="button" aria-label="Increase quantity" wire:click="incrementQuantity({{ $itemId }})" wire:loading.attr="disabled">+</button>
                                     </div>
                                 </div>
                                 <div class="td-subtotal">
                                     <span class="subtotal-label">Subtotal:</span>
                                     <span class="val-subtotal">PKR {{ number_format($price * $quantity) }}</span>
-                                    <button class="remove-item-btn" type="button" aria-label="Remove item" wire:click="removeFromCart({{ $cartitem->id }})">
+                                    <button class="remove-item-btn" type="button" aria-label="Remove item" wire:click="removeFromCart({{ $itemId }})">
                                         <i data-lucide="x"></i>
                                     </button>
                                 </div>
@@ -63,11 +70,15 @@
                     </div>
 
                     <!-- Actions below list -->
-                    <div class="cart-action-buttons" style="margin-top: 30px; display: flex; gap: 15px;">
+                    <div class="cart-action-buttons" style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <a href="{{ route('polani.collection') }}" class="btn btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
                             <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
                             <span>Continue Shopping</span>
                         </a>
+                        <button class="btn btn-outline-danger" id="clearCartBtn" type="button" wire:click="clearCart" style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none;">
+                            <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                            <span>Clear Cart</span>
+                        </button>
                     </div>
                 </div>
 
