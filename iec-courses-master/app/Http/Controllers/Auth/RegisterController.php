@@ -40,6 +40,13 @@ class RegisterController extends Controller
      */
     public function store(Request $request)
     {
+        // Normalize email input
+        if ($request->has('email')) {
+            $request->merge([
+                'email' => strtolower(trim($request->email)),
+            ]);
+        }
+
         // Load all valid country codes from JSON
         $jsonPath = public_path('assets/js/countrycode.json');
         $countriesJson = json_decode(file_get_contents($jsonPath), true);

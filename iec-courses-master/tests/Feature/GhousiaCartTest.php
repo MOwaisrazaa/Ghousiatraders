@@ -133,7 +133,7 @@ class GhousiaCartTest extends TestCase
 
     public function test_authenticated_cart_calculations()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['password' => bcrypt('SecurePass123!')]);
         $toyota = Course::where('slug', 'toyota-land-cruiser')->first();
 
         // 1. Initial State (Empty)

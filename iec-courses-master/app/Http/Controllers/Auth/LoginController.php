@@ -39,6 +39,13 @@ class LoginController extends Controller
      */
     public function store(Request $request)
     {
+        // Normalize email input
+        if ($request->has('email')) {
+            $request->merge([
+                'email' => strtolower(trim($request->email)),
+            ]);
+        }
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
