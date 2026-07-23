@@ -92,7 +92,7 @@
                     <p class="form-subtext">Already have an account? <a href="{{ route('sign-in') }}">Sign in</a></p>
 
                     <!-- Registration Form -->
-                    <form class="signup-form" method="POST" action="{{ url('/sign-up') }}">
+                    <form class="signup-form" id="signupForm" method="POST" action="{{ url('/sign-up') }}">
                         @csrf
 
                         @if (session('message'))
@@ -108,6 +108,7 @@
                                 <i data-lucide="user" class="input-icon-left"></i>
                                 <input type="text" name="name" id="name" class="form-input" placeholder="Enter your full name" value="{{ old('name') }}" required>
                             </div>
+                            <div class="error-msg" style="display: none; color: #E11D48; font-size: 0.8rem; margin-top: 5px;"></div>
                             @error('name')
                                 <div class="error-msg" style="display: block; color: #E11D48; font-size: 0.8rem; margin-top: 5px;">{{ $message }}</div>
                             @enderror
@@ -120,6 +121,7 @@
                                 <i data-lucide="mail" class="input-icon-left"></i>
                                 <input type="email" name="email" id="emailAddress" class="form-input" placeholder="Enter your email address" value="{{ old('email') }}" required>
                             </div>
+                            <div class="error-msg" style="display: none; color: #E11D48; font-size: 0.8rem; margin-top: 5px;"></div>
                             @error('email')
                                 <div class="error-msg" style="display: block; color: #E11D48; font-size: 0.8rem; margin-top: 5px;">{{ $message }}</div>
                             @enderror
@@ -138,6 +140,7 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="error-msg" style="display: none; color: #E11D48; font-size: 0.8rem; margin-top: 5px;"></div>
                             @error('country')
                                 <div class="error-msg" style="display: block; color: #E11D48; font-size: 0.8rem; margin-top: 5px;">{{ $message }}</div>
                             @enderror
@@ -150,6 +153,7 @@
                                 <i data-lucide="phone" class="input-icon-left"></i>
                                 <input type="text" name="phone" id="phone" class="form-input" placeholder="03XX-XXXXXXX" value="{{ old('phone') }}" required>
                             </div>
+                            <div class="error-msg" style="display: none; color: #E11D48; font-size: 0.8rem; margin-top: 5px;"></div>
                             @error('phone')
                                 <div class="error-msg" style="display: block; color: #E11D48; font-size: 0.8rem; margin-top: 5px;">{{ $message }}</div>
                             @enderror
@@ -165,6 +169,7 @@
                                     <i data-lucide="eye"></i>
                                 </button>
                             </div>
+                            <div class="error-msg" style="display: none; color: #E11D48; font-size: 0.8rem; margin-top: 5px;"></div>
                             @error('password')
                                 <div class="error-msg" style="display: block; color: #E11D48; font-size: 0.8rem; margin-top: 5px;">{{ $message }}</div>
                             @enderror
@@ -180,6 +185,7 @@
                                     <i data-lucide="eye"></i>
                                 </button>
                             </div>
+                            <div class="error-msg" style="display: none; color: #E11D48; font-size: 0.8rem; margin-top: 5px;"></div>
                         </div>
 
                         <!-- Terms & Conditions Checkbox -->
@@ -188,6 +194,7 @@
                                 <input type="checkbox" name="terms" value="1" id="termsAgreement" class="terms-checkbox" {{ old('terms') ? 'checked' : '' }} required>
                                 <span>I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></span>
                             </label>
+                            <div class="error-msg" style="display: none; color: #E11D48; font-size: 0.8rem; margin-top: 5px;"></div>
                             @error('terms')
                                 <div class="error-msg" style="display: block; color: #E11D48; font-size: 0.8rem; margin-top: 5px;">{{ $message }}</div>
                             @enderror

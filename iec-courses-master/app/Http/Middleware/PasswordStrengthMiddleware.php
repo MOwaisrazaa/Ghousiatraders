@@ -16,7 +16,7 @@ class PasswordStrengthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // Check if the request has a password field
-        if ($request->has('password')) {
+        if ($request->filled('password')) {
             $password = $request->input('password');
             
             // Get validation settings from config
@@ -26,23 +26,29 @@ class PasswordStrengthMiddleware
             
             // 1. Check password length to prevent very long passwords (DoS)
             if (strlen($password) > $maxLength) {
-                return response()->json([
-                    'error' => 'Password is too long. Maximum allowed is ' . $maxLength . ' characters.'
-                ], 422);
+                $errorMsg = 'Password is too long. Maximum allowed is ' . $maxLength . ' characters.';
+                if ($request->expectsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                    return response()->json(['error' => $errorMsg], 422);
+                }
+                return back()->withErrors(['password' => $errorMsg])->withInput();
             }
             
             // 2. Check minimum length
             if (strlen($password) < $minLength) {
-                return response()->json([
-                    'error' => 'Password is too short. Minimum required is ' . $minLength . ' characters.'
-                ], 422);
+                $errorMsg = 'Password is too short. Minimum required is ' . $minLength . ' characters.';
+                if ($request->expectsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                    return response()->json(['error' => $errorMsg], 422);
+                }
+                return back()->withErrors(['password' => $errorMsg])->withInput();
             }
             
             // 3. Check password complexity
             if (!preg_match($regex, $password)) {
-                return response()->json([
-                    'error' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.'
-                ], 422);
+                $errorMsg = 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.';
+                if ($request->expectsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                    return response()->json(['error' => $errorMsg], 422);
+                }
+                return back()->withErrors(['password' => $errorMsg])->withInput();
             }
         }
         

@@ -10,20 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form elements
     const signupForm = document.getElementById('signupForm');
-    const firstNameInput = document.getElementById('firstName');
-    const lastNameInput = document.getElementById('lastName');
+    const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('emailAddress');
-    const phoneInput = document.getElementById('phoneNumber');
+    const countrySelect = document.getElementById('country');
+    const phoneInput = document.getElementById('phone');
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const termsCheckbox = document.getElementById('termsAgreement');
     const signupSubmitBtn = document.getElementById('signupSubmitBtn');
-
-    // Password requirements elements
-    const reqLength = document.getElementById('reqLength');
-    const reqUpper = document.getElementById('reqUpper');
-    const reqNumber = document.getElementById('reqNumber');
-    const reqSpecial = document.getElementById('reqSpecial');
 
     // 1. Password Visibility Toggles
     setupPasswordToggle('passwordToggle', 'password');
@@ -57,187 +51,237 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 2. Real-Time Password Requirements Verification
-    if (passwordInput) {
-        passwordInput.addEventListener('input', () => {
-            const val = passwordInput.value;
-            
-            // Length check (at least 8 characters)
-            const isLengthValid = val.length >= 8;
-            updateReqState(reqLength, isLengthValid);
+    // State trackers to avoid showing validation errors until field has been interacted with
+    const touchedFields = {
+        name: false,
+        email: false,
+        country: false,
+        phone: false,
+        password: false,
+        confirmPassword: false,
+        terms: false
+    };
 
-            // Uppercase check
-            const isUpperValid = /[A-Z]/.test(val);
-            updateReqState(reqUpper, isUpperValid);
-
-            // Number check
-            const isNumberValid = /[0-9]/.test(val);
-            updateReqState(reqNumber, isNumberValid);
-
-            // Special character check
-            const isSpecialValid = /[^A-Za-z0-9]/.test(val);
-            updateReqState(reqSpecial, isSpecialValid);
-
-            // Validate form state
-            validateFormState();
-        });
+    // Validation patterns and checks
+    function checkName() {
+        const val = nameInput ? nameInput.value.trim() : '';
+        if (!val) return 'Full Name is required.';
+        if (val.length < 4) return 'Full Name must be at least 4 characters.';
+        if (!/^[A-Za-z\s\.\-]+$/.test(val)) return 'Full Name may only contain letters, spaces, dots and hyphens.';
+        return null; // Valid
     }
 
-    function updateReqState(element, isValid) {
-        if (!element) return;
-        const icon = element.querySelector('i');
-        if (isValid) {
-            element.classList.add('valid');
-            if (icon) {
-                icon.setAttribute('data-lucide', 'check-circle-2');
+    function checkEmail() {
+        const val = emailInput ? emailInput.value.trim() : '';
+        if (!val) return 'Email Address is required.';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return 'Please enter a valid email address.';
+        return null;
+    }
+
+    function checkCountry() {
+        const val = countrySelect ? countrySelect.value : '';
+        if (!val) return 'Country is required.';
+        return null;
+    }
+
+    function checkPhone() {
+        const val = phoneInput ? phoneInput.value.trim() : '';
+        const country = countrySelect ? countrySelect.value : 'PK';
+        if (!val) return 'Phone number is required.';
+        if (country === 'PK') {
+            if (!/^((\+92)?(0092)?(92)?(0)?)(3\d{2})(-?|\s?)(\d{7})$/.test(val)) {
+                return 'Please enter a valid Pakistani phone number (e.g. 0300-1234567).';
             }
         } else {
-            element.classList.remove('valid');
-            if (icon) {
-                icon.setAttribute('data-lucide', 'circle');
+            const cleaned = val.replace(/[^0-9+]/g, '');
+            if (cleaned.length < 7 || cleaned.length > 15) {
+                return 'Please enter a valid phone number (7 to 15 digits).';
             }
         }
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
+        return null;
+    }
+
+    function checkPassword() {
+        const val = passwordInput ? passwordInput.value : '';
+        if (!val) return 'Password is required.';
+        if (val.length < 6 || val.length > 15) return 'Password must be between 6 and 15 characters.';
+        if (!/[A-Z]/.test(val)) return 'Password must contain at least one uppercase letter.';
+        if (!/[a-z]/.test(val)) return 'Password must contain at least one lowercase letter.';
+        if (!/[0-9]/.test(val)) return 'Password must contain at least one number.';
+        if (!/[@$!%*?&#+=~]/.test(val)) return 'Password must contain at least one special character (@$!%*?&#+=~).';
+        return null;
+    }
+
+    function checkConfirmPassword() {
+        const val = confirmPasswordInput ? confirmPasswordInput.value : '';
+        const passVal = passwordInput ? passwordInput.value : '';
+        if (!val) return 'Please confirm your password.';
+        if (val !== passVal) return 'Passwords do not match.';
+        return null;
+    }
+
+    function checkTerms() {
+        const isChecked = termsCheckbox ? termsCheckbox.checked : false;
+        if (!isChecked) return 'You must agree to the Terms & Conditions and Privacy Policy.';
+        return null;
+    }
+
+    // Helper functions to show/clear error messages
+    function displayFieldStatus(inputElement, getErrorMsg, fieldKey) {
+        if (!inputElement) return;
+
+        const error = getErrorMsg();
+        const hasError = error !== null;
+
+        // Only display errors if the field has been touched/interacted with
+        if (hasError && touchedFields[fieldKey]) {
+            inputElement.classList.add('input-error');
+            const parent = inputElement.closest('.input-group');
+            if (parent) {
+                // Find all error divs to populate them (both the persistent placeholder and dynamic ones)
+                const errorMsgElements = parent.querySelectorAll('.error-msg');
+                errorMsgElements.forEach(elem => {
+                    elem.innerHTML = `<i data-lucide="alert-circle" style="width: 14px; height: 14px; flex-shrink:0; vertical-align: middle; margin-right: 4px;"></i> ${error}`;
+                    elem.style.display = 'flex';
+                });
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+        } else {
+            inputElement.classList.remove('input-error');
+            const parent = inputElement.closest('.input-group');
+            if (parent) {
+                const errorMsgElements = parent.querySelectorAll('.error-msg');
+                errorMsgElements.forEach(elem => {
+                    elem.textContent = '';
+                    elem.style.display = 'none';
+                });
+            }
         }
     }
 
-    // 3. Listen to input changes to update submit button state (Disabled/Enabled)
-    const inputsToWatch = [
-        firstNameInput,
-        lastNameInput,
-        emailInput,
-        phoneInput,
-        passwordInput,
-        confirmPasswordInput,
-        termsCheckbox
-    ];
-
-    inputsToWatch.forEach(input => {
-        if (input) {
-            input.addEventListener('input', validateFormState);
-            if (input.type === 'checkbox') {
-                input.addEventListener('change', validateFormState);
+    function validateField(fieldKey) {
+        if (fieldKey === 'name') displayFieldStatus(nameInput, checkName, 'name');
+        if (fieldKey === 'email') displayFieldStatus(emailInput, checkEmail, 'email');
+        if (fieldKey === 'country') displayFieldStatus(countrySelect, checkCountry, 'country');
+        if (fieldKey === 'phone') displayFieldStatus(phoneInput, checkPhone, 'phone');
+        if (fieldKey === 'password') {
+            displayFieldStatus(passwordInput, checkPassword, 'password');
+            if (touchedFields.confirmPassword) {
+                displayFieldStatus(confirmPasswordInput, checkConfirmPassword, 'confirmPassword');
             }
         }
-    });
+        if (fieldKey === 'confirmPassword') displayFieldStatus(confirmPasswordInput, checkConfirmPassword, 'confirmPassword');
+        if (fieldKey === 'terms') displayFieldStatus(termsCheckbox, checkTerms, 'terms');
+    }
 
+    // Revalidate the complete form state and toggle submit button
     function validateFormState() {
-        if (!signupSubmitBtn) return;
+        const isNameValid = checkName() === null;
+        const isEmailValid = checkEmail() === null;
+        const isCountryValid = checkCountry() === null;
+        const isPhoneValid = checkPhone() === null;
+        const isPasswordValid = checkPassword() === null;
+        const isConfirmPasswordValid = checkConfirmPassword() === null;
+        const isTermsValid = checkTerms() === null;
 
-        const firstNameVal = firstNameInput ? firstNameInput.value.trim() : '';
-        const lastNameVal = lastNameInput ? lastNameInput.value.trim() : '';
-        const emailVal = emailInput ? emailInput.value.trim() : '';
-        const phoneVal = phoneInput ? phoneInput.value.trim() : '';
-        const passwordVal = passwordInput ? passwordInput.value : '';
-        const confirmPasswordVal = confirmPasswordInput ? confirmPasswordInput.value : '';
-        const isTermsChecked = termsCheckbox ? termsCheckbox.checked : false;
+        const canSubmit = isNameValid && 
+                          isEmailValid && 
+                          isCountryValid && 
+                          isPhoneValid && 
+                          isPasswordValid && 
+                          isConfirmPasswordValid && 
+                          isTermsValid;
 
-        // Password requirements status
-        const isPassLength = passwordVal.length >= 8;
-        const isPassUpper = /[A-Z]/.test(passwordVal);
-        const isPassNumber = /[0-9]/.test(passwordVal);
-        const isPassSpecial = /[^A-Za-z0-9]/.test(passwordVal);
-        const isPasswordRulesMet = isPassLength && isPassUpper && isPassNumber && isPassSpecial;
-
-        // Passwords match
-        const isPasswordMatch = passwordVal === confirmPasswordVal && passwordVal !== '';
-
-        // Form eligibility criteria
-        const canSubmit = firstNameVal !== '' && 
-                            lastNameVal !== '' && 
-                            emailVal !== '' && 
-                            phoneVal !== '' && 
-                            isPasswordRulesMet && 
-                            isPasswordMatch && 
-                            isTermsChecked;
-
-        signupSubmitBtn.disabled = !canSubmit;
+        if (signupSubmitBtn) {
+            signupSubmitBtn.disabled = !canSubmit;
+        }
     }
 
-    // 4. Form Validation on Submit
+    // Bind event listeners to input elements
+    const setupInputListeners = (input, fieldKey) => {
+        if (!input) return;
+
+        // input event - update validation state and clear inline errors immediately when they type correct values
+        input.addEventListener('input', () => {
+            validateField(fieldKey);
+            validateFormState();
+        });
+
+        // keyup event - catch any keyboard input immediately
+        input.addEventListener('keyup', () => {
+            validateField(fieldKey);
+            validateFormState();
+        });
+
+        // change event - handles checkboxes, select tags, and password managers
+        input.addEventListener('change', () => {
+            touchedFields[fieldKey] = true;
+            validateField(fieldKey);
+            validateFormState();
+        });
+
+        // blur event - mark field as touched and run full validation error displays
+        input.addEventListener('blur', () => {
+            touchedFields[fieldKey] = true;
+            validateField(fieldKey);
+            validateFormState();
+        });
+
+        // focus event - run validation
+        input.addEventListener('focus', () => {
+            validateFormState();
+        });
+    };
+
+    setupInputListeners(nameInput, 'name');
+    setupInputListeners(emailInput, 'email');
+    setupInputListeners(countrySelect, 'country');
+    setupInputListeners(phoneInput, 'phone');
+    setupInputListeners(passwordInput, 'password');
+    setupInputListeners(confirmPasswordInput, 'confirmPassword');
+    setupInputListeners(termsCheckbox, 'terms');
+
+    // Run form state check periodically and on load to support browser auto-fills
+    validateFormState();
+    setTimeout(validateFormState, 200);
+    setTimeout(validateFormState, 500);
+    setTimeout(validateFormState, 1000);
+    setInterval(validateFormState, 1000);
+
+    // 5. Form Validation on Submit
     if (signupForm) {
         signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            let isValid = true;
-            clearErrors();
 
-            const firstNameVal = firstNameInput.value.trim();
-            const lastNameVal = lastNameInput.value.trim();
-            const emailVal = emailInput.value.trim();
-            const phoneVal = phoneInput.value.trim();
-            const passwordVal = passwordInput.value;
-            const confirmPasswordVal = confirmPasswordInput.value;
-            const isTermsChecked = termsCheckbox.checked;
+            // Mark all fields as touched to display any validation errors
+            Object.keys(touchedFields).forEach(key => {
+                touchedFields[key] = true;
+            });
 
-            // Validate First Name
-            if (!firstNameVal) {
-                showError(firstNameInput, 'First Name is required.');
-                isValid = false;
-            }
+            // Trigger validations for all fields
+            validateField('name');
+            validateField('email');
+            validateField('country');
+            validateField('phone');
+            validateField('password');
+            validateField('confirmPassword');
+            validateField('terms');
 
-            // Validate Last Name
-            if (!lastNameVal) {
-                showError(lastNameInput, 'Last Name is required.');
-                isValid = false;
-            }
+            // Validate form state
+            validateFormState();
 
-            // Validate Email
-            if (!emailVal) {
-                showError(emailInput, 'Email Address is required.');
-                isValid = false;
-            } else if (!validateEmailPattern(emailVal)) {
-                showError(emailInput, 'Please enter a valid email address.');
-                isValid = false;
-            }
+            const isFormValid = checkName() === null &&
+                               checkEmail() === null &&
+                               checkCountry() === null &&
+                               checkPhone() === null &&
+                               checkPassword() === null &&
+                               checkConfirmPassword() === null &&
+                               checkTerms() === null;
 
-            // Validate Phone (Pakistani phone number format)
-            if (!phoneVal) {
-                showError(phoneInput, 'Phone number is required.');
-                isValid = false;
-            } else if (!validatePakistaniPhone(phoneVal)) {
-                showError(phoneInput, 'Please enter a valid phone number (e.g. 0300-1234567).');
-                isValid = false;
-            }
-
-            // Validate Password
-            if (!passwordVal) {
-                showError(passwordInput, 'Password is required.');
-                isValid = false;
-            } else {
-                const isPassLength = passwordVal.length >= 8;
-                const isPassUpper = /[A-Z]/.test(passwordVal);
-                const isPassNumber = /[0-9]/.test(passwordVal);
-                const isPassSpecial = /[^A-Za-z0-9]/.test(passwordVal);
-                if (!isPassLength || !isPassUpper || !isPassNumber || !isPassSpecial) {
-                    showError(passwordInput, 'Password must meet all 4 safety requirements.');
-                    isValid = false;
-                }
-            }
-
-            // Validate Confirm Password Match
-            if (!confirmPasswordVal) {
-                showError(confirmPasswordInput, 'Please confirm your password.');
-                isValid = false;
-            } else if (passwordVal !== confirmPasswordVal) {
-                showError(confirmPasswordInput, 'Passwords do not match.');
-                isValid = false;
-            }
-
-            // Validate Terms Checkbox
-            if (!isTermsChecked) {
-                const errorContainer = document.getElementById('termsErrorMsg');
-                if (errorContainer) {
-                    errorContainer.textContent = 'You must agree to the Terms & Conditions and Privacy Policy.';
-                    errorContainer.style.display = 'flex';
-                }
-                isValid = false;
-            }
-
-            if (isValid) {
-                // Submit Simulation
-                const originalBtnContent = signupSubmitBtn.innerHTML;
+            if (isFormValid) {
+                // Prevent duplicate submissions by disabling button & showing loader
                 signupSubmitBtn.disabled = true;
                 signupSubmitBtn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Creating Account...';
                 if (typeof lucide !== 'undefined') {
@@ -250,101 +294,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     spinner.style.animation = 'spin 1s linear infinite';
                 }
 
-                setTimeout(() => {
-                    // Show success toast
-                    showSuccessToast(firstNameVal);
-
-                    // Reset form
-                    signupForm.reset();
-                    
-                    // Reset requirement checks
-                    updateReqState(reqLength, false);
-                    updateReqState(reqUpper, false);
-                    updateReqState(reqNumber, false);
-                    updateReqState(reqSpecial, false);
-
-                    // Restore button
-                    signupSubmitBtn.innerHTML = originalBtnContent;
-                    signupSubmitBtn.disabled = true;
-                    if (typeof lucide !== 'undefined') {
-                        lucide.createIcons();
-                    }
-                }, 1500);
+                // Submit to the backend
+                signupForm.submit();
             }
         });
     }
 
-    // Helper validation functions
-    function validateEmailPattern(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
-
-    function validatePakistaniPhone(phone) {
-        // Formats: 03XX-XXXXXXX, 03XXXXXXXXX, +923XXXXXXXXX, 00923XXXXXXXXX
-        const regex = /^((\+92)?(0092)?(92)?(0)?)(3\d{2})(-?|\s?)(\d{7})$/;
-        return regex.test(phone.trim());
-    }
-
-    function showError(inputElement, message) {
-        if (!inputElement) return;
-        inputElement.classList.add('input-error');
-        const parent = inputElement.closest('.input-group');
-        if (parent) {
-            const errorMsgElement = parent.querySelector('.error-msg');
-            if (errorMsgElement) {
-                errorMsgElement.innerHTML = `<i data-lucide="alert-circle" style="width: 14px; height: 14px; flex-shrink:0;"></i> ${message}`;
-                errorMsgElement.style.display = 'flex';
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
-                }
-            }
-        }
-    }
-
-    function clearErrors() {
-        const errorInputs = document.querySelectorAll('.form-input.input-error');
-        errorInputs.forEach(input => input.classList.remove('input-error'));
-
-        const errorMsgs = document.querySelectorAll('.error-msg');
-        errorMsgs.forEach(msg => {
-            msg.textContent = '';
-            msg.style.display = 'none';
-        });
-    }
-
-    // 5. Success Toast Trigger
-    function showSuccessToast(userName) {
-        const toast = document.getElementById('signupSuccessToast');
-        if (!toast) return;
-
-        const desc = toast.querySelector('.success-toast-desc');
-        if (desc) {
-            desc.textContent = `Welcome aboard, ${userName}! Your account was created successfully.`;
-        }
-
-        toast.classList.add('show');
-
-        // Hide after 4 seconds and redirect to Sign In
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => {
-                window.location.href = 'signin.html';
-            }, 500);
-        }, 4000);
-    }
-
-    // 6. Mock Social Login Alert
-    const socialButtons = document.querySelectorAll('.btn-social-signup');
-    socialButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const provider = btn.querySelector('span') ? btn.querySelector('span').textContent.trim() : btn.textContent.trim();
-            alert(`🔗 Redirecting to ${provider} authentication...`);
-        });
-    });
-
-    // 7. General Header Sticky Scroll Listener
+    // Header Sticky Scroll Listener
     const mainHeader = document.querySelector('.main-header');
     if (mainHeader) {
         window.addEventListener('scroll', () => {
@@ -356,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 8. Mobile Menu Toggle Logic
+    // Mobile Menu Toggle Logic
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
 
@@ -377,15 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 9. Account buttons redirection (to point to signin.html)
-    const headerAccountBtns = document.querySelectorAll('button[aria-label="Account"]');
-    headerAccountBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            window.location.href = 'signin.html';
-        });
-    });
-
-    // 10. Keyframe CSS Spinner Injection
+    // Keyframe CSS Spinner Injection
     if (!document.getElementById('spinStyle')) {
         const style = document.createElement('style');
         style.id = 'spinStyle';
