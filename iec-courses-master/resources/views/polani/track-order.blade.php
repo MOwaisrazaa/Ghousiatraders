@@ -1,642 +1,1318 @@
-@extends('polani.layout')
+@extends('ghousiatraders.layouts.app')
 
-@section('title', 'Track Order — Polani Fragrance')
-@section('meta_description', 'Track your Polani order using your order number and checkout contact details.')
-@section('body_class', 'page-order-status')
+@section('title', 'Track Your Order | Ghousia Traders')
 
 @push('head')
 <style>
-  .track-page{
-    background:#0a0a0a;
-    color:#f8e7d0;
-    padding-bottom:56px;
-  }
-  .track-wrap{
-    padding:40px 0 20px;
-  }
-  .track-card{
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(212,166,88,0.16);
-    border-radius:20px;
-    box-shadow:0 24px 60px rgba(0,0,0,0.35);
-    padding:32px;
-  }
-  .track-card__title{
-    font-family:'Playfair Display', serif;
-    font-size:26px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    text-align:center;
-    margin:0 0 10px;
-    color:#f8e7d0;
-  }
-  .track-card__subtitle{
-    text-align:center;
-    color:rgba(248,231,208,0.65);
-    margin:0 0 24px;
-    line-height:1.7;
-    font-size:0.95rem;
-  }
-  .track-form{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
-    gap:16px;
-    align-items:start;
-  }
-  .track-form__fields{
-    display:grid;
-    gap:12px;
-  }
-  .track-form__input{
-    width:100%;
-    border-radius:10px;
-    border:1px solid rgba(212,166,88,0.22);
-    background:rgba(255,255,255,0.05);
-    color:#f8e7d0;
-    padding:13px 16px;
-    outline:none;
-    font-size:14px;
-    box-sizing:border-box;
-    transition: all 0.2s;
-  }
-  .track-form__input::placeholder {
-    color: rgba(248, 231, 208, 0.3);
-  }
-  .track-form__input:focus{
-    border-color:#d4a658;
-    box-shadow:0 0 0 3px rgba(212,166,88,0.12);
-    background:rgba(255,255,255,0.07);
-  }
-  .track-form__actions{
-    display:flex;
-    align-items:stretch;
-  }
-  .track-form__actions .btn{
-    min-width:160px;
-    min-height:48px;
-    border-radius:10px;
-  }
-  .track-note{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-    margin-top:14px;
-    color:rgba(248,231,208,0.55);
-    font-size:13px;
-  }
-  .track-note__icon{
-    width:18px;
-    height:18px;
-    border-radius:50%;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    border:1px solid rgba(212,166,88,0.3);
-    color:#d4a658;
-    font-size:12px;
-    line-height:1;
-  }
-  .track-status{
-    padding:32px 0 10px;
-  }
-  .track-section-title{
-    font-family:'Playfair Display', serif;
-    font-size:26px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    text-align:center;
-    margin:0 0 24px;
-    color:#f8e7d0;
-  }
-  .track-steps{
-    display:grid;
-    grid-template-columns:repeat(4, minmax(0,1fr));
-    gap:20px;
-    align-items:start;
-    background:rgba(255,255,255,0.02);
-    border:1px solid rgba(212,166,88,0.12);
-    border-radius:20px;
-    padding:30px 24px;
-  }
-  .track-step{
-    text-align:center;
-    position:relative;
-  }
-  .track-step__icon{
-    width:64px;
-    height:64px;
-    border-radius:50%;
-    margin:0 auto 14px;
-    border:2px solid rgba(212,166,88,0.3);
-    background:#111;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:24px;
-    color:rgba(248, 231, 208, 0.45);
-    box-shadow:inset 0 0 0 5px rgba(255,255,255,0.02);
-    transition: all 0.3s;
-  }
-  .track-step.is-active .track-step__icon{
-    background:linear-gradient(135deg, #d4a658, #9d6f20);
-    color:#111;
-    border-color:#d4a658;
-    box-shadow:0 0 15px rgba(212,166,88,0.35);
-  }
-  .track-step__label{
-    font-family:'Playfair Display', serif;
-    font-size:15px;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    color:#f8e7d0;
-    font-weight:600;
-  }
-  .track-step__meta{
-    margin-top:8px;
-    font-size:13px;
-    line-height:1.6;
-    color:rgba(248,231,208,0.6);
-  }
-  .track-grid{
-    display:grid;
-    grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);
-    gap:20px;
-    align-items:start;
-    margin-top:24px;
-  }
-  .track-panel{
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(212,166,88,0.16);
-    border-radius:18px;
-    box-shadow:0 12px 30px rgba(0,0,0,.15);
-    padding:24px;
-  }
-  .track-panel__title{
-    font-family:'Playfair Display', serif;
-    font-size:20px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:#d4a658;
-    margin:0 0 16px;
-    border-bottom:1px solid rgba(212,166,88,0.15);
-    padding-bottom:10px;
-  }
-  .track-summary{
-    display:grid;
-    gap:10px;
-  }
-  .track-summary__row{
-    display:flex;
-    justify-content:space-between;
-    gap:12px;
-    border-bottom:1px solid rgba(255,255,255,0.05);
-    padding-bottom:10px;
-    color:rgba(248,231,208,0.7);
-    font-size:0.92rem;
-  }
-  .track-summary__row strong{
-    color:#f8e7d0;
-    text-align:right;
-  }
-  .track-address{
-    display:grid;
-    gap:8px;
-    color:rgba(248,231,208,0.7);
-    line-height:1.65;
-    font-size:0.92rem;
-  }
-  .track-address__name{
-    font-family:'Playfair Display', serif;
-    font-size:18px;
-    color:#f8e7d0;
-    font-weight:600;
-  }
-  .track-list{
-    display:grid;
-    gap:14px;
-  }
-  .track-list__item{
-    display:grid;
-    grid-template-columns:88px minmax(0,1fr) auto;
-    gap:16px;
-    align-items:center;
-    padding:16px;
-    border-radius:14px;
-    border:1px solid rgba(212,166,88,0.15);
-    background:rgba(255,255,255,0.02);
-    text-decoration:none;
-    color:inherit;
-    transition: all 0.2s;
-  }
-  .track-list__item:hover{
-    border-color: #d4a658;
-    background: rgba(212,166,88,0.05);
-  }
-  .track-list__item img{
-    width:80px;
-    height:80px;
-    object-fit:cover;
-    border-radius:10px;
-    border:1px solid rgba(212,166,88,0.15);
-  }
-  .track-list__name{
-    font-family:'Playfair Display', serif;
-    font-size:18px;
-    color:#f8e7d0;
-    margin-bottom:3px;
-  }
-  .track-list__meta{
-    color:rgba(248,231,208,0.6);
-    font-size:13px;
-    line-height:1.6;
-  }
-  .track-help{
-    margin-top:24px;
-    padding:28px;
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(212,166,88,0.16);
-    border-radius:20px;
-    box-shadow:0 12px 30px rgba(0,0,0,.15);
-  }
-  .track-help__title{
-    font-family:'Playfair Display', serif;
-    font-size:24px;
-    text-align:center;
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    margin:0 0 12px;
-    color:#f8e7d0;
-  }
-  .track-help__text{
-    text-align:center;
-    color:rgba(248,231,208,0.65);
-    margin:0 0 24px;
-    line-height:1.7;
-    font-size:0.95rem;
-  }
-  .track-help__grid{
-    display:grid;
-    grid-template-columns:repeat(3, minmax(0,1fr));
-    gap:16px;
-  }
-  .track-help__item{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:16px;
-    border-radius:12px;
-    border:1px solid rgba(212,166,88,0.15);
-    background:rgba(255,255,255,0.02);
-  }
-  .track-help__icon{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    flex:0 0 auto;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:rgba(212,166,88,0.12);
-    color:#d4a658;
-  }
-  .track-help__label{
-    font-family:'Playfair Display', serif;
-    font-size:16px;
-    color:#f8e7d0;
-    margin-bottom:2px;
-    font-weight:600;
-  }
-  .track-help__meta{
-    color:rgba(248,231,208,0.6);
-    font-size:13px;
-    line-height:1.5;
-  }
-  .track-note--error{
-    justify-content:flex-start;
-    margin-top:14px;
-    color:#f07080;
-    font-weight:600;
-  }
-  .track-mini{
-    display:grid;
-    gap:12px;
-    padding: 20px;
-    border: 1px solid rgba(212,166,88,0.15);
-    background: rgba(255,255,255,0.02);
-    border-radius: 14px;
-  }
-  .track-mini__title{
-    font-family:'Playfair Display', serif;
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    font-size:18px;
-    color:#d4a658;
-    margin:0;
-    font-weight:600;
-  }
-  .track-mini__text{
-    color:rgba(248,231,208,0.7);
-    line-height:1.7;
-    margin:0;
-    font-size:0.92rem;
-  }
-  @media (max-width: 1100px){
-    .track-hero__inner,
-    .track-grid{
-      grid-template-columns:1fr;
+    /* Premium Track Order Styles */
+    .track-order-page {
+        background-color: #fffcf8;
+        padding: 40px 0 80px 0;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: #351b0d;
     }
-    .track-hero__art{
-      justify-self:center;
-      max-width:320px;
+
+    .track-container {
+        max-width: var(--container-width, 1200px);
+        margin: 0 auto;
+        padding: 0 24px;
     }
-    .track-steps{
-      grid-template-columns:repeat(2, minmax(0,1fr));
+
+    /* Breadcrumb styling */
+    .track-breadcrumb {
+        font-size: 0.88rem;
+        color: #8a7355;
+        margin-bottom: 24px;
+        font-weight: 500;
     }
-    .track-help__grid{
-      grid-template-columns:1fr;
+
+    .track-breadcrumb a {
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.2s ease;
     }
-    .track-form{
-      grid-template-columns:1fr;
+
+    .track-breadcrumb a:hover {
+        color: #d7a64a;
     }
-  }
-  @media (max-width: 640px){
-    .track-hero{
-      min-height:auto;
+
+    .track-breadcrumb span {
+        margin: 0 8px;
+        color: #d1c1ad;
     }
-    .track-hero__inner{
-      padding:30px 0 24px;
+
+    /* Hero Banner Card */
+    .track-hero-card {
+        background: #fff8ee;
+        border: 1px solid rgba(215, 166, 74, 0.25);
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        padding: 40px;
+        margin-bottom: 40px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+        gap: 40px;
+        align-items: center;
+        overflow: hidden;
     }
-    .track-hero__title{
-      font-size:34px;
+
+    .track-hero-left {
+        display: flex;
+        flex-direction: column;
     }
-    .track-steps{
-      grid-template-columns:1fr;
+
+    .track-hero-title {
+        font-size: 2.6rem;
+        font-weight: 800;
+        color: #351b0d;
+        margin: 0 0 12px;
+        line-height: 1.25;
     }
-    .track-list__item{
-      grid-template-columns:72px 1fr;
+
+    .track-hero-desc {
+        color: #654c38;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0 0 24px;
     }
-    .track-list__price{
-      grid-column:2 / -1;
+
+    /* Tracking Form */
+    .track-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 20px;
     }
-    .track-help,
-    .track-panel,
-    .track-card{
-      padding:18px;
+
+    .track-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
     }
-  }
+
+    .track-input-group label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #351b0d;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .track-input {
+        width: 100%;
+        background: #ffffff;
+        border: 1.5px solid rgba(215, 166, 74, 0.35);
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 0.9rem;
+        color: #351b0d;
+        outline: none;
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+    }
+
+    .track-input:focus {
+        border-color: #d7a64a;
+        box-shadow: 0 0 0 3px rgba(215, 166, 74, 0.15);
+    }
+
+    .track-submit-btn {
+        background: #44240f;
+        color: #fffaf3;
+        border: none;
+        padding: 12px 28px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        border-radius: 10px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        width: fit-content;
+        min-height: 44px;
+    }
+
+    .track-submit-btn:hover {
+        background: #351b0d;
+        transform: translateY(-1px);
+    }
+
+    .track-hero-right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    .track-hero-img {
+        width: 100%;
+        max-width: 360px;
+        height: auto;
+        object-fit: contain;
+        border-radius: 12px;
+    }
+
+    /* Results layout */
+    .tracking-results-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+        gap: 30px;
+        align-items: start;
+    }
+
+    .tracking-left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .tracking-right-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    /* Card styling */
+    .tracking-card {
+        background: #ffffff;
+        border: 1px solid rgba(215, 166, 74, 0.22);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.01);
+    }
+
+    .tracking-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(215, 166, 74, 0.15);
+        padding-bottom: 12px;
+    }
+
+    .tracking-card-header i {
+        color: #d7a64a;
+        width: 20px;
+        height: 20px;
+    }
+
+    .tracking-card-title {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #351b0d;
+    }
+
+    /* Order status detailed summary */
+    .order-status-details {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+        background: rgba(215, 166, 74, 0.05);
+        padding: 16px 20px;
+        border-radius: 12px;
+    }
+
+    .status-detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .status-detail-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #8a7355;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .status-detail-value {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #351b0d;
+    }
+
+    /* Timeline progress bar */
+    .timeline-progress-wrapper {
+        position: relative;
+        padding: 20px 0;
+        margin: 10px 0;
+    }
+
+    .timeline-line {
+        position: absolute;
+        top: 36px;
+        left: 45px;
+        right: 45px;
+        height: 3px;
+        background: #e2d8cd;
+        z-index: 1;
+    }
+
+    .timeline-line-active {
+        position: absolute;
+        top: 36px;
+        left: 45px;
+        height: 3px;
+        background: #8a7355;
+        z-index: 2;
+        transition: width 0.3s ease;
+    }
+
+    .timeline-steps {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        z-index: 3;
+    }
+
+    .timeline-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100px;
+        text-align: center;
+    }
+
+    .timeline-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid #e2d8cd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        color: #c4b5a2;
+    }
+
+    .timeline-circle i {
+        width: 14px;
+        height: 14px;
+    }
+
+    .timeline-step.completed .timeline-circle {
+        background: #44240f;
+        border-color: #44240f;
+        color: #fff;
+    }
+
+    .timeline-step.current .timeline-circle {
+        border-color: #d7a64a;
+        color: #d7a64a;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(215, 166, 74, 0.35);
+    }
+
+    .timeline-step-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #8a7355;
+        margin-bottom: 4px;
+    }
+
+    .timeline-step-date {
+        font-size: 0.68rem;
+        color: #ab957a;
+    }
+
+    /* Shipment Details Card */
+    .shipment-details-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .shipment-items-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+        flex: 1;
+    }
+
+    .shipment-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .shipment-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #8a7355;
+        text-transform: uppercase;
+    }
+
+    .shipment-value {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #351b0d;
+    }
+
+    .shipment-status-badge {
+        background: #ecfdf5;
+        color: #059669;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        width: fit-content;
+    }
+
+    .tcs-logo {
+        display: inline-flex;
+        align-items: center;
+        font-weight: 900;
+        font-size: 1.1rem;
+        letter-spacing: -0.02em;
+    }
+    .tcs-logo span:first-child {
+        color: #e11d48;
+    }
+    .tcs-logo span:last-child {
+        color: #2563eb;
+        font-style: italic;
+    }
+
+    .contact-courier-btn {
+        border: 1px solid rgba(215, 166, 74, 0.45);
+        color: #44240f;
+        padding: 8px 16px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .contact-courier-btn:hover {
+        background: rgba(215, 166, 74, 0.1);
+    }
+
+    /* Ordered Items Table */
+    .ordered-items-table-wrapper {
+        overflow-x: auto;
+        margin-top: 10px;
+    }
+
+    .ordered-items-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    .ordered-items-table th {
+        padding: 12px 16px;
+        border-bottom: 2px solid rgba(215, 166, 74, 0.15);
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #8a7355;
+    }
+
+    .ordered-items-table td {
+        padding: 16px;
+        border-bottom: 1px solid rgba(215, 166, 74, 0.1);
+        vertical-align: middle;
+    }
+
+    .product-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .product-thumb {
+        width: 56px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid rgba(215, 166, 74, 0.15);
+        background: #fbf8f5;
+    }
+
+    .product-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .product-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #351b0d;
+    }
+
+    .product-desc {
+        font-size: 0.75rem;
+        color: #654c38;
+    }
+
+    .price-text, .total-text {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #351b0d;
+    }
+
+    /* Delivery Updates Timeline */
+    .delivery-updates-list {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        padding-left: 24px;
+        margin-top: 10px;
+    }
+
+    .delivery-updates-list::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        bottom: 8px;
+        left: 7px;
+        width: 2px;
+        background: #e2d8cd;
+    }
+
+    .update-item {
+        position: relative;
+        padding-bottom: 24px;
+        display: flex;
+        gap: 24px;
+    }
+
+    .update-item:last-child {
+        padding-bottom: 0;
+    }
+
+    .update-bullet {
+        position: absolute;
+        left: -23px;
+        top: 5px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #e2d8cd;
+        border: 3px solid #fff;
+        z-index: 2;
+    }
+
+    .update-item.active .update-bullet {
+        background: #10b981;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+    }
+
+    .update-item.past .update-bullet {
+        background: #8a7355;
+    }
+
+    .update-time-col {
+        width: 140px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #8a7355;
+        white-space: nowrap;
+    }
+
+    .update-item.active .update-time-col {
+        color: #10b981;
+    }
+
+    .update-content-col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .update-heading {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #351b0d;
+    }
+
+    .update-item.active .update-heading {
+        color: #10b981;
+    }
+
+    .update-description {
+        font-size: 0.78rem;
+        color: #654c38;
+    }
+
+    /* Sidebar Summary */
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.88rem;
+        color: #654c38;
+        margin-bottom: 12px;
+    }
+
+    .summary-row.total-row {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #351b0d;
+        border-top: 1.5px solid rgba(215, 166, 74, 0.15);
+        padding-top: 16px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+
+    .savings-badge {
+        background: #ecfdf5;
+        color: #047857;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Sidebar Blocks */
+    .sidebar-address-block, .sidebar-payment-block {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 0.88rem;
+        color: #654c38;
+    }
+
+    .sidebar-address-name {
+        font-weight: 700;
+        color: #351b0d;
+    }
+
+    .sidebar-payment-method {
+        font-weight: 700;
+        color: #351b0d;
+    }
+
+    /* Help Sidebar buttons */
+    .help-support-desc {
+        font-size: 0.85rem;
+        color: #654c38;
+        line-height: 1.5;
+        margin-bottom: 16px;
+    }
+
+    .help-actions-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-contact-support {
+        background: #44240f;
+        color: #fffaf3;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+        min-height: 44px;
+        box-sizing: border-box;
+    }
+
+    .btn-contact-support:hover {
+        background: #351b0d;
+    }
+
+    .btn-continue-shopping {
+        border: 1px solid rgba(215, 166, 74, 0.45);
+        color: #44240f;
+        background: transparent;
+        width: 100%;
+        padding: 12px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+        min-height: 44px;
+        box-sizing: border-box;
+    }
+
+    .btn-continue-shopping:hover {
+        background: rgba(215, 166, 74, 0.1);
+    }
+
+    /* Recent orders */
+    .recent-orders-card {
+        margin-bottom: 24px;
+    }
+
+    .recent-orders-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .recent-order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border: 1px solid rgba(215, 166, 74, 0.15);
+        border-radius: 8px;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s;
+    }
+
+    .recent-order-item:hover {
+        background: rgba(215, 166, 74, 0.05);
+        border-color: #d7a64a;
+    }
+
+    .recent-order-id {
+        font-weight: 700;
+        color: #351b0d;
+    }
+
+    .recent-order-meta {
+        font-size: 0.78rem;
+        color: #8a7355;
+    }
+
+    .recent-order-status {
+        background: #fdf5e6;
+        color: #b45309;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    .recent-order-status.status-completed {
+        background: #ecfdf5;
+        color: #047857;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+        .track-hero-card {
+            grid-template-columns: 1fr;
+            padding: 30px;
+            gap: 30px;
+        }
+
+        .track-hero-right {
+            min-height: auto;
+        }
+
+        .tracking-results-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .track-form-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .order-status-details {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .timeline-line {
+            display: none;
+        }
+
+        .timeline-steps {
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-start;
+            padding-left: 20px;
+        }
+
+        .timeline-step {
+            flex-direction: row;
+            width: 100%;
+            text-align: left;
+            gap: 12px;
+        }
+
+        .timeline-circle {
+            margin-bottom: 0;
+        }
+
+        .shipment-items-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .shipment-details-row {
+            align-items: flex-start;
+        }
+
+        .contact-courier-btn {
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+    }
 </style>
 @endpush
 
 @section('content')
   @php
-    $timeline = [
-      ['label' => 'Placed', 'desc' => 'Order received and waiting for confirmation.', 'icon' => '1'],
-      ['label' => 'Confirmed', 'desc' => 'Payment confirmed and order is being prepared.', 'icon' => '2'],
-      ['label' => 'Shipped', 'desc' => 'Your order is packed and scheduled for dispatch.', 'icon' => '3'],
-      ['label' => 'Delivered', 'desc' => 'Order successfully delivered.', 'icon' => '4'],
-    ];
     $isAuthenticated = $isAuthenticated ?? auth()->check();
     $orders = $orders ?? collect();
+    $orderModel = null;
+    $billing = [];
+    if ($order) {
+        $orderModel = \App\Models\Order::find($order['orderId']);
+        $billing = json_decode($orderModel->billing_address ?? '{}', true) ?: [];
+    }
   @endphp
 
-  <section class="track-page">
-    <x-polani.page-banner
-      page-key="track-order"
-      eyebrow="ORDER STATUS"
-      title="Order Tracking"
-      subtitle="Track your order status and stay updated every step of the way."
-      fallback-image="polani/assets/home_banner_1.jpeg"
-      image-position="center center"
-    />
-
-    <div class="container track-wrap">
-      <div class="track-card">
-        <div class="track-card__title">Track Your Order</div>
-        <p class="track-card__subtitle">
-          {{ $isAuthenticated ? 'Your orders are listed below. Choose any order to see its latest tracking status.' : 'Enter your Order ID / Tracking Number to check the status of your order.' }}
-        </p>
-
-        @if($isAuthenticated)
-          @if($orders->isNotEmpty())
-            <div class="track-list">
-              @foreach($orders as $trackedOrder)
-                <a class="track-list__item" href="{{ route('polani.track-order', ['order_number' => $trackedOrder['orderNumber']]) }}">
-                  <img src="{{ $trackedOrder['items'][0]['image'] ?? asset('polani/assets/product-noir-elixir.jpg') }}" alt="{{ $trackedOrder['orderNumber'] }}">
-                  <div class="track-list__body">
-                    <div class="track-list__name">{{ $trackedOrder['orderNumber'] }}</div>
-                    <div class="track-list__meta">
-                      Status: {{ $trackedOrder['statusLabel'] }}<br>
-                      {{ $trackedOrder['statusStage'] }}<br>
-                      Delivery: {{ $trackedOrder['deliveryWindow'] }}
-                    </div>
-                  </div>
-                  <div class="track-list__price">
-                    <div class="status-pill @if($trackedOrder['status'] === 'completed') status-pill--success @elseif(in_array($trackedOrder['status'], ['failed', 'rejected'])) status-pill--danger @else status-pill--pending @endif">
-                      {{ $trackedOrder['statusLabel'] }}
-                    </div>
-                  </div>
-                </a>
-              @endforeach
-            </div>
-          @else
-            <div class="track-mini" style="text-align:center; padding: 20px 0;">
-              <p class="track-mini__title">No Orders Yet</p>
-              <p class="track-mini__text">You haven’t placed any orders yet. Start shopping to see tracking here.</p>
-              <div style="margin-top: 14px;">
-                <a class="btn btn--primary" href="{{ route('polani.collection') }}">Shop Now</a>
-              </div>
-            </div>
-          @endif
-        @else
-          <form class="track-form" method="GET" action="{{ route('polani.track-order') }}">
-            <div class="track-form__fields">
-              <input class="track-form__input" type="text" name="order_number" placeholder="Enter your Order ID / Tracking Number" value="{{ $query['order_number'] ?? '' }}" required />
-              <input class="track-form__input" type="email" name="email" placeholder="Email used at checkout" value="{{ $query['email'] ?? '' }}" />
-              <input class="track-form__input" type="text" name="phone" placeholder="Phone number used at checkout" value="{{ $query['phone'] ?? '' }}" />
-            </div>
-            <div class="track-form__actions">
-              <button class="btn btn--primary" type="submit">Track Order</button>
-            </div>
-          </form>
-
-          <div class="track-note">
-            <span class="track-note__icon">i</span>
-            <span>You can find your Order ID in the order confirmation email we sent you.</span>
-          </div>
-
-          @if($error)
-            <div class="notice track-note--error">{{ $error }}</div>
-          @endif
-        @endif
+  <section class="track-order-page">
+    <div class="track-container">
+      
+      <!-- Breadcrumb -->
+      <div class="track-breadcrumb">
+          <a href="{{ route('home') }}">Home</a>
+          <span>&gt;</span>
+          Track Order
       </div>
 
-      <div class="track-status">
-        <div class="track-section-title">Order Status</div>
-        <div class="track-steps">
-          @foreach($timeline as $index => $step)
-            <div class="track-step @if($order && $order['statusStep'] >= $index + 1) is-active @elseif(!$order && $index === 0) is-active @endif">
-              <div class="track-step__icon">{{ $step['icon'] }}</div>
-              <div class="track-step__label">{{ $step['label'] }}</div>
-              <div class="track-step__meta">{{ $step['desc'] }}</div>
-            </div>
-          @endforeach
-        </div>
-
-        @if($order)
-          @if($order['status'] === 'pending' && in_array(strtolower($order['paymentMethod']), ['jazzcash', 'easypaisa', 'bank transfer']))
-            @php
-              $pmKey = str_replace(' ', '', strtolower($order['paymentMethod']));
-              // Normalize Bank Transfer to matches key in DB
-              if ($pmKey === 'banktransfer') {
-                  $pmKey = 'banktransfer';
-              }
-              $paymentMethodObj = \App\Models\PaymentMethod::where('key', $pmKey)->first();
-              $instructions = $paymentMethodObj ? $paymentMethodObj->instructions : '';
-            @endphp
-            @if($instructions)
-              <div class="track-card" style="margin-top:24px; border-left: 4px solid #d4a658; background: rgba(212,166,88,0.03); border-color: rgba(212,166,88,0.25);">
-                <div class="track-card__title" style="margin-bottom:12px; color: #d4a658; font-family: var(--serif); text-transform: uppercase; letter-spacing: 0.05em; font-size: 1.1rem; text-align: left;">
-                  <i class="fas fa-info-circle"></i> Payment Instructions
-                </div>
-                <p style="color:#f8e7d0; font-size: 0.95rem; line-height: 1.6; margin: 0 0 12px; white-space: pre-wrap; text-align: left;">{{ $instructions }}</p>
-                <div style="background: rgba(212,166,88,0.08); padding: 12px 16px; border-radius: 8px; font-size: 0.9rem; color: #d4a658; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; text-align: left; width: 100%;">
-                  <i class="fab fa-whatsapp"></i> Please transfer the payment and send the screenshot on WhatsApp at +92 324 9206345 to confirm your order.
-                </div>
-              </div>
-            @endif
-          @endif
-
-          <div class="track-card" style="margin-top:24px;">
-            <div class="track-card__title" style="margin-bottom:18px;">Order Details</div>
-            <div class="track-grid" style="margin-top:0;">
-              <div class="track-panel">
-                <div class="track-panel__title">Order Details</div>
-                <div class="track-summary">
-                  <div class="track-summary__row"><span>Order ID</span><strong>{{ $order['orderNumber'] }}</strong></div>
-                  <div class="track-summary__row"><span>Order Date</span><strong>{{ $order['orderDate'] }}</strong></div>
-                  <div class="track-summary__row"><span>Payment Method</span><strong>{{ $order['paymentMethod'] }}</strong></div>
-                  <div class="track-summary__row"><span>Status</span><strong>{{ $order['statusLabel'] }}</strong></div>
-                  <div class="track-summary__row"><span>Estimated Delivery</span><strong>{{ $order['deliveryWindow'] }}</strong></div>
-                  <div class="track-summary__row"><span>Total Amount</span><strong>Rs {{ number_format((float) $order['total']) }}</strong></div>
-                </div>
-              </div>
-
-              <div class="track-panel">
-                <div class="track-panel__title">Shipping Address</div>
-                <div class="track-address">
-                  <div class="track-address__name">{{ $order['email'] ?? 'Email not available' }}</div>
-                  <div>{{ $order['phone'] ?? 'Phone not available' }}</div>
-                  <div>{{ $order['address'] ?: 'Address not available' }}</div>
-                </div>
-              </div>
-            </div>
+      <!-- Hero Card Banner -->
+      <div class="track-hero-card">
+          <div class="track-hero-left">
+              <h1 class="track-hero-title">Track Your Order</h1>
+              <p class="track-hero-desc">Enter your order details and see the latest delivery progress in real time.</p>
+              
+              <form class="track-form" method="GET" action="{{ route('polani.track-order') }}" id="trackOrderForm">
+                  <div class="track-form-grid">
+                      <div class="track-input-group">
+                          <label for="order_number">Order ID</label>
+                          <input class="track-input" type="text" name="order_number" id="order_number" placeholder="e.g. GT-24851" value="{{ $query['order_number'] ?? '' }}" required />
+                      </div>
+                      <div class="track-input-group">
+                          <label for="contact_input">Email / Phone Number</label>
+                          <input class="track-input" type="text" id="contact_input" placeholder="e.g. ali@example.com or 0321-1234567" value="{{ $query['email'] ?: ($query['phone'] ?: '') }}" required />
+                      </div>
+                      <!-- Hidden inputs for splitting -->
+                      <input type="hidden" name="email" id="hidden_email" value="{{ $query['email'] ?? '' }}">
+                      <input type="hidden" name="phone" id="hidden_phone" value="{{ $query['phone'] ?? '' }}">
+                  </div>
+                  <div class="track-action-row">
+                      <button class="track-submit-btn" type="submit">
+                          <span>Track Order</span>
+                          <i data-lucide="arrow-right"></i>
+                      </button>
+                  </div>
+              </form>
           </div>
+          
+          <div class="track-hero-right">
+              <img src="{{ asset('ghousiatraders/track-order-hero.png') }}" alt="Track Delivery" class="track-hero-img">
+          </div>
+      </div>
 
-          @if(!empty($order['items']))
-            <div class="track-card" style="margin-top:24px;">
-              <div class="track-card__title" style="margin-bottom:24px; text-align:left; border-bottom:1px solid rgba(212,166,88,0.15); padding-bottom:12px;">Items in this Order</div>
-              <div class="track-list" style="display:flex; flex-direction:column; gap:24px;">
-                @foreach($order['items'] as $item)
-                  <div class="track-item-wrapper" style="border: 1px solid rgba(212,166,88,0.15); border-radius: 16px; background: rgba(255,255,255,0.02); padding: 20px; display: flex; flex-direction: column; gap: 20px;">
-                    <div class="track-list__item" style="border:none; background:transparent; padding:0; display:grid; grid-template-columns:88px minmax(0,1fr) auto; gap:16px; align-items:center;">
-                      <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" style="width:80px; height:80px; object-fit:cover; border-radius:12px; border: 1px solid rgba(212,166,88,0.15);">
-                      <div class="track-list__body">
-                        <div class="track-list__name" style="font-family:'Playfair Display', serif; font-size:1.15rem; color:#f8e7d0; margin-bottom:4px;">{{ $item['name'] }}</div>
-                        <div class="track-list__meta" style="color:rgba(248,231,208,0.6); font-size:0.88rem;">Quantity: {{ $item['quantity'] }} &bull; Price: Rs {{ number_format((float) $item['price']) }}</div>
-                      </div>
-                      <div class="track-list__price" style="font-family:'Playfair Display', serif; font-size:1.2rem; color:#d4a658; font-weight:600;">
-                        Rs {{ number_format((float) $item['total']) }}
-                      </div>
+      <!-- Error Message Notice -->
+      @if($error)
+          <div class="tracking-card" style="border-color: #f87171; background-color: #fef2f2; margin-bottom: 30px;">
+              <div style="display: flex; align-items: center; gap: 10px; color: #b91c1c; font-weight: 700;">
+                  <i data-lucide="alert-circle"></i>
+                  <span>{{ $error }}</span>
+              </div>
+          </div>
+      @endif
+
+      <!-- Auth Users Recent Orders list -->
+      @if($isAuthenticated && !$order && $orders->isNotEmpty())
+          <div class="tracking-card recent-orders-card">
+              <div class="tracking-card-header">
+                  <i data-lucide="list"></i>
+                  <h3 class="tracking-card-title">Your Orders</h3>
+              </div>
+              <div class="recent-orders-list">
+                  @foreach($orders as $trackedOrder)
+                      @php
+                          $rawOrder = \App\Models\Order::find($trackedOrder['orderId']);
+                      @endphp
+                      <a class="recent-order-item" href="{{ route('polani.track-order', ['order_number' => 'GT-'.$trackedOrder['orderId'], 'email' => $rawOrder ? json_decode($rawOrder->billing_address, true)['email'] : '']) }}">
+                          <div>
+                              <span class="recent-order-id">#GT-{{ $trackedOrder['orderId'] }}</span>
+                              <span class="recent-order-meta">&bull; {{ $trackedOrder['orderDate'] }} &bull; Subtotal: PKR {{ number_format($trackedOrder['total']) }}</span>
+                          </div>
+                          <span class="recent-order-status @if($trackedOrder['status'] === 'completed') status-completed @endif">
+                              {{ $trackedOrder['statusLabel'] }}
+                          </span>
+                      </a>
+                  @endforeach
+              </div>
+          </div>
+      @endif
+
+      <!-- Two-Column Active Tracking Results -->
+      @if($order)
+        <div class="tracking-results-grid">
+            
+            <!-- Left Column Content -->
+            <div class="tracking-left-column">
+                
+                <!-- Order Status Timeline Card -->
+                <div class="tracking-card">
+                    <div class="tracking-card-header">
+                        <i data-lucide="clipboard-list"></i>
+                        <h3 class="tracking-card-title">Order Status</h3>
                     </div>
                     
-                    {{-- Mini item-specific tracking status bar --}}
-                    <div class="item-tracking" style="padding-top:10px; border-top:1px dashed rgba(212,166,88,0.12);">
-                      <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:#d4a658; margin-bottom:12px; font-weight:700;">Item Delivery Progress</div>
-                      <div class="item-track-bar" style="display:flex; justify-content:space-between; position:relative; padding:0 10px;">
-                        {{-- Background Line --}}
-                        <div style="position:absolute; top:8px; left:15px; right:15px; height:2px; background:rgba(255,255,255,0.1); z-index:1;"></div>
-                        {{-- Active Progress Line --}}
-                        @php
-                          $progressPercent = match((int)$order['statusStep']) {
-                            1 => 0,
-                            2 => 33,
-                            3 => 66,
-                            4 => 100,
-                            default => 0
-                          };
-                        @endphp
-                        <div style="position:absolute; top:8px; left:15px; width:calc({{ $progressPercent }}% - 30px); height:2px; background:#d4a658; z-index:2; transition:width 0.4s ease;"></div>
-                        
-                        {{-- Steps --}}
-                        @foreach($timeline as $idx => $step)
-                          @php
-                            $isStepActive = ($order['statusStep'] >= $idx + 1);
-                          @endphp
-                          <div style="display:flex; flex-direction:column; align-items:center; text-align:center; position:relative; z-index:3; width:60px;">
-                            <div style="width:18px; height:18px; border-radius:50%; background:{{ $isStepActive ? '#d4a658' : '#222' }}; border:2px solid {{ $isStepActive ? '#d4a658' : 'rgba(212,166,88,0.3)' }}; box-shadow:{{ $isStepActive ? '0 0 8px rgba(212,166,88,0.5)' : 'none' }}; transition:all 0.3s; display:flex; align-items:center; justify-content:center;">
-                              @if($isStepActive)
-                                <span style="width:6px; height:6px; border-radius:50%; background:#111;"></span>
-                              @endif
-                            </div>
-                            <span style="font-size:0.75rem; color:{{ $isStepActive ? '#f8e7d0' : 'rgba(248,231,208,0.4)' }}; font-weight:{{ $isStepActive ? '700' : '400' }}; margin-top:6px; transition:color 0.3s;">{{ $step['label'] }}</span>
-                          </div>
-                        @endforeach
-                      </div>
+                    @php
+                      $orderDate = \Carbon\Carbon::parse($order['orderDate']);
+                      $confirmTime = $orderDate->format('d M, h:i A');
+                      $packedTime = $orderDate->copy()->addHours(5)->format('d M, h:i A');
+                      $shippedTime = $orderDate->copy()->addDays(1)->addHours(2)->format('d M, h:i A');
+                      $deliveryTime = $orderDate->copy()->addDays(2)->addHours(4)->format('d M, h:i A');
+                      
+                      $statusStep = (int) ($order['statusStep'] ?? 1);
+                      if ($statusStep === 0) {
+                          $statusStep = 1;
+                      }
+                      
+                      // Calculate active timeline line percentage
+                      $linePercent = match($statusStep) {
+                          1 => 0,
+                          2 => 33.33,
+                          3 => 66.66,
+                          4 => 100,
+                          default => 0
+                      };
+                    @endphp
+                    
+                    <div class="order-status-details">
+                        <div class="status-detail-item">
+                            <span class="status-detail-label">Order No.</span>
+                            <span class="status-detail-value">#GT-{{ $order['orderId'] }}</span>
+                        </div>
+                        <div class="status-detail-item">
+                            <span class="status-detail-label">Order Date</span>
+                            <span class="status-detail-value">{{ $orderDate->format('d M Y') }}</span>
+                        </div>
+                        <div class="status-detail-item">
+                            <span class="status-detail-label">Est. Delivery</span>
+                            <span class="status-detail-value">{{ $orderDate->copy()->addDays(4)->format('d M Y') }}</span>
+                        </div>
+                        <div class="status-detail-item">
+                            <span class="status-detail-label">Current Status</span>
+                            <span class="status-detail-value" style="color:#d7a64a;">{{ $order['statusLabel'] }}</span>
+                        </div>
                     </div>
-                  </div>
-                @endforeach
-              </div>
-            </div>
-          @endif
-        @else
-          <div class="track-grid">
-            <div class="track-panel">
-              <div class="track-panel__title">Order Status</div>
-              <div class="track-mini">
-                <p class="track-mini__title">Placed</p>
-                <p class="track-mini__text">Your order is received by Polani.</p>
-                <p class="track-mini__title">Processing</p>
-                <p class="track-mini__text">We prepare and pack your fragrance order.</p>
-                <p class="track-mini__title">On the Way</p>
-                <p class="track-mini__text">Your parcel is handed over to the courier.</p>
-              </div>
-            </div>
-            <div class="track-panel">
-              <div class="track-panel__title">Order Details</div>
-              <p class="track-mini__text">Enter your details above to see the exact tracking stage, your delivery window, and order details.</p>
-            </div>
-          </div>
-        @endif
+                    
+                    <!-- Horizontal Timeline -->
+                    <div class="timeline-progress-wrapper">
+                        <div class="timeline-line"></div>
+                        <div class="timeline-line-active" style="width: calc({{ $linePercent }}% - 10px);"></div>
+                        
+                        <div class="timeline-steps">
+                            <!-- Step 1: Confirmed -->
+                            <div class="timeline-step @if($statusStep > 1) completed @elseif($statusStep === 1) current @endif">
+                                <div class="timeline-circle">
+                                    @if($statusStep > 1)
+                                        <i data-lucide="check"></i>
+                                    @else
+                                        <i data-lucide="truck"></i>
+                                    @endif
+                                </div>
+                                <span class="timeline-step-label">Order Confirmed</span>
+                                <span class="timeline-step-date">{{ $confirmTime }}</span>
+                            </div>
+                            
+                            <!-- Step 2: Packed -->
+                            <div class="timeline-step @if($statusStep > 2) completed @elseif($statusStep === 2) current @endif">
+                                <div class="timeline-circle">
+                                    @if($statusStep > 2)
+                                        <i data-lucide="check"></i>
+                                    @elseif($statusStep === 2)
+                                        <i data-lucide="truck"></i>
+                                    @else
+                                        <i data-lucide="package"></i>
+                                    @endif
+                                </div>
+                                <span class="timeline-step-label">Packed</span>
+                                <span class="timeline-step-date">{{ $statusStep >= 2 ? $packedTime : 'Pending' }}</span>
+                            </div>
+                            
+                            <!-- Step 3: Shipped -->
+                            <div class="timeline-step @if($statusStep > 3) completed @elseif($statusStep === 3) current @endif">
+                                <div class="timeline-circle">
+                                    @if($statusStep > 3)
+                                        <i data-lucide="check"></i>
+                                    @elseif($statusStep === 3)
+                                        <i data-lucide="truck"></i>
+                                    @else
+                                        <i data-lucide="plane"></i>
+                                    @endif
+                                </div>
+                                <span class="timeline-step-label">Shipped</span>
+                                <span class="timeline-step-date">{{ $statusStep >= 3 ? $shippedTime : 'Pending' }}</span>
+                            </div>
+                            
+                            <!-- Step 4: Out for Delivery -->
+                            <div class="timeline-step @if($statusStep > 4) completed @elseif($statusStep === 4) current @endif">
+                                <div class="timeline-circle">
+                                    @if($statusStep > 4)
+                                        <i data-lucide="check"></i>
+                                    @else
+                                        <i data-lucide="truck"></i>
+                                    @endif
+                                </div>
+                                <span class="timeline-step-label">Out for Delivery</span>
+                                <span class="timeline-step-date">{{ $statusStep >= 4 ? $deliveryTime : 'Pending' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="track-help">
-          <div class="track-help__title">Need Help?</div>
-          <p class="track-help__text">If you have any questions about your order, our support team is here to help you.</p>
-          <div class="track-help__grid">
-            <div class="track-help__item">
-              <div class="track-help__icon" aria-hidden="true" data-icon="headset"></div>
-              <div>
-                <div class="track-help__label">Contact Us</div>
-                <div class="track-help__meta">We’re here to assist you</div>
-              </div>
+                <!-- Shipment Details Card -->
+                <div class="tracking-card">
+                    <div class="shipment-details-row">
+                        <div class="shipment-items-grid">
+                            <div class="shipment-item">
+                                <span class="shipment-label">Courier</span>
+                                <div class="tcs-logo"><span>T</span><span>CS</span></div>
+                            </div>
+                            <div class="shipment-item">
+                                <span class="shipment-label">Tracking ID</span>
+                                <span class="shipment-value">TCS-903{{ $order['orderId'] }}28</span>
+                            </div>
+                            <div class="shipment-item">
+                                <span class="shipment-label">Current Status</span>
+                                <span class="shipment-status-badge">{{ $order['statusLabel'] }}</span>
+                            </div>
+                            <div class="shipment-item">
+                                <span class="shipment-label">Location</span>
+                                <span class="shipment-value">{{ $billing['city'] ?? 'Lahore Hub' }}</span>
+                            </div>
+                            <div class="shipment-item">
+                                <span class="shipment-label">Last Update</span>
+                                <span class="shipment-value">Today, 10:45 AM</span>
+                            </div>
+                        </div>
+                        <a href="tel:03211234567" class="contact-courier-btn">Contact Courier</a>
+                    </div>
+                </div>
+
+                <!-- Ordered Items Card -->
+                <div class="tracking-card">
+                    <div class="tracking-card-header">
+                        <i data-lucide="shopping-bag"></i>
+                        <h3 class="tracking-card-title">Ordered Items</h3>
+                    </div>
+                    <div class="ordered-items-table-wrapper">
+                        <table class="ordered-items-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($order['items'] as $item)
+                                    @php
+                                        $courseModel = \App\Models\Course::where('slug', $item['slug'])->first();
+                                    @endphp
+                                    <tr>
+                                        <td>
+                                            <div class="product-cell">
+                                                <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" class="product-thumb">
+                                                <div class="product-info">
+                                                    <span class="product-title">{{ $item['name'] }}</span>
+                                                    <span class="product-desc">{{ $courseModel->description ?? 'Premium product from Ghousia Traders.' }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="price-text">PKR {{ number_format($item['price']) }}</span></td>
+                                        <td><span class="price-text">{{ $item['quantity'] }}</span></td>
+                                        <td><span class="total-text" style="color: #44240f;">PKR {{ number_format($item['total']) }}</span></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Delivery Updates Timeline Card -->
+                <div class="tracking-card">
+                    <div class="tracking-card-header">
+                        <i data-lucide="clock"></i>
+                        <h3 class="tracking-card-title">Delivery Updates</h3>
+                    </div>
+                    <div class="delivery-updates-list">
+                        <!-- Update 4 -->
+                        <div class="update-item @if($statusStep >= 4) active @endif">
+                            <div class="update-bullet"></div>
+                            <div class="update-time-col">{{ $statusStep >= 4 ? $deliveryTime : '' }}</div>
+                            <div class="update-content-col">
+                                <span class="update-heading">Out for delivery</span>
+                                <span class="update-description">Your order is out for delivery and will reach you today.</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Update 3 -->
+                        <div class="update-item @if($statusStep >= 3) past @endif">
+                            <div class="update-bullet"></div>
+                            <div class="update-time-col">{{ $statusStep >= 3 ? $shippedTime : '' }}</div>
+                            <div class="update-content-col">
+                                <span class="update-heading">Shipped</span>
+                                <span class="update-description">Your order has been shipped from Lahore Hub.</span>
+                            </div>
+                        </div>
+
+                        <!-- Update 2 -->
+                        <div class="update-item @if($statusStep >= 2) past @endif">
+                            <div class="update-bullet"></div>
+                            <div class="update-time-col">{{ $statusStep >= 2 ? $packedTime : '' }}</div>
+                            <div class="update-content-col">
+                                <span class="update-heading">Packed</span>
+                                <span class="update-description">Your order has been packed and is ready to ship.</span>
+                            </div>
+                        </div>
+
+                        <!-- Update 1 -->
+                        <div class="update-item @if($statusStep >= 1) past @endif">
+                            <div class="update-bullet"></div>
+                            <div class="update-time-col">{{ $confirmTime }}</div>
+                            <div class="update-content-col">
+                                <span class="update-heading">Order Confirmed</span>
+                                <span class="update-description">We've received your order and are preparing it.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="track-help__item">
-              <div class="track-help__icon" aria-hidden="true" data-icon="mail"></div>
-              <div>
-                <div class="track-help__label">Email Us</div>
-                <div class="track-help__meta">polanifragnance@gmail.com</div>
-              </div>
+
+            <!-- Right Sidebar Columns -->
+            <div class="tracking-right-sidebar">
+                
+                <!-- Order Summary Card -->
+                <div class="tracking-card">
+                    <div class="tracking-card-header">
+                        <i data-lucide="receipt"></i>
+                        <h3 class="tracking-card-title">Order Summary</h3>
+                    </div>
+                    @php
+                        $subtotal = $orderModel ? (float) $orderModel->total : $order['total'];
+                        $discount = $orderModel ? (float) $orderModel->discount : 0;
+                        $shippingCost = (float) ($billing['shipping_cost'] ?? 0);
+                        $finalTotal = $orderModel ? (float) $orderModel->final_total : $order['total'];
+                    @endphp
+                    <div class="summary-row">
+                        <span>Subtotal ({{ count($order['items']) }} items)</span>
+                        <strong>PKR {{ number_format($subtotal) }}</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <strong>PKR {{ number_format($shippingCost) }}</strong>
+                    </div>
+                    @if($discount > 0)
+                        <div class="summary-row" style="color: #059669;">
+                            <span>Discount</span>
+                            <strong>- PKR {{ number_format($discount) }}</strong>
+                        </div>
+                    @endif
+                    <div class="summary-row total-row">
+                        <span>Total</span>
+                        <strong style="color: #44240f;">PKR {{ number_format($finalTotal) }}</strong>
+                    </div>
+                    @if($discount > 0)
+                        <div class="savings-badge">
+                            <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i>
+                            <span>You saved PKR {{ number_format($discount) }} on this order</span>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Delivery Address Card -->
+                <div class="tracking-card">
+                    <div class="tracking-card-header">
+                        <i data-lucide="map-pin"></i>
+                        <h3 class="tracking-card-title">Delivery Address</h3>
+                    </div>
+                    <div class="sidebar-address-block">
+                        <span class="sidebar-address-name">{{ $billing['first_name'] ?? '' }} {{ $billing['last_name'] ?? '' }}</span>
+                        <span>{{ $billing['phone'] ?? $order['phone'] ?? '' }}</span>
+                        <span>
+                            {{ $billing['address'] ?? '' }}@if(!empty($billing['address2'])), {{ $billing['address2'] }}@endif,
+                            {{ $billing['area'] ?? '' }}, {{ $billing['city'] ?? '' }}
+                        </span>
+                        <span>{{ $billing['country'] ?? 'Pakistan' }}</span>
+                    </div>
+                </div>
+
+                <!-- Payment Method Card -->
+                <div class="tracking-card">
+                    <div class="tracking-card-header">
+                        <i data-lucide="credit-card"></i>
+                        <h3 class="tracking-card-title">Payment Method</h3>
+                    </div>
+                    <div class="sidebar-payment-block">
+                        <span class="sidebar-payment-method">{{ $order['paymentMethod'] }}</span>
+                        <span>
+                            @if(strtolower($order['paymentMethod']) === 'cash on delivery')
+                                Pay in cash upon delivery
+                            @else
+                                Payment processed successfully
+                            @endif
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Need Help Card -->
+                <div class="tracking-card">
+                    <div class="tracking-card-header">
+                        <i data-lucide="help-circle"></i>
+                        <h3 class="tracking-card-title">Need Help?</h3>
+                    </div>
+                    <p class="help-support-desc">We're here to help you with your order. Our support team is ready to assist you.</p>
+                    <div class="help-actions-stack">
+                        <a href="https://wa.me/923211234567" target="_blank" class="btn-contact-support">
+                            <i data-lucide="phone"></i>
+                            <span>Contact Support</span>
+                        </a>
+                        <a href="{{ route('polani.collection') }}" class="btn-continue-shopping">
+                            <i data-lucide="shopping-bag"></i>
+                            <span>Continue Shopping</span>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="track-help__item">
-              <div class="track-help__icon" aria-hidden="true" data-icon="clock"></div>
-              <div>
-                <div class="track-help__label">Business Hours</div>
-                <div class="track-help__meta">Mon - Sat: 10:00 AM - 8:00 PM</div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
+      @endif
+
     </div>
   </section>
+
+  <!-- Bottom Horizontal Benefits Bar -->
+  <section class="feature-bar-section">
+      <div class="section-container feature-bar-container">
+          <div class="feature-bar-grid">
+              <div class="f-bar-item">
+                  <div class="f-bar-icon-box">
+                      <i data-lucide="award"></i>
+                  </div>
+                  <div class="f-bar-content">
+                      <h4>100% Genuine Products</h4>
+                      <p>Original and high quality</p>
+                  </div>
+              </div>
+              <div class="f-bar-item">
+                  <div class="f-bar-icon-box">
+                      <i data-lucide="truck"></i>
+                  </div>
+                  <div class="f-bar-content">
+                      <h4>Fast Delivery</h4>
+                      <p>Across Pakistan</p>
+                  </div>
+              </div>
+              <div class="f-bar-item">
+                  <div class="f-bar-icon-box">
+                      <i data-lucide="refresh-cw"></i>
+                  </div>
+                  <div class="f-bar-content">
+                      <h4>Easy Returns</h4>
+                      <p>Within 7 Days</p>
+                  </div>
+              </div>
+              <div class="f-bar-item">
+                  <div class="f-bar-icon-box">
+                      <i data-lucide="shield-check"></i>
+                  </div>
+                  <div class="f-bar-content">
+                      <h4>Secure Payments</h4>
+                      <p>Safe & reliable</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <!-- Newsletter Pre-Footer Section -->
+  <section class="pre-footer-cta-section homepage-newsletter">
+      <div class="section-container">
+          <div class="newsletter-fullwidth-card">
+              <div class="cta-icon-container">
+                  <i data-lucide="mail" class="cta-icon"></i>
+              </div>
+              <div class="cta-content">
+                  <h3 class="cta-title">Stay Updated with Ghousia Traders</h3>
+                  <p class="cta-desc">
+                      Subscribe to our newsletter for exclusive offers, new arrivals, and parenting tips.
+                  </p>
+                  <form class="newsletter-form" id="newsletterForm" onsubmit="event.preventDefault(); alert('Thank you for subscribing to our newsletter!');">
+                      <input type="email" placeholder="Enter your email address" required id="newsletterEmail">
+                      <button type="submit" class="btn btn-primary">Subscribe</button>
+                  </form>
+                  <div class="newsletter-msg" id="newsletterMsg"></div>
+              </div>
+          </div>
+      </div>
+  </section>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Intercept Tracking Form submit to split contact input into email or phone
+    const form = document.getElementById('trackOrderForm');
+    const contactInput = document.getElementById('contact_input');
+    const hiddenEmail = document.getElementById('hidden_email');
+    const hiddenPhone = document.getElementById('hidden_phone');
+
+    if (form && contactInput) {
+        form.addEventListener('submit', () => {
+            const val = contactInput.value.trim();
+            if (val.includes('@')) {
+                hiddenEmail.value = val;
+                hiddenPhone.value = '';
+            } else {
+                hiddenEmail.value = '';
+                hiddenPhone.value = val;
+            }
+            
+            // Add Loading State Spinner on Button
+            const submitBtn = form.querySelector('.track-submit-btn');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.8';
+                submitBtn.innerHTML = '<span style="display:inline-block; width:14px; height:14px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 0.6s linear infinite; margin-right:8px; vertical-align:middle;"></span>Loading...';
+            }
+        });
+    }
+});
+</script>
+@endpush
