@@ -10,7 +10,7 @@
             <span>100% Genuine & Premium Quality</span>
         </div>
         <div class="top-bar-item">
-            <i data-lucide="phone-call" class="top-bar-icon"></i>
+            <i data-lucide="headset" class="top-bar-icon"></i>
             <span>Customer Support: 0321-1234567</span>
         </div>
     </div>
@@ -18,34 +18,13 @@
 
 <!-- 2. Main Header / Navigation -->
 <header class="main-header">
-    <!-- Line 1 (Top Line): Compact Search Bar (Centered) + Track Order (Right) -->
-    <div class="header-sub-bar">
-        <div class="header-container header-sub-container">
-            <!-- Search Input Form -->
-            <form class="header-search-form" action="{{ route('polani.collection') }}" method="GET">
-                <div class="header-search-input-wrapper">
-                    <i data-lucide="search" class="search-input-icon"></i>
-                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Search baby care products, ride-on bikes, toy cars..." class="header-search-input" id="headerSearchInput">
-                    <button type="submit" class="header-search-submit-btn">Search</button>
-                </div>
-            </form>
-
-            <!-- Track Order Button -->
-            <a href="{{ route('polani.track-order') }}" class="track-order-link {{ request()->routeIs('polani.track-order') ? 'active' : '' }}">
-                <i data-lucide="truck"></i>
-                <span>Track Order</span>
-            </a>
-        </div>
-    </div>
-
-    <!-- Line 2 (Bottom Line): Main Navbar Container (Logo + Nav Menu + User Icons) -->
-    <div class="header-container">
-        <!-- Mobile Menu Toggle (Left) -->
+    <div class="header-container main-header-row">
+        <!-- Mobile Menu Toggle (Left on mobile, hidden on desktop) -->
         <button class="action-btn mobile-menu-toggle" id="menuToggle" aria-label="Toggle Menu">
             <i data-lucide="menu"></i>
         </button>
 
-        <!-- Brand Logo -->
+        <!-- Left Side: Brand Logo -->
         <a href="{{ route('home') }}" class="logo brand-logo-link">
             <svg viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg">
                 <defs>
@@ -82,23 +61,33 @@
             </svg>
         </a>
 
-        <!-- Navigation Links -->
-        <nav class="nav-menu" id="navMenu">
-            <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
-            <a href="{{ route('polani.babycare') }}" class="nav-link {{ request()->routeIs('polani.babycare') ? 'active' : '' }}">Baby Care</a>
-            <a href="{{ route('polani.bikes') }}" class="nav-link {{ request()->routeIs('polani.bikes') ? 'active' : '' }}">B/O Bikes</a>
-            <a href="{{ route('polani.cars') }}" class="nav-link {{ request()->routeIs('polani.cars') ? 'active' : '' }}">B/O Cars</a>
-            <a href="{{ route('polani.collection') }}" class="nav-link {{ request()->routeIs('polani.collection') ? 'active' : '' }}">Shop</a>
-            <a href="{{ route('polani.about') }}" class="nav-link {{ request()->routeIs('polani.about') ? 'active' : '' }}">About Us</a>
-            <a href="{{ route('polani.contact') }}" class="nav-link {{ request()->routeIs('polani.contact') ? 'active' : '' }}">Contact Us</a>
-        </nav>
+        <!-- Center: Desktop Search Bar -->
+        <div class="desktop-search-container">
+            <form class="header-search-form" action="{{ route('polani.collection') }}" method="GET">
+                <div class="header-search-input-wrapper">
+                    <i data-lucide="search" class="search-input-icon"></i>
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Search baby care products, ride-on bikes, toy cars..." class="header-search-input" id="headerSearchInput">
+                    <button type="submit" class="header-search-submit-btn">Search</button>
+                </div>
+            </form>
+        </div>
 
-        <!-- Utility Actions -->
+        <!-- Right Side: Actions -->
         <div class="header-actions">
+            <!-- Track Order Outlined Button -->
+            <a href="{{ route('polani.track-order') }}" class="track-order-outline-btn {{ request()->routeIs('polani.track-order') ? 'active' : '' }}">
+                <i data-lucide="truck"></i>
+                <span>Track Order</span>
+            </a>
+
+            <!-- Account Icon -->
             @auth
                 <div class="profile-dropdown-container">
-                    <a href="#" class="action-btn" id="profileDropdownBtn" aria-label="Account" title="Profile: {{ auth()->user()->name }}">
-                        <i data-lucide="user"></i>
+                    <a href="#" class="header-action-item" id="profileDropdownBtn" aria-label="Account" title="Profile: {{ auth()->user()->name }}">
+                        <div class="action-btn">
+                            <i data-lucide="user"></i>
+                        </div>
+                        <span class="action-label">Account</span>
                     </a>
                     <div class="profile-dropdown-menu" id="profileDropdownMenu">
                         <a href="{{ route('users.profile') }}" class="profile-dropdown-item">
@@ -116,30 +105,140 @@
                     </div>
                 </div>
             @else
-                <a href="{{ route('sign-in') }}" class="action-btn {{ request()->routeIs('sign-in') ? 'active' : '' }}" aria-label="Account" title="Sign In">
-                    <i data-lucide="user"></i>
+                <a href="{{ route('sign-in') }}" class="header-action-item {{ request()->routeIs('sign-in') ? 'active' : '' }}" aria-label="Account" title="Sign In">
+                    <div class="action-btn">
+                        <i data-lucide="user"></i>
+                    </div>
+                    <span class="action-label">Account</span>
                 </a>
             @endauth
-            
-            <a href="{{ route('polani.wishlist') }}" class="action-btn badge-btn {{ request()->routeIs('polani.wishlist') ? 'active' : '' }}" aria-label="Wishlist" id="wishlistBtn">
-                <i data-lucide="heart"></i>
-                <span class="badge" id="wishlistCount">0</span>
+
+            <!-- Wishlist Icon -->
+            <a href="{{ route('polani.wishlist') }}" class="header-action-item {{ request()->routeIs('polani.wishlist') ? 'active' : '' }}" aria-label="Wishlist" id="wishlistBtn">
+                <div class="action-btn badge-btn">
+                    <i data-lucide="heart"></i>
+                    <span class="badge" id="wishlistCount">0</span>
+                </div>
+                <span class="action-label">Wishlist</span>
             </a>
-            <a href="{{ route('shopping-cart') }}" class="action-btn badge-btn {{ request()->routeIs('shopping-cart') ? 'active' : '' }}" aria-label="Cart" id="cartBtn">
-                <i data-lucide="shopping-cart"></i>
-                <span class="badge" id="cartCount" data-cart-badge>{{ $cartCount ?? 0 }}</span>
+
+            <!-- Cart Icon -->
+            <a href="{{ route('shopping-cart') }}" class="header-action-item {{ request()->routeIs('shopping-cart') ? 'active' : '' }}" aria-label="Cart" id="cartBtn">
+                <div class="action-btn badge-btn">
+                    <i data-lucide="shopping-cart"></i>
+                    <span class="badge" id="cartCount" data-cart-badge>{{ $cartCount ?? 0 }}</span>
+                </div>
+                <span class="action-label">Cart</span>
             </a>
+        </div>
+    </div>
+
+    <!-- Mobile Search Row (visible only on mobile/tablet) -->
+    <div class="mobile-search-row">
+        <form class="header-search-form" action="{{ route('polani.collection') }}" method="GET">
+            <div class="header-search-input-wrapper">
+                <i data-lucide="search" class="search-input-icon"></i>
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Search baby care products, ride-on bikes, toy cars..." class="header-search-input" id="mobileSearchInput">
+                <button type="submit" class="header-search-submit-btn">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 3. Floating Navigation Bar -->
+    <div class="floating-nav-container">
+        <div class="floating-nav-capsule">
+            <div class="nav-item">
+                <a href="{{ route('home') }}" class="floating-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                    <i data-lucide="home"></i>
+                    <span>Home</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('polani.babycare') }}" class="floating-nav-link {{ request()->routeIs('polani.babycare') ? 'active' : '' }}">
+                    <i data-lucide="baby"></i>
+                    <span>Baby Care</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('polani.bikes') }}" class="floating-nav-link {{ request()->routeIs('polani.bikes') ? 'active' : '' }}">
+                    <i data-lucide="bike"></i>
+                    <span>B/O Bikes</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('polani.cars') }}" class="floating-nav-link {{ request()->routeIs('polani.cars') ? 'active' : '' }}">
+                    <i data-lucide="car"></i>
+                    <span>B/O Cars</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('polani.collection') }}" class="floating-nav-link {{ request()->routeIs('polani.collection') ? 'active' : '' }}">
+                    <i data-lucide="shopping-bag"></i>
+                    <span>Shop</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('polani.about') }}" class="floating-nav-link {{ request()->routeIs('polani.about') ? 'active' : '' }}">
+                    <i data-lucide="users"></i>
+                    <span>About Us</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('polani.contact') }}" class="floating-nav-link {{ request()->routeIs('polani.contact') ? 'active' : '' }}">
+                    <i data-lucide="mail"></i>
+                    <span>Contact Us</span>
+                </a>
+            </div>
         </div>
     </div>
 </header>
 
-<!-- Search Overlay -->
-<div class="search-overlay" id="searchOverlay">
-    <div class="search-bar">
-        <form action="{{ route('polani.collection') }}" method="GET" style="width: 100%; display: flex; align-items: center;">
-            <input type="text" name="q" placeholder="Search baby care products, ride-on cars..." id="searchInput">
-            <button type="submit" style="display:none;"></button>
-        </form>
-        <button class="search-close" id="searchClose">&times;</button>
+<!-- Mobile Navigation Drawer Overlay & Content -->
+<div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-header">
+        <span class="mobile-drawer-title">Menu Navigation</span>
+        <button class="mobile-drawer-close-btn" id="mobileDrawerCloseBtn" aria-label="Close Menu">
+            <i data-lucide="x"></i>
+        </button>
+    </div>
+    <div class="mobile-drawer-body">
+        <nav class="mobile-drawer-nav">
+            <a href="{{ route('home') }}" class="mobile-drawer-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                <i data-lucide="home"></i>
+                <span>Home</span>
+            </a>
+            <a href="{{ route('polani.babycare') }}" class="mobile-drawer-link {{ request()->routeIs('polani.babycare') ? 'active' : '' }}">
+                <i data-lucide="baby"></i>
+                <span>Baby Care</span>
+            </a>
+            <a href="{{ route('polani.bikes') }}" class="mobile-drawer-link {{ request()->routeIs('polani.bikes') ? 'active' : '' }}">
+                <i data-lucide="bike"></i>
+                <span>B/O Bikes</span>
+            </a>
+            <a href="{{ route('polani.cars') }}" class="mobile-drawer-link {{ request()->routeIs('polani.cars') ? 'active' : '' }}">
+                <i data-lucide="car"></i>
+                <span>B/O Cars</span>
+            </a>
+            <a href="{{ route('polani.collection') }}" class="mobile-drawer-link {{ request()->routeIs('polani.collection') ? 'active' : '' }}">
+                <i data-lucide="shopping-bag"></i>
+                <span>Shop</span>
+            </a>
+            <a href="{{ route('polani.about') }}" class="mobile-drawer-link {{ request()->routeIs('polani.about') ? 'active' : '' }}">
+                <i data-lucide="users"></i>
+                <span>About Us</span>
+            </a>
+            <a href="{{ route('polani.contact') }}" class="mobile-drawer-link {{ request()->routeIs('polani.contact') ? 'active' : '' }}">
+                <i data-lucide="mail"></i>
+                <span>Contact Us</span>
+            </a>
+            
+            <div class="mobile-drawer-divider"></div>
+            
+            <a href="{{ route('polani.track-order') }}" class="mobile-drawer-link mobile-track-order-link {{ request()->routeIs('polani.track-order') ? 'active' : '' }}">
+                <i data-lucide="truck"></i>
+                <span>Track Order</span>
+            </a>
+        </nav>
     </div>
 </div>

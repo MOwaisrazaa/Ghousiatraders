@@ -75,37 +75,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 1. Mobile Menu Toggle
+    // 1. Mobile Menu Drawer Toggle
     const menuToggle = document.getElementById('menuToggle');
-    const navMenu = document.getElementById('navMenu');
+    const mobileDrawer = document.getElementById('mobileDrawer');
+    const mobileDrawerOverlay = document.getElementById('mobileDrawerOverlay');
+    const mobileDrawerCloseBtn = document.getElementById('mobileDrawerCloseBtn');
 
-    if (menuToggle && navMenu) {
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            
-            // Toggle hamburger icon between menu and x
-            const icon = menuToggle.querySelector('i');
-            if (icon) {
-                if (navMenu.classList.contains('active')) {
-                    icon.setAttribute('data-lucide', 'x');
-                } else {
-                    icon.setAttribute('data-lucide', 'menu');
-                }
-                lucide.createIcons();
-            }
+    function openMobileDrawer() {
+        if (mobileDrawer && mobileDrawerOverlay) {
+            mobileDrawer.classList.add('active');
+            mobileDrawerOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Lock scrolling
+        }
+    }
+
+    function closeMobileDrawer() {
+        if (mobileDrawer && mobileDrawerOverlay) {
+            mobileDrawer.classList.remove('active');
+            mobileDrawerOverlay.classList.remove('active');
+            document.body.style.overflow = ''; // Unlock scrolling
+        }
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openMobileDrawer();
         });
     }
 
-    // Close menu when clicking navigation links
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
+    if (mobileDrawerCloseBtn) {
+        mobileDrawerCloseBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeMobileDrawer();
+        });
+    }
+
+    if (mobileDrawerOverlay) {
+        mobileDrawerOverlay.addEventListener('click', () => {
+            closeMobileDrawer();
+        });
+    }
+
+    // Close mobile drawer on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeMobileDrawer();
+        }
+    });
+
+    // Close drawer when clicking any mobile links
+    const mobileDrawerLinks = document.querySelectorAll('.mobile-drawer-link');
+    mobileDrawerLinks.forEach(link => {
         link.addEventListener('click', () => {
-            if (navMenu) navMenu.classList.remove('active');
-            const icon = menuToggle ? menuToggle.querySelector('i') : null;
-            if (icon) {
-                icon.setAttribute('data-lucide', 'menu');
-                lucide.createIcons();
-            }
+            closeMobileDrawer();
         });
     });
 
