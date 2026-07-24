@@ -861,6 +861,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Profile Dropdown Toggle Logic
+    const profileBtn = document.getElementById('profileDropdownBtn');
+    const profileMenu = document.getElementById('profileDropdownMenu');
+
+    if (profileBtn && profileMenu) {
+        profileBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            profileMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!profileMenu.contains(e.target) && !profileBtn.contains(e.target)) {
+                profileMenu.classList.remove('active');
+            }
+        });
+    }
+
     // Initial Lucide icons initialization
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();

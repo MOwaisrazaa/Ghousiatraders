@@ -4766,3 +4766,98 @@ img {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==========================================================================
+   Profile Dropdown Menu Styles
+   ========================================================================== */
+.profile-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: #ffffff;
+    border: 1px solid var(--border-color, #E5E7EB);
+    border-radius: var(--radius-sm, 6px);
+    min-width: 160px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 8px;
+    padding: 6px 0;
+    animation: dropdownFadeIn 0.2s ease;
+}
+
+/* Arrow indicator for dropdown menu */
+.profile-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 14px;
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border-left: 1px solid var(--border-color, #E5E7EB);
+    border-top: 1px solid var(--border-color, #E5E7EB);
+    transform: rotate(45deg);
+}
+
+.profile-dropdown-menu.active {
+    display: block !important;
+}
+
+.profile-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    color: var(--text-dark, #374151);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+    text-align: left;
+}
+
+.profile-dropdown-item:hover {
+    background-color: var(--bg-alt, #F9FAFB);
+    color: var(--primary, #5C3E21);
+}
+
+.profile-dropdown-item.logout-item {
+    color: #E11D48;
+}
+
+.profile-dropdown-item.logout-item:hover {
+    background-color: #FEF2F2;
+    color: #BE123C;
+}
+
+.profile-dropdown-divider {
+    height: 1px;
+    background-color: var(--border-color, #E5E7EB);
+    margin: 4px 0;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover show for desktop */
+@media (hover: hover) {
+    .profile-dropdown-container:hover .profile-dropdown-menu {
+        display: block;
+    }
+}
+

@@ -96,15 +96,25 @@
         <!-- Utility Actions -->
         <div class="header-actions">
             @auth
-                <a href="{{ route('users.profile') }}" class="action-btn" aria-label="Account" title="Profile: {{ auth()->user()->name }}">
-                    <i data-lucide="user"></i>
-                </a>
-                <form method="POST" action="{{ route('logout') }}" id="logout-form" style="display: none;">
-                    @csrf
-                </form>
-                <a href="#" class="action-btn" aria-label="Logout" title="Logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i data-lucide="log-out"></i>
-                </a>
+                <div class="profile-dropdown-container">
+                    <a href="#" class="action-btn" id="profileDropdownBtn" aria-label="Account" title="Profile: {{ auth()->user()->name }}">
+                        <i data-lucide="user"></i>
+                    </a>
+                    <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                        <a href="{{ route('users.profile') }}" class="profile-dropdown-item">
+                            <i data-lucide="user" style="width: 14px; height: 14px;"></i>
+                            <span>My Profile</span>
+                        </a>
+                        <div class="profile-dropdown-divider"></div>
+                        <form method="POST" action="{{ route('logout') }}" id="logout-form" style="display: none;">
+                            @csrf
+                        </form>
+                        <a href="#" class="profile-dropdown-item logout-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i data-lucide="log-out" style="width: 14px; height: 14px;"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
             @else
                 <a href="{{ route('sign-in') }}" class="action-btn {{ request()->routeIs('sign-in') ? 'active' : '' }}" aria-label="Account" title="Sign In">
                     <i data-lucide="user"></i>

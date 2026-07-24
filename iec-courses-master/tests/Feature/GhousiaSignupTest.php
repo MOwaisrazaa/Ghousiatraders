@@ -111,7 +111,8 @@ class GhousiaSignupTest extends TestCase
         $this->assertTrue(auth()->check());
 
         // 2. Log out
-        $this->post('/logout');
+        $response = $this->post('/logout');
+        $response->assertRedirect('/sign-in');
         $this->assertFalse(auth()->check());
 
         // 3. Try logging in with wrong credentials
