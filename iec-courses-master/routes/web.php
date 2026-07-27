@@ -619,8 +619,12 @@ Route::middleware(['auth', 'check.role:Admin,Super Admin', 'super.admin.bypass']
     Route::resource('coupons', App\Http\Controllers\Admin\CouponController::class)
         ->names(['index' => 'admin.coupons.index', 'create' => 'admin.coupons.create', 'store' => 'admin.coupons.store',
                 'show' => 'admin.coupons.show', 'edit' => 'admin.coupons.edit', 'update' => 'admin.coupons.update',
-                'destroy' => 'admin.coupons.destroy'])
-        ->middleware('admin.permission:coupons');
+                'destroy' => 'admin.coupons.destroy']);
+    Route::post('/coupons/{coupon}/duplicate', [App\Http\Controllers\Admin\CouponController::class, 'duplicate'])
+        ->name('admin.coupons.duplicate');
+    Route::post('/coupons/{coupon}/toggle', [App\Http\Controllers\Admin\CouponController::class, 'toggleStatus'])
+        ->name('admin.coupons.toggle-status');
+
 
     // Orders & Payments management
     Route::get('/orders/export', [App\Http\Controllers\Admin\OrderController::class, 'export'])
@@ -851,8 +855,12 @@ Route::middleware(['auth', 'check.role:Admin,Super Admin', 'super.admin.bypass']
 
     // Review management routes
     Route::get('/reviews', [App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('admin.reviews.index');
-    Route::post('/reviews/{rating}/toggle', [App\Http\Controllers\Admin\ReviewController::class, 'toggleStatus'])->name('admin.reviews.toggle');
+    Route::post('/reviews', [App\Http\Controllers\Admin\ReviewController::class, 'store'])->name('admin.reviews.store');
+    Route::put('/reviews/{rating}', [App\Http\Controllers\Admin\ReviewController::class, 'update'])->name('admin.reviews.update');
     Route::delete('/reviews/{rating}', [App\Http\Controllers\Admin\ReviewController::class, 'destroy'])->name('admin.reviews.destroy');
+    Route::post('/reviews/{rating}/approve', [App\Http\Controllers\Admin\ReviewController::class, 'approve'])->name('admin.reviews.approve');
+    Route::post('/reviews/{rating}/reject', [App\Http\Controllers\Admin\ReviewController::class, 'reject'])->name('admin.reviews.reject');
+    Route::post('/reviews/{rating}/pending', [App\Http\Controllers\Admin\ReviewController::class, 'pending'])->name('admin.reviews.pending');
 
     // Navigation Pages Management
     Route::get('/pages', [App\Http\Controllers\Admin\PageController::class, 'index'])->name('admin.pages.index');

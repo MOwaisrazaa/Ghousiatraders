@@ -21,6 +21,10 @@ class Rating extends Model
         'comment',
         'is_approved',
         'show_publicly',
+        'status',
+        'moderation_note',
+        'rateable_type',
+        'rateable_id',
     ];
 
     /**

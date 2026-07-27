@@ -456,7 +456,7 @@ class Checkout extends Component
             'couponCode' => 'required|string'
         ]);
 
-        $coupon = Coupon::where('code', $this->couponCode)->first();
+        $coupon = Coupon::where('code', strtoupper(trim($this->couponCode)))->first();
 
         if (!$coupon) {
             $this->couponError = 'Invalid coupon code';
@@ -466,33 +466,10 @@ class Checkout extends Component
             return;
         }
 
-        if (!$coupon->is_active) {
-            $this->couponError = 'This coupon is inactive';
-            $this->couponSuccess = '';
-            $this->discount = 0;
-            $this->appliedCoupon = null;
-            return;
-        }
-
-        if ($coupon->max_uses !== null && $coupon->uses_count >= $coupon->max_uses) {
-            $this->couponError = 'This coupon has reached its maximum usage limit';
-            $this->couponSuccess = '';
-            $this->discount = 0;
-            $this->appliedCoupon = null;
-            return;
-        }
-
-        $now = now();
-        if ($now < $coupon->valid_from) {
-            $this->couponError = 'This coupon is not yet valid. Valid from: ' . $coupon->valid_from->format('M d, Y');
-            $this->couponSuccess = '';
-            $this->discount = 0;
-            $this->appliedCoupon = null;
-            return;
-        }
-
-        if ($now > $coupon->valid_until) {
-            $this->couponError = 'This coupon has expired. Expired on: ' . $coupon->valid_until->format('M d, Y');
+        // Call our unified robust validator
+        $validation = $coupon->isValidForCart($this->cartItems, $this->total, auth()->id());
+        if (!$validation['valid']) {
+            $this->couponError = $validation['error'];
             $this->couponSuccess = '';
             $this->discount = 0;
             $this->appliedCoupon = null;
@@ -500,12 +477,21 @@ class Checkout extends Component
         }
 
         $this->discount = $coupon->calculateDiscount($this->total);
+        if ($coupon->free_shipping) {
+            $this->discount += $this->shippingCost;
+        }
+
         $this->couponSuccess = 'Coupon applied successfully!';
         $this->couponError = '';
         $this->appliedCoupon = $coupon;
 
+        // Ensure discount doesn't make total negative
+        if (($this->total - $this->discount + $this->shippingCost) < 0) {
+            $this->discount = $this->total + $this->shippingCost;
+        }
+
         // Check if the total after discount is zero
-        if (($this->total - $this->discount) <= 0) {
+        if (($this->total - $this->discount + $this->shippingCost) <= 0) {
             $user = auth()->user();
 
             if (empty($this->firstName)) {

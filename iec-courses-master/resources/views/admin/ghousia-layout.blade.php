@@ -825,20 +825,7 @@
                     </div>
                 </a>
 
-                <a href="#" class="sidebar-nav-link">
-                    <div class="sidebar-nav-link-left">
-                        <i data-lucide="image"></i>
-                        <span>Media Library</span>
-                    </div>
-                </a>
 
-                <a href="#" class="sidebar-nav-link">
-                    <div class="sidebar-nav-link-left">
-                        <i data-lucide="megaphone"></i>
-                        <span>Marketing</span>
-                    </div>
-                    <i data-lucide="chevron-down" class="chevron-arrow"></i>
-                </a>
 
                 <a href="#" class="sidebar-nav-link">
                     <div class="sidebar-nav-link-left">
