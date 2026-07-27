@@ -517,6 +517,17 @@ Route::middleware(['auth', 'check.role:Admin,Super Admin', 'super.admin.bypass']
         ->name('admin.payment-methods.update-order');
 
     // Products management
+    Route::get('/products/export', [ProductController::class, 'export'])
+        ->name('admin.products.export');
+    Route::post('/products/import', [ProductController::class, 'import'])
+        ->name('admin.products.import');
+    Route::post('/products/{course}/toggle-featured', [ProductController::class, 'toggleFeatured'])
+        ->name('admin.products.toggle-featured');
+    Route::post('/products/{course}/toggle-status', [ProductController::class, 'toggleStatus'])
+        ->name('admin.products.toggle-status');
+    Route::post('/products/{course}/update-stock', [ProductController::class, 'updateStock'])
+        ->name('admin.products.update-stock');
+
     Route::get('/products', [ProductController::class, 'index'])
         ->name('admin.products');
     Route::get('/products/create', [ProductController::class, 'create'])
@@ -557,6 +568,12 @@ Route::middleware(['auth', 'check.role:Admin,Super Admin', 'super.admin.bypass']
         ->name('admin.courses.show');
 
     // Categories management
+    Route::post('categories/reorder', [App\Http\Controllers\Admin\CategoryController::class, 'reorder'])
+        ->name('admin.categories.reorder')
+        ->middleware('admin.permission:courses');
+    Route::post('categories/{category}/toggle-status', [App\Http\Controllers\Admin\CategoryController::class, 'toggleStatus'])
+        ->name('admin.categories.toggle-status')
+        ->middleware('admin.permission:courses');
     Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)
         ->names(['index' => 'admin.categories.index', 'create' => 'admin.categories.create', 'store' => 'admin.categories.store',
                 'show' => 'admin.categories.show', 'edit' => 'admin.categories.edit', 'update' => 'admin.categories.update',
@@ -592,6 +609,22 @@ Route::middleware(['auth', 'check.role:Admin,Super Admin', 'super.admin.bypass']
         ->middleware('admin.permission:coupons');
 
     // Orders & Payments management
+    Route::get('/orders/export', [App\Http\Controllers\Admin\OrderController::class, 'export'])
+        ->middleware('admin.permission:orders')
+        ->name('admin.orders.export');
+    Route::post('/orders/import', [App\Http\Controllers\Admin\OrderController::class, 'import'])
+        ->middleware('admin.permission:orders')
+        ->name('admin.orders.import');
+    Route::post('/orders/store', [App\Http\Controllers\Admin\OrderController::class, 'store'])
+        ->middleware('admin.permission:orders')
+        ->name('admin.orders.store');
+    Route::post('/order/{order}/duplicate', [App\Http\Controllers\Admin\OrderController::class, 'duplicate'])
+        ->middleware('admin.permission:orders')
+        ->name('admin.orders.duplicate');
+    Route::delete('/order/{order}/delete', [App\Http\Controllers\Admin\OrderController::class, 'destroy'])
+        ->middleware('admin.permission:orders')
+        ->name('admin.orders.destroy');
+
     Route::get('/orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])
         ->middleware('admin.permission:orders')
         ->name('admin.orders');

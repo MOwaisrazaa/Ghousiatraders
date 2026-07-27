@@ -18,6 +18,7 @@ class Course extends Model
     protected $fillable = [
         'name',
         'slug',
+        'sku',
         'description',
         'long_description',
         'instructor',
@@ -28,6 +29,14 @@ class Course extends Model
         'category_id',
         'is_free',
         'purchase_model',
+        'stock',
+        'low_stock_threshold',
+        'status',
+        'is_featured',
+        'sale_price',
+        'cost_price',
+        'meta_title',
+        'meta_description',
     ];
 
     /**
@@ -41,6 +50,13 @@ class Course extends Model
             if (empty($course->slug)) {
                 $course->slug = \Illuminate\Support\Str::slug($course->name);
             }
+            if (empty($course->sku)) {
+                // Auto generate SKU like GT-P-[random 5 digits]
+                $course->sku = 'GT-P-' . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+            }
+            if (is_null($course->image_path)) {
+                $course->image_path = '';
+            }
         });
 
         static::updating(function ($course) {
@@ -48,6 +64,20 @@ class Course extends Model
                 $course->slug = \Illuminate\Support\Str::slug($course->name);
             }
         });
+    }
+
+    /**
+     * Get stock status attribute.
+     */
+    public function getStockStatusAttribute()
+    {
+        if ($this->stock <= 0) {
+            return 'out_of_stock';
+        }
+        if ($this->stock <= $this->low_stock_threshold) {
+            return 'low_stock';
+        }
+        return 'in_stock';
     }
 
     /**

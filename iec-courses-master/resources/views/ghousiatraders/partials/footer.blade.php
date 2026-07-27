@@ -45,9 +45,24 @@
                     {{ $footer->brand_description ?? 'Your trusted destination for premium baby care products and exciting ride-on toys. Quality you can trust, happiness they deserve.' }}
                 </p>
                 <div class="social-links">
-                    <a href="{{ $footer->facebook_url ?? '#' }}" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><i data-lucide="facebook"></i></a>
-                    <a href="{{ $footer->instagram_url ?? '#' }}" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><i data-lucide="instagram"></i></a>
-                    <a href="{{ $footer->youtube_url ?? '#' }}" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><i data-lucide="youtube"></i></a>
+                    <a href="{{ $footer->facebook_url ?? '#' }}" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                        <svg class="social-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; display: block;">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                        </svg>
+                    </a>
+                    <a href="{{ $footer->instagram_url ?? '#' }}" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                        <svg class="social-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; display: block;">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                        </svg>
+                    </a>
+                    <a href="{{ $footer->youtube_url ?? '#' }}" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+                        <svg class="social-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; display: block;">
+                            <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/>
+                            <polygon points="10 15 15 12 10 9"/>
+                        </svg>
+                    </a>
                     <a href="{{ $footer->tiktok_url ?? '#' }}" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
                         <svg class="tiktok-svg" viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px; display: block;"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.09-1.5-1.06-.8-1.8-1.95-2.22-3.23v8.52c0 2.45-.76 4.95-2.58 6.56-2.12 1.88-5.3 2.24-7.79 1.12-2.52-1.12-4.22-3.7-4.14-6.48.06-2.92 2.05-5.63 4.95-6.19 1.01-.2 2.07-.1 3.06.2v4.09c-.83-.26-1.74-.32-2.56-.05-1.14.37-2.01 1.47-2.04 2.68-.05 1.5.95 2.9 2.43 3.19 1.55.3 3.2-.55 3.59-2.05.07-.28.09-.57.09-.86V.02z"/></svg>
                     </a>
