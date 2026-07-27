@@ -804,7 +804,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('admin.users') }}" class="sidebar-nav-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+                <a href="{{ route('admin.customers.index') }}" class="sidebar-nav-link {{ request()->routeIs('admin.customers*') ? 'active' : '' }}">
                     <div class="sidebar-nav-link-left">
                         <i data-lucide="users"></i>
                         <span>Customers</span>

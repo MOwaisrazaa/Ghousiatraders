@@ -25,7 +25,12 @@ class User extends Authenticatable
         'phone',
         'about',
         'google_id',
-        'role'
+        'role',
+        'status',
+        'group',
+        'shipping_address',
+        'billing_address',
+        'notes',
     ];
 
     /**
@@ -56,6 +61,9 @@ class User extends Authenticatable
     }
     public function roles(){
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+    }
+    public function orders(){
+        return $this->hasMany(Order::class, 'user_id');
     }
 
     /**

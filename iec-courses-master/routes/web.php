@@ -516,6 +516,20 @@ Route::middleware(['auth', 'check.role:Admin,Super Admin', 'super.admin.bypass']
         ->middleware('admin.permission:payment_methods')
         ->name('admin.payment-methods.update-order');
 
+    // Customers management
+    Route::get('/customers/export', [App\Http\Controllers\Admin\CustomerController::class, 'export'])
+        ->name('admin.customers.export');
+    Route::post('/customers/{user}/toggle-status', [App\Http\Controllers\Admin\CustomerController::class, 'toggleStatus'])
+        ->name('admin.customers.toggle-status');
+    Route::get('/customers', [App\Http\Controllers\Admin\CustomerController::class, 'index'])
+        ->name('admin.customers.index');
+    Route::post('/customers', [App\Http\Controllers\Admin\CustomerController::class, 'store'])
+        ->name('admin.customers.store');
+    Route::put('/customers/{user}', [App\Http\Controllers\Admin\CustomerController::class, 'update'])
+        ->name('admin.customers.update');
+    Route::delete('/customers/{user}', [App\Http\Controllers\Admin\CustomerController::class, 'destroy'])
+        ->name('admin.customers.destroy');
+
     // Products management
     Route::get('/products/export', [ProductController::class, 'export'])
         ->name('admin.products.export');
