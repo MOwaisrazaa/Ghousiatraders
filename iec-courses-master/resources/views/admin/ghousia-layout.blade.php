@@ -899,7 +899,7 @@
                     </div>
                 </a>
 
-                <a href="#" class="sidebar-nav-link">
+                <a href="{{ route('admin.support-tickets') }}" class="sidebar-nav-link {{ request()->routeIs('admin.support-tickets*') ? 'active' : '' }}">
                     <div class="sidebar-nav-link-left">
                         <i data-lucide="help-circle"></i>
                         <span>Support & Tickets</span>

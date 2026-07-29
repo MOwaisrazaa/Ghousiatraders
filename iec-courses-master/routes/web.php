@@ -643,6 +643,35 @@ Route::middleware(['auth', 'check.role:Admin,Super Admin', 'super.admin.bypass']
         ->middleware('admin.permission:users')
         ->name('admin.users-roles.export');
 
+    // Support & Tickets management
+    Route::get('/support-tickets', [App\Http\Controllers\Admin\SupportTicketController::class, 'index'])
+        ->middleware('admin.permission:support')
+        ->name('admin.support-tickets');
+    Route::post('/support-tickets', [App\Http\Controllers\Admin\SupportTicketController::class, 'store'])
+        ->middleware('admin.permission:support')
+        ->name('admin.support-tickets.store');
+    Route::get('/support-tickets/export', [App\Http\Controllers\Admin\SupportTicketController::class, 'exportTickets'])
+        ->middleware('admin.permission:support')
+        ->name('admin.support-tickets.export');
+    Route::get('/support-tickets/{ticket}', [App\Http\Controllers\Admin\SupportTicketController::class, 'show'])
+        ->middleware('admin.permission:support')
+        ->name('admin.support-tickets.show');
+    Route::post('/support-tickets/{ticket}/reply', [App\Http\Controllers\Admin\SupportTicketController::class, 'reply'])
+        ->middleware('admin.permission:support')
+        ->name('admin.support-tickets.reply');
+    Route::put('/support-tickets/{ticket}/status', [App\Http\Controllers\Admin\SupportTicketController::class, 'updateStatus'])
+        ->middleware('admin.permission:support')
+        ->name('admin.support-tickets.status');
+    Route::delete('/support-tickets/{ticket}', [App\Http\Controllers\Admin\SupportTicketController::class, 'destroy'])
+        ->middleware('admin.permission:support')
+        ->name('admin.support-tickets.destroy');
+    Route::post('/support-tickets/department/store', [App\Http\Controllers\Admin\SupportTicketController::class, 'manageDepartment'])
+        ->middleware('admin.permission:support')
+        ->name('admin.support-tickets.department.store');
+    Route::post('/support-tickets/canned/store', [App\Http\Controllers\Admin\SupportTicketController::class, 'manageCannedResponse'])
+        ->middleware('admin.permission:support')
+        ->name('admin.support-tickets.canned.store');
+
     // Coupons management
     Route::resource('coupons', App\Http\Controllers\Admin\CouponController::class)
         ->names(['index' => 'admin.coupons.index', 'create' => 'admin.coupons.create', 'store' => 'admin.coupons.store',
