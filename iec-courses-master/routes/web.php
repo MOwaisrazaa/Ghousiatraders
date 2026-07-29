@@ -602,18 +602,46 @@ Route::middleware(['auth', 'check.role:Admin,Super Admin', 'super.admin.bypass']
         ->middleware('admin.permission:lectures')
         ->name('admin.lectures.show');
 
-    // Roles management
-    Route::get('/roles', [App\Http\Controllers\Admin\AdminController::class, 'roles'])
+    // Users & Roles management
+    Route::get('/users-roles', [App\Http\Controllers\Admin\UsersRolesController::class, 'index'])
+        ->middleware('admin.permission:users')
+        ->name('admin.users-roles');
+    Route::get('/users', [App\Http\Controllers\Admin\UsersRolesController::class, 'index'])
+        ->middleware('admin.permission:users')
+        ->name('admin.users');
+    Route::get('/roles', [App\Http\Controllers\Admin\UsersRolesController::class, 'index'])
         ->middleware('admin.permission:roles')
         ->name('admin.roles');
 
-    // Users management
-    Route::get('/users', [App\Http\Controllers\Admin\AdminController::class, 'users'])
+    Route::post('/users-roles/user', [App\Http\Controllers\Admin\UsersRolesController::class, 'storeUser'])
         ->middleware('admin.permission:users')
-        ->name('admin.users');
-    Route::get('/user/create', [UserController::class, 'create'])
+        ->name('admin.users-roles.user.store');
+    Route::put('/users-roles/user/{user}', [App\Http\Controllers\Admin\UsersRolesController::class, 'updateUser'])
         ->middleware('admin.permission:users')
-        ->name('admin.user.create');
+        ->name('admin.users-roles.user.update');
+    Route::delete('/users-roles/user/{user}', [App\Http\Controllers\Admin\UsersRolesController::class, 'destroyUser'])
+        ->middleware('admin.permission:users')
+        ->name('admin.users-roles.user.destroy');
+    Route::post('/users-roles/user/{user}/status', [App\Http\Controllers\Admin\UsersRolesController::class, 'toggleUserStatus'])
+        ->middleware('admin.permission:users')
+        ->name('admin.users-roles.user.status');
+    Route::post('/users-roles/user/{user}/reset-password', [App\Http\Controllers\Admin\UsersRolesController::class, 'resetUserPassword'])
+        ->middleware('admin.permission:users')
+        ->name('admin.users-roles.user.reset-password');
+
+    Route::post('/users-roles/role', [App\Http\Controllers\Admin\UsersRolesController::class, 'storeRole'])
+        ->middleware('admin.permission:roles')
+        ->name('admin.users-roles.role.store');
+    Route::put('/users-roles/role/{role}', [App\Http\Controllers\Admin\UsersRolesController::class, 'updateRole'])
+        ->middleware('admin.permission:roles')
+        ->name('admin.users-roles.role.update');
+    Route::delete('/users-roles/role/{role}', [App\Http\Controllers\Admin\UsersRolesController::class, 'destroyRole'])
+        ->middleware('admin.permission:roles')
+        ->name('admin.users-roles.role.destroy');
+
+    Route::get('/users-roles/export', [App\Http\Controllers\Admin\UsersRolesController::class, 'exportUsers'])
+        ->middleware('admin.permission:users')
+        ->name('admin.users-roles.export');
 
     // Coupons management
     Route::resource('coupons', App\Http\Controllers\Admin\CouponController::class)

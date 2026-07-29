@@ -892,7 +892,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('admin.users') }}" class="sidebar-nav-link">
+                <a href="{{ route('admin.users-roles') }}" class="sidebar-nav-link {{ request()->routeIs('admin.users*') || request()->routeIs('admin.roles*') ? 'active' : '' }}">
                     <div class="sidebar-nav-link-left">
                         <i data-lucide="shield-check"></i>
                         <span>Users & Roles</span>
