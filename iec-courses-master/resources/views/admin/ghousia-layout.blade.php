@@ -171,6 +171,36 @@
             transition: transform 0.2s;
         }
 
+        .sidebar-submenu {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding-left: 28px;
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-submenu-link {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--gt-text-muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-submenu-link:hover {
+            color: var(--gt-primary);
+            background-color: var(--gt-primary-light);
+        }
+
+        .sidebar-submenu-link.active {
+            color: var(--gt-primary);
+            font-weight: 700;
+            background-color: var(--gt-primary-light);
+        }
+
         /* Business Promotion Card */
         .business-grow-card {
             background: #fff8ee;
@@ -827,21 +857,33 @@
 
 
 
-                <a href="#" class="sidebar-nav-link">
+                <a href="{{ route('admin.reports.index') }}" class="sidebar-nav-link {{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
                     <div class="sidebar-nav-link-left">
                         <i data-lucide="bar-chart-3"></i>
                         <span>Reports</span>
                     </div>
-                    <i data-lucide="chevron-down" class="chevron-arrow"></i>
                 </a>
 
-                <a href="#" class="sidebar-nav-link">
-                    <div class="sidebar-nav-link-left">
-                        <i data-lucide="settings"></i>
-                        <span>Settings</span>
+                <div class="sidebar-menu-item-group" style="display:flex; flex-direction:column; width:100%;">
+                    <a href="{{ route('admin.settings.index') }}" class="sidebar-nav-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+                        <div class="sidebar-nav-link-left">
+                            <i data-lucide="settings"></i>
+                            <span>Settings</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="chevron-arrow" style="transform: {{ request()->routeIs('admin.settings*') ? 'rotate(180deg)' : 'none' }}; transition: transform 0.2s;"></i>
+                    </a>
+                    <div class="sidebar-submenu" style="display: {{ request()->routeIs('admin.settings*') ? 'flex' : 'none' }};">
+                        <a href="{{ route('admin.settings.index', ['tab' => 'general']) }}" class="sidebar-submenu-link {{ (request()->routeIs('admin.settings*') && (request()->input('tab', 'general') === 'general')) ? 'active' : '' }}">General</a>
+                        <a href="{{ route('admin.settings.index', ['tab' => 'store_info']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'store_info' ? 'active' : '' }}">Store Information</a>
+                        <a href="{{ route('admin.settings.index', ['tab' => 'payment_methods']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'payment_methods' ? 'active' : '' }}">Payment Methods</a>
+                        <a href="{{ route('admin.settings.index', ['tab' => 'shipping']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'shipping' ? 'active' : '' }}">Shipping Settings</a>
+                        <a href="{{ route('admin.settings.index', ['tab' => 'tax']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'tax' ? 'active' : '' }}">Tax Settings</a>
+                        <a href="{{ route('admin.settings.index', ['tab' => 'notifications']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'notifications' ? 'active' : '' }}">Notifications</a>
+                        <a href="{{ route('admin.settings.index', ['tab' => 'roles']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'roles' ? 'active' : '' }}">Roles & Permissions</a>
+                        <a href="{{ route('admin.settings.index', ['tab' => 'api']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'api' ? 'active' : '' }}">API Settings</a>
+                        <a href="{{ route('admin.settings.index', ['tab' => 'backup']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'backup' ? 'active' : '' }}">Backup & Restore</a>
                     </div>
-                    <i data-lucide="chevron-down" class="chevron-arrow"></i>
-                </a>
+                </div>
 
                 <a href="{{ route('admin.payment-methods.index') }}" class="sidebar-nav-link {{ request()->routeIs('admin.payment-methods*') ? 'active' : '' }}">
                     <div class="sidebar-nav-link-left">

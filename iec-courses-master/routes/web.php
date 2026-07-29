@@ -625,6 +625,24 @@ Route::middleware(['auth', 'check.role:Admin,Super Admin', 'super.admin.bypass']
     Route::post('/coupons/{coupon}/toggle', [App\Http\Controllers\Admin\CouponController::class, 'toggleStatus'])
         ->name('admin.coupons.toggle-status');
 
+    // Reports management
+    Route::get('/reports', [App\Http\Controllers\Admin\ReportController::class, 'index'])
+        ->name('admin.reports.index');
+    Route::get('/reports/export', [App\Http\Controllers\Admin\ReportController::class, 'export'])
+        ->name('admin.reports.export');
+
+    // Settings management
+    Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])
+        ->name('admin.settings.index');
+    Route::post('/settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])
+        ->name('admin.settings.update');
+    Route::post('/settings/upload-logo', [App\Http\Controllers\Admin\SettingController::class, 'uploadLogo'])
+        ->name('admin.settings.upload-logo');
+    Route::post('/settings/security', [App\Http\Controllers\Admin\SettingController::class, 'security'])
+        ->name('admin.settings.security');
+    Route::post('/settings/smtp', [App\Http\Controllers\Admin\SettingController::class, 'smtp'])
+        ->name('admin.settings.smtp');
+
 
     // Orders & Payments management
     Route::get('/orders/export', [App\Http\Controllers\Admin\OrderController::class, 'export'])
