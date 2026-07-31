@@ -82,44 +82,29 @@ class PolaniController extends Controller
     private function productViewModel(Course $course): array
     {
         $slug = $course->slug;
-        $category = $course->category?->name;
-        $imagePath = $course->image_path ?: 'polani/assets/product-noir.svg';
-        $categoryFilter = match ($category) {
-            'Scented Candles' => 'candles',
-            'Attars' => 'attars',
-            'Oud' => 'oud',
-            'Women' => 'women',
-            default => 'men',
-        };
-        $rating = $course->average_rating;
-        $reviews = $course->rating_count;
-        $notes = $this->notesMap[$slug] ?? [
-            'top' => ['Citrus'],
-            'heart' => ['Amber'],
-            'base' => ['Musk', 'Woods'],
-        ];
+        $category = $course->category?->name ?? 'General';
+        $imagePath = $course->image_path ?: 'ghousiatraders/assets/shop_hero.png';
+        $categoryFilter = $course->category?->slug ?? 'all';
 
         return [
             'db_id' => $course->id,
             'id' => $slug,
             'slug' => $slug,
+            'sku' => $course->sku,
             'name' => $course->name,
-            'type' => $this->productType($category),
+            'type' => $category,
             'price' => (float) ($course->weekly_price ?? 0),
-            'rating' => $rating,
-            'reviews' => $reviews,
+            'sale_price' => $course->sale_price ? (float) $course->sale_price : null,
+            'stock' => (int) $course->stock,
+            'status' => $course->status,
+            'is_featured' => (bool) $course->is_featured,
+            'rating' => $course->average_rating ?? 5.0,
+            'reviews' => $course->rating_count ?? 1,
             'category_slug' => $categoryFilter,
             'category_name' => $category,
-            'family' => $this->familyForCategory($category),
-            'occasion' => $this->occasionForCategory($category),
             'image' => asset($imagePath),
-            'notes' => $notes,
-            'longevity' => $this->longevityForCategory($category),
-            'projection' => $this->projectionForCategory($category),
-            'season' => $this->seasonForCategory($category),
             'description' => $course->description,
-            'long_description' => $course->long_description,
-            'intro_video_url' => $course->intro_video_url,
+            'long_description' => $course->long_description ?: $course->description,
         ];
     }
 
@@ -198,6 +183,7 @@ class PolaniController extends Controller
     {
         $products = Course::query()
             ->with('category')
+            ->where('status', 'active')
             ->whereHas('category', function ($query) use ($categoryName) {
                 $query->where('name', $categoryName);
             })
@@ -222,6 +208,7 @@ class PolaniController extends Controller
     {
         $products = Course::query()
             ->with('category')
+            ->where('status', 'active')
             ->whereHas('category', function ($query) {
                 $query->whereIn('slug', ['baby-care', 'bo-bikes', 'bo-cars']);
             })
@@ -231,6 +218,7 @@ class PolaniController extends Controller
 
         $babyCareProducts = Course::query()
             ->with('category')
+            ->where('status', 'active')
             ->whereHas('category', function ($query) {
                 $query->where('slug', 'baby-care');
             })
@@ -240,6 +228,7 @@ class PolaniController extends Controller
 
         $bikesProducts = Course::query()
             ->with('category')
+            ->where('status', 'active')
             ->whereHas('category', function ($query) {
                 $query->where('slug', 'bo-bikes');
             })
@@ -249,6 +238,7 @@ class PolaniController extends Controller
 
         $carsProducts = Course::query()
             ->with('category')
+            ->where('status', 'active')
             ->whereHas('category', function ($query) {
                 $query->where('slug', 'bo-cars');
             })
@@ -260,7 +250,7 @@ class PolaniController extends Controller
 
         $homepageSections = \App\Models\HomepageSection::query()
             ->with(['products' => function($query) {
-                $query->with('category')->orderByDesc('homepage_section_product.created_at');
+                $query->with('category')->where('status', 'active')->orderByDesc('homepage_section_product.created_at');
             }])
             ->where('is_active', true)
             ->orderBy('order')
@@ -291,6 +281,7 @@ class PolaniController extends Controller
 
         $products = Course::query()
             ->with('category')
+            ->where('status', 'active')
             ->whereHas('category', function ($q) {
                 $q->whereIn('slug', ['baby-care', 'bo-bikes', 'bo-cars']);
             })

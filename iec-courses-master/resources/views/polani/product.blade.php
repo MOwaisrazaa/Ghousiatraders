@@ -42,50 +42,48 @@
           <span class="rating-count" id="top-rating-count" style="color: #8a7558; text-decoration: underline; cursor: pointer;"></span>
         </div>
 
-        <div class="product__row">
-          <div class="price" data-product-price>Rs {{ number_format($product['price']) }}</div>
-          {{-- No fake rating shown --}}
+        <div class="product__row" style="margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+          <div class="price" data-product-price>
+            @if(!empty($product['sale_price']))
+              <span style="text-decoration: line-through; opacity: 0.6; margin-right: 8px; font-size: 0.85em;">Rs {{ number_format($product['price']) }}</span>
+              <span style="color: #44240f; font-weight: 800;">Rs {{ number_format($product['sale_price']) }}</span>
+            @else
+              <span style="color: #44240f; font-weight: 800;">Rs {{ number_format($product['price']) }}</span>
+            @endif
+          </div>
+          <div class="stock-status" style="font-weight: 700; color: {{ ($product['stock'] ?? 0) > 0 ? '#10b981' : '#ef4444' }};">
+            {{ ($product['stock'] ?? 0) > 0 ? 'In Stock (' . $product['stock'] . ' available)' : 'Out of Stock' }}
+          </div>
         </div>
 
         <p class="product__desc" data-product-desc>{{ $product['description'] }}</p>
 
-        <div class="notes notes--compact" data-product-notes>
-          <div class="notes__col">
-            <div class="notes__label">TOP NOTES</div>
-            <div class="notes__value">{{ implode(', ', $product['notes']['top']) }}</div>
-          </div>
-          <div class="notes__col">
-            <div class="notes__label">HEART NOTES</div>
-            <div class="notes__value">{{ implode(', ', $product['notes']['heart']) }}</div>
-          </div>
-          <div class="notes__col">
-            <div class="notes__label">BASE NOTES</div>
-            <div class="notes__value">{{ implode(', ', $product['notes']['base']) }}</div>
-          </div>
+        <div class="product__actions" style="margin-top: 20px;">
+          @if(($product['stock'] ?? 0) > 0)
+            <button
+              class="btn btn--primary"
+              type="button"
+              data-add-to-cart
+              data-add-url="{{ route('polani.cart.add', ['slug' => $product['slug']]) }}"
+            >
+              Add to Cart
+            </button>
+            <a class="btn btn--ghost btn--dark" href="{{ route('shopping-cart') }}">Buy Now</a>
+          @else
+            <button class="btn btn--ghost" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Out of Stock</button>
+          @endif
         </div>
 
-        <div class="product__actions">
-          <button
-            class="btn btn--primary"
-            type="button"
-            data-add-to-cart
-            data-add-url="{{ route('polani.cart.add', ['slug' => $product['slug']]) }}"
-          >
-            Add to Cart
-          </button>
-          <a class="btn btn--ghost btn--dark" href="{{ route('shopping-cart') }}">Buy Now</a>
-        </div>
-
-        <div class="accordion" data-accordion>
+        <div class="accordion" data-accordion style="margin-top: 20px;">
           <button class="accordion__head" type="button" aria-expanded="true">
-            Additional Information <span aria-hidden="true">+</span>
+            Product Specifications <span aria-hidden="true">+</span>
           </button>
           <div class="accordion__body">
             <div class="kv">
-              <div class="kv__row"><span>Longevity</span><span data-product-longevity>{{ $product['longevity'] }}</span></div>
-              <div class="kv__row"><span>Projection</span><span data-product-projection>{{ $product['projection'] }}</span></div>
-              <div class="kv__row"><span>Best Season</span><span data-product-season>{{ $product['season'] }}</span></div>
-              <div class="kv__row"><span>Occasion</span><span data-product-occasion>{{ implode(', ', $product['occasion']) }}</span></div>
+              <div class="kv__row"><span>SKU</span><span>{{ $product['sku'] ?? 'N/A' }}</span></div>
+              <div class="kv__row"><span>Category</span><span>{{ $product['category_name'] ?? 'General' }}</span></div>
+              <div class="kv__row"><span>Availability</span><span>{{ ($product['stock'] ?? 0) > 0 ? 'In Stock' : 'Out of Stock' }}</span></div>
+              <div class="kv__row"><span>Vendor</span><span>Ghousia Traders</span></div>
             </div>
           </div>
         </div>
