@@ -110,7 +110,17 @@ class User extends Authenticatable
 
     public function permissions()
     {
-        return $this->hasMany(AdminPermission::class, 'admin_user_id');
+        if (\Illuminate\Support\Facades\Schema::hasTable('admin_permissions')) {
+            return $this->hasMany(AdminPermission::class, 'admin_user_id');
+        }
+        return $this->hasManyThrough(
+            RolePermission::class,
+            Role::class,
+            'id',
+            'role_id',
+            'id',
+            'id'
+        );
     }
 
     public function isSuperAdmin()
@@ -136,10 +146,13 @@ class User extends Authenticatable
         // Check role_permissions table through assigned roles
         $roleIds = $this->roles()->pluck('roles.id')->toArray();
         if (!empty($roleIds)) {
+            $moduleKey = strtok($permissionKey, '.');
             $hasRolePerm = RolePermission::whereIn('role_id', $roleIds)
-                ->where(function($q) use ($permissionKey) {
+                ->where(function($q) use ($permissionKey, $moduleKey) {
                     $q->where('permission', $permissionKey)
-                      ->orWhere('permission', strtok($permissionKey, '.') . '.manage');
+                      ->orWhere('permission', $moduleKey)
+                      ->orWhere('permission', $moduleKey . '.manage')
+                      ->orWhere('permission', $moduleKey . '.view');
                 })
                 ->where('is_allowed', true)
                 ->exists();
@@ -149,14 +162,16 @@ class User extends Authenticatable
             }
         }
 
-        // Fallback to legacy AdminPermission table (page key)
-        $moduleKey = strtok($permissionKey, '.');
-        $hasPagePerm = AdminPermission::where('admin_user_id', $this->id)
-            ->where('page', $moduleKey)
-            ->where('is_allowed', true)
-            ->exists();
+        // Fallback to legacy AdminPermission table only if table exists in database
+        if (\Illuminate\Support\Facades\Schema::hasTable('admin_permissions')) {
+            $moduleKey = strtok($permissionKey, '.');
+            return AdminPermission::where('admin_user_id', $this->id)
+                ->where('page', $moduleKey)
+                ->where('is_allowed', true)
+                ->exists();
+        }
 
-        return $hasPagePerm;
+        return false;
     }
 
     /**
