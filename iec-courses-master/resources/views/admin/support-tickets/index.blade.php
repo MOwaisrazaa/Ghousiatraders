@@ -975,17 +975,7 @@
 <div style="width: 100%; box-sizing: border-box;">
     
     <!-- 1. Page Header Bar -->
-    <div class="st-page-header">
-        <div class="st-page-title-wrap">
-            <h1>Support & Tickets</h1>
-            <div class="st-breadcrumb">
-                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
-                <span>Support & Tickets</span>
-            </div>
-        </div>
-
-        <!-- Split Button + New Ticket -->
+    <x-admin-page-header title="Support & Tickets">
         <div class="st-btn-split">
             <button type="button" class="st-btn-primary" onclick="openNewTicketModal()">
                 <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
@@ -1009,7 +999,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </x-admin-page-header>
 
     <!-- 2. Five Statistics Cards Row -->
     <div class="st-stats-row">

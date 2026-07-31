@@ -611,31 +611,20 @@
 @section('content')
 
 <!-- Header bar -->
-<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px; min-width:0; width:100%;">
-    <div>
-        <h2 style="font-size:1.8rem; font-weight:800; color:var(--gt-primary);">Orders</h2>
-        <div style="font-size:0.85rem; color:var(--gt-text-muted); margin-top:4px; font-weight:600;">
-            <a href="{{ route('admin.dashboard') }}" style="color:inherit; text-decoration:none;">Dashboard</a>
-            <span style="margin:0 6px;">&rsaquo;</span>
-            <span style="color:var(--gt-primary);">Orders</span>
-        </div>
-    </div>
-    
-    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-        <a href="{{ route('admin.orders.export', request()->query()) }}" class="gt-btn-outline">
-            <i data-lucide="download" style="width:16px; height:16px;"></i>
-            Export
-        </a>
-        <button type="button" class="gt-btn-outline" onclick="openModal('importOrdersModal')">
-            <i data-lucide="upload" style="width:16px; height:16px;"></i>
-            Import
-        </button>
-        <button type="button" class="gt-btn-primary" onclick="openModal('createOrderModal')">
-            <i data-lucide="plus" style="width:16px; height:16px;"></i>
-            Create Order
-        </button>
-    </div>
-</div>
+<x-admin-page-header title="Orders">
+    <a href="{{ route('admin.orders.export', request()->query()) }}" class="gt-btn-outline">
+        <i data-lucide="download" style="width:16px; height:16px;"></i>
+        Export
+    </a>
+    <button type="button" class="gt-btn-outline" onclick="openModal('importOrdersModal')">
+        <i data-lucide="upload" style="width:16px; height:16px;"></i>
+        Import
+    </button>
+    <button type="button" class="gt-btn-primary" onclick="openModal('createOrderModal')">
+        <i data-lucide="plus" style="width:16px; height:16px;"></i>
+        Create Order
+    </button>
+</x-admin-page-header>
 
 <!-- Order Statistics Row (6 Cards) -->
 <div class="orders-stats-row">

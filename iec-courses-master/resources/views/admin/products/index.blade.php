@@ -757,28 +757,17 @@
     }
 </style>
 
-<!-- Sub navigation header -->
-<div class="sub-nav-bar" style="margin-bottom: 24px;">
-    <div class="sub-nav-left">
-        <h1 class="page-title">Products</h1>
-        <div class="breadcrumbs-list">
-            <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-            <i data-lucide="chevron-right"></i>
-            <span>Products</span>
-        </div>
-    </div>
-    <div class="sub-nav-right" style="gap:10px;">
-        <a href="{{ route('admin.products.export', request()->all()) }}" class="gt-btn-outline" style="min-height:38px;padding:0 16px;">
-            <i data-lucide="download" style="width:16px;height:16px;"></i> Export
-        </a>
-        <button class="gt-btn-outline" onclick="openModal('importProductsModal')" style="min-height:38px;padding:0 16px;">
-            <i data-lucide="upload" style="width:16px;height:16px;"></i> Import
-        </button>
-        <button class="gt-btn-primary" onclick="openModal('addProductModal')">
-            <i data-lucide="plus"></i> Add New Product
-        </button>
-    </div>
-</div>
+<x-admin-page-header title="Products">
+    <a href="{{ route('admin.products.export', request()->all()) }}" class="gt-btn-outline" style="min-height:38px;padding:0 16px;">
+        <i data-lucide="download" style="width:16px;height:16px;"></i> Export
+    </a>
+    <button class="gt-btn-outline" onclick="openModal('importProductsModal')" style="min-height:38px;padding:0 16px;">
+        <i data-lucide="upload" style="width:16px;height:16px;"></i> Import
+    </button>
+    <button class="gt-btn-primary" onclick="openModal('addProductModal')">
+        <i data-lucide="plus"></i> Add New Product
+    </button>
+</x-admin-page-header>
 
 <!-- Product Statistics Row -->
 <div class="products-stats-row">

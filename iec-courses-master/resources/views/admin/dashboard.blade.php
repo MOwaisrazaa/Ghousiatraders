@@ -413,12 +413,7 @@
 <div class="dashboard-grid">
     
     <!-- Dashboard Header Section -->
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:10px;">
-        <div>
-            <h2 style="font-size:1.8rem; font-weight:800; color:var(--gt-primary);">Dashboard</h2>
-            <p style="font-size:0.88rem; color:var(--gt-text-muted); margin-top:4px;">Welcome back, Admin! Here's what's happening with your store today.</p>
-        </div>
-        
+    <x-admin-page-header title="Dashboard">
         <!-- Date filter form -->
         <form action="{{ route('admin.dashboard') }}" method="GET" id="dateFilterForm" style="display:flex; align-items:center; gap:8px;">
             <div style="background:#ffffff; border:1.5px solid var(--gt-border); border-radius:10px; padding:6px 12px; display:flex; align-items:center; gap:8px; font-size:0.82rem; font-weight:700;">
@@ -428,7 +423,7 @@
                 <input type="date" name="end_date" value="{{ $endDateInput }}" style="border:none; outline:none; font-family:inherit; color:inherit; cursor:pointer;" onchange="document.getElementById('dateFilterForm').submit();">
             </div>
         </form>
-    </div>
+    </x-admin-page-header>
 
     <!-- 4. Statistics Cards (5 Cards) -->
     <div class="stats-row">

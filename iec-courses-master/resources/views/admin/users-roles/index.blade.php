@@ -942,17 +942,7 @@
 <div style="width: 100%; box-sizing: border-box;">
     
     <!-- 1. Page Header Bar -->
-    <div class="ur-page-header">
-        <div class="ur-page-title-wrap">
-            <h1>Users & Roles</h1>
-            <div class="ur-breadcrumb">
-                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
-                <span>Users & Roles</span>
-            </div>
-        </div>
-
-        <!-- Split Button -->
+    <x-admin-page-header title="Users & Roles">
         <div class="ur-btn-split">
             <button type="button" class="ur-btn-primary" onclick="openAddUserModal()">
                 <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i>
@@ -973,7 +963,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </x-admin-page-header>
 
     <!-- 2. Navigation Tabs -->
     <div class="ur-nav-tabs">

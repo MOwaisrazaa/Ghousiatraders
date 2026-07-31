@@ -524,38 +524,27 @@
     }
 </style>
 
-<!-- Sub navigation header -->
-<div class="sub-nav-bar" style="margin-bottom: 24px;">
-    <div class="sub-nav-left">
-        <h1 class="page-title">Reports</h1>
-        <div class="breadcrumbs-list">
-            <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-            <i data-lucide="chevron-right"></i>
-            <span>Reports</span>
+<x-admin-page-header title="Reports">
+    <div class="split-btn-container">
+        <button class="gt-btn-primary split-btn-main" onclick="triggerReportExport('csv')">
+            <i data-lucide="download"></i> Export Report
+        </button>
+        <button class="gt-btn-primary split-btn-toggle" onclick="toggleExportMenu(event)">
+            <i data-lucide="chevron-down" style="width:14px;height:14px;"></i>
+        </button>
+        <div class="export-dropdown-menu" id="exportDropdownMenu">
+            <button class="export-dropdown-item" onclick="triggerReportExport('csv')">
+                <i data-lucide="file-text" style="width:12px;height:12px;"></i> CSV
+            </button>
+            <button class="export-dropdown-item" onclick="triggerReportExport('excel')">
+                <i data-lucide="table" style="width:12px;height:12px;"></i> Excel
+            </button>
+            <button class="export-dropdown-item" onclick="triggerReportExport('pdf')">
+                <i data-lucide="file" style="width:12px;height:12px;"></i> PDF / Print
+            </button>
         </div>
     </div>
-    <div class="sub-nav-right">
-        <div class="split-btn-container">
-            <button class="gt-btn-primary split-btn-main" onclick="triggerReportExport('csv')">
-                <i data-lucide="download"></i> Export Report
-            </button>
-            <button class="gt-btn-primary split-btn-toggle" onclick="toggleExportMenu(event)">
-                <i data-lucide="chevron-down" style="width:14px;height:14px;"></i>
-            </button>
-            <div class="export-dropdown-menu" id="exportDropdownMenu">
-                <button class="export-dropdown-item" onclick="triggerReportExport('csv')">
-                    <i data-lucide="file-text" style="width:12px;height:12px;"></i> CSV
-                </button>
-                <button class="export-dropdown-item" onclick="triggerReportExport('excel')">
-                    <i data-lucide="table" style="width:12px;height:12px;"></i> Excel
-                </button>
-                <button class="export-dropdown-item" onclick="triggerReportExport('pdf')">
-                    <i data-lucide="file" style="width:12px;height:12px;"></i> PDF / Print
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+</x-admin-page-header>
 
 <!-- Report Statistics Row -->
 <div class="reports-stats-row">

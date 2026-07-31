@@ -306,6 +306,70 @@
             color: var(--gt-text-muted);
         }
 
+        /* Standardized Admin Header & Breadcrumb Reset */
+        .admin-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .admin-page-title {
+            font-size: 1.8rem !important;
+            font-weight: 800 !important;
+            color: #351b0d !important;
+            margin: 0 0 4px 0 !important;
+            line-height: 1.2 !important;
+            letter-spacing: -0.02em !important;
+        }
+
+        .admin-breadcrumb {
+            font-size: 0.85rem !important;
+            color: #786458 !important;
+            margin-top: 4px !important;
+            font-weight: 600 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            flex-wrap: wrap !important;
+        }
+
+        .admin-breadcrumb a,
+        .admin-breadcrumb a:visited,
+        .admin-breadcrumb a:active {
+            color: #786458 !important;
+            text-decoration: none !important;
+            font-weight: 600 !important;
+            transition: color 0.15s ease !important;
+        }
+
+        .admin-breadcrumb a:hover {
+            color: #351b0d !important;
+            text-decoration: underline !important;
+        }
+
+        .admin-breadcrumb-separator {
+            color: #b0a095 !important;
+            font-size: 0.85rem !important;
+            user-select: none !important;
+        }
+
+        .admin-breadcrumb-current {
+            color: #351b0d !important;
+            font-weight: 700 !important;
+        }
+
+        .admin-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
         /* Profile Popover Menu */
         .profile-popover-menu {
             position: absolute;

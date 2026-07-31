@@ -460,19 +460,7 @@
     }
 </style>
 
-<!-- Sub navigation page header -->
-<div class="sub-nav-bar" style="margin-bottom: 24px;">
-    <div class="sub-nav-left">
-        <h1 class="page-title">Settings</h1>
-        <div class="breadcrumbs-list">
-            <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-            <i data-lucide="chevron-right"></i>
-            <span>Settings</span>
-            <i data-lucide="chevron-right"></i>
-            <span style="text-transform: capitalize;">{{ str_replace('_', ' ', $tab) }}</span>
-        </div>
-    </div>
-</div>
+<x-admin-page-header title="Settings" />
 
 <!-- Horizontal navigation tabs -->
 <div class="settings-tabs-nav">

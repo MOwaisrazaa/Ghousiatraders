@@ -656,22 +656,11 @@
     }
 </style>
 
-<!-- Sticky Sub header bar -->
-<div class="sub-nav-bar" style="margin-bottom: 24px;">
-    <div class="sub-nav-left">
-        <h1 class="page-title">Categories</h1>
-        <div class="breadcrumbs-list">
-            <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-            <i data-lucide="chevron-right"></i>
-            <span>Categories</span>
-        </div>
-    </div>
-    <div class="sub-nav-right">
-        <button class="gt-btn-primary" onclick="openModal('addCategoryModal')">
-            <i data-lucide="plus"></i> Add New Category
-        </button>
-    </div>
-</div>
+<x-admin-page-header title="Categories">
+    <button class="gt-btn-primary" onclick="openModal('addCategoryModal')">
+        <i data-lucide="plus"></i> Add New Category
+    </button>
+</x-admin-page-header>
 
 <!-- Category Statistics Row -->
 <div class="categories-stats-row">

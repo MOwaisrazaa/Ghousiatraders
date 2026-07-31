@@ -628,22 +628,11 @@
     }
 </style>
 
-<!-- Sub navigation header -->
-<div class="sub-nav-bar" style="margin-bottom: 24px;">
-    <div class="sub-nav-left">
-        <h1 class="page-title">Coupons</h1>
-        <div class="breadcrumbs-list">
-            <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-            <i data-lucide="chevron-right"></i>
-            <span>Coupons</span>
-        </div>
-    </div>
-    <div class="sub-nav-right">
-        <button class="gt-btn-primary" onclick="openModal('addCouponModal')">
-            <i data-lucide="plus"></i> Add New Coupon
-        </button>
-    </div>
-</div>
+<x-admin-page-header title="Coupons">
+    <button class="gt-btn-primary" onclick="openModal('addCouponModal')">
+        <i data-lucide="plus"></i> Add New Coupon
+    </button>
+</x-admin-page-header>
 
 <!-- Coupon Statistics Row -->
 <div class="coupons-stats-row">
