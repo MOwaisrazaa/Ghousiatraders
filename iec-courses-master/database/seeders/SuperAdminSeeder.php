@@ -15,12 +15,12 @@ class SuperAdminSeeder extends Seeder
     public function run(): void
     {
         $user = User::updateOrCreate(
-            ['email' => 'admin@polani.com'],
+            ['email' => 'admin@ghousiatraders.com'],
             [
-                'name' => 'Polani Admin',
+                'name' => 'Ghousia Traders Admin',
                 'email_verified_at' => now(),
                 'phone_verified_at' => now(),
-                'password' => Hash::make('PolaniAdmin@123'),
+                'password' => Hash::make('GhousiaAdmin@123'),
                 'phone' => '1234567890',
                 'location' => 'System',
                 'about' => 'Single admin account for product management',

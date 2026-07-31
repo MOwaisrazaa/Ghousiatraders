@@ -200,7 +200,7 @@
             } else {
                 // System default mappings
                 if ($key === 'home') {
-                    $eyebrow = 'POLANI FRAGRANCE';
+                    $eyebrow = 'GHOUSIA TRADERS';
                     $previewImage = asset('polani/assets/hero-noir-elixir-1024.jpg');
                     $title = 'More Than A Fragrance, It\'s A Statement.';
                     $subtitle = 'Handcrafted extrait de parfum made for timeless elegance.';

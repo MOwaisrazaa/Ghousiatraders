@@ -278,10 +278,12 @@
             align-items: center;
             justify-content: space-between;
             gap: 24px;
-            padding: 18px 28px;
-            background: rgba(7, 7, 7, 0.96);
-            border-bottom: 1px solid rgba(212, 166, 88, 0.18);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            height: 70px;
+            padding: 0 28px;
+            background: linear-gradient(135deg, #351b0d 0%, #44240f 100%);
+            border-bottom: 1.5px solid rgba(215, 166, 74, 0.35);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
         }
 
         .polani-admin-brand {
@@ -1027,10 +1029,9 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <a class="polani-admin-brand" href="{{ route('admin.dashboard') }}" style="display: flex; align-items: center; gap: 10px; flex-direction: row; text-decoration: none;">
-                    <img src="{{ asset('polani/assets/logos/logo-white-trans.png?v=4') }}" alt="Polani Fragrance Logo" style="height: 38px; width: auto; object-fit: contain;">
                     <div style="display: flex; flex-direction: column; line-height: 1;">
-                        <span class="polani-admin-brand__word">POLANI</span>
-                        <span class="polani-admin-brand__sub" style="margin-top: 2px;">FRAGRANCE</span>
+                        <span class="polani-admin-brand__word" style="font-size: 1.4rem;">GHOUSIA</span>
+                        <span class="polani-admin-brand__sub" style="margin-top: 2px;">TRADERS</span>
                     </div>
                 </a>
             </div>

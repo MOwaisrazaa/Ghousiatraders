@@ -75,17 +75,21 @@
         }
 
         .sidebar-header {
-            padding: 24px 20px 16px 20px;
+            height: 70px;
+            padding: 0 20px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            border-bottom: 1.5px solid var(--gt-border);
-            background: #ffffff;
+            border-bottom: 1.5px solid rgba(215, 166, 74, 0.35);
+            background: linear-gradient(135deg, #351b0d 0%, #44240f 100%);
+            box-sizing: border-box;
+            flex-shrink: 0;
         }
 
         .sidebar-logo-svg {
-            width: 140px;
-            height: 38px;
+            width: 175px;
+            height: 44px;
         }
 
         .sidebar-header-title {
@@ -362,15 +366,15 @@
         .admin-topbar {
             position: sticky;
             top: 0;
-            background: #ffffff;
-            border-bottom: 1.5px solid var(--gt-border);
+            background: linear-gradient(135deg, #351b0d 0%, #44240f 100%);
+            border-bottom: 1.5px solid rgba(215, 166, 74, 0.35);
             height: 70px;
             padding: 0 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 90;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.01);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .topbar-left {
@@ -385,7 +389,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: var(--gt-primary);
+            color: #fffaf3;
             width: 36px;
             height: 36px;
             border-radius: 8px;
@@ -396,7 +400,7 @@
         }
 
         .hamburger-btn:hover {
-            background-color: var(--gt-primary-light);
+            background-color: rgba(255, 255, 255, 0.12);
         }
 
         .hamburger-btn i {
@@ -411,20 +415,24 @@
 
         .search-pill-input {
             width: 100%;
-            background: #fffdf9;
-            border: 1.5px solid var(--gt-border);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(215, 166, 74, 0.35);
             border-radius: 99px;
             padding: 8px 45px 8px 16px;
             font-size: 0.85rem;
-            color: var(--gt-text);
+            color: #fffaf3;
             outline: none;
             transition: all 0.2s;
         }
 
+        .search-pill-input::placeholder {
+            color: rgba(255, 250, 243, 0.65);
+        }
+
         .search-pill-input:focus {
             border-color: #d7a64a;
-            background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(215, 166, 74, 0.1);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(215, 166, 74, 0.2);
         }
 
         .shortcut-hint {
@@ -433,11 +441,11 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 0.72rem;
-            color: var(--gt-text-muted);
-            background: var(--gt-primary-light);
+            color: #fce4be;
+            background: rgba(215, 166, 74, 0.2);
             padding: 2px 6px;
             border-radius: 4px;
-            border: 1px solid rgba(215, 166, 74, 0.2);
+            border: 1px solid rgba(215, 166, 74, 0.35);
             pointer-events: none;
         }
 
@@ -448,9 +456,9 @@
         }
 
         .view-store-btn {
-            border: 1.5px solid var(--gt-border);
-            background: transparent;
-            color: var(--gt-primary);
+            border: 1.5px solid rgba(215, 166, 74, 0.4);
+            background: rgba(215, 166, 74, 0.15);
+            color: #fffaf3;
             text-decoration: none;
             padding: 8px 16px;
             border-radius: 99px;
@@ -464,15 +472,16 @@
         }
 
         .view-store-btn:hover {
-            background-color: var(--gt-primary-light);
+            background-color: rgba(215, 166, 74, 0.3);
             border-color: #d7a64a;
+            color: #ffffff;
         }
 
         .topbar-icon-btn {
             background: none;
             border: none;
             cursor: pointer;
-            color: var(--gt-primary);
+            color: #fce4be;
             position: relative;
             width: 38px;
             height: 38px;
@@ -484,7 +493,8 @@
         }
 
         .topbar-icon-btn:hover {
-            background-color: var(--gt-primary-light);
+            background-color: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
         }
 
         .topbar-icon-btn i {
@@ -496,7 +506,7 @@
             position: absolute;
             top: 6px;
             right: 6px;
-            background: var(--gt-danger);
+            background: #ef4444;
             color: #ffffff;
             font-size: 0.65rem;
             font-weight: 800;
@@ -506,13 +516,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1.5px solid #ffffff;
+            border: 1.5px solid #351b0d;
         }
 
         .topbar-divider {
             width: 1.5px;
             height: 24px;
-            background-color: var(--gt-border);
+            background-color: rgba(215, 166, 74, 0.35);
         }
 
         .admin-user-header {
@@ -526,18 +536,18 @@
             width: 34px;
             height: 34px;
             border-radius: 50%;
-            background-color: var(--gt-primary);
-            color: #ffffff;
+            background-color: #d7a64a;
+            color: #351b0d;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 0.85rem;
         }
 
         .header-dropdown-arrow {
             font-size: 0.75rem;
-            color: var(--gt-primary);
+            color: #fce4be;
         }
 
         /* Content wrapper */
@@ -787,9 +797,9 @@
                 <svg viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg" class="sidebar-logo-svg">
                     <defs>
                         <linearGradient id="goldGradSidebar" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#8E5B10" />
+                            <stop offset="0%" stop-color="#FFE5A3" />
                             <stop offset="50%" stop-color="#DFAC4D" />
-                            <stop offset="100%" stop-color="#44240f" />
+                            <stop offset="100%" stop-color="#FCE4BE" />
                         </linearGradient>
                     </defs>
                     <text x="160" y="55" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="46" font-weight="bold" fill="url(#goldGradSidebar)" text-anchor="middle">Ghousia Traders</text>
@@ -920,11 +930,11 @@
             <div class="sidebar-profile-footer" id="profileFooterBtn">
                 <div class="sidebar-profile-info">
                     <div class="admin-avatar">
-                        {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 2)) }}
+                        {{ Auth::user()->initials ?? 'GT' }}
                     </div>
                     <div class="admin-profile-meta">
-                        <strong>{{ Auth::user()->name ?? 'Admin User' }}</strong>
-                        <span>{{ Auth::user()->isSuperAdmin() ? 'Super Administrator' : 'Administrator' }}</span>
+                        <strong>{{ Auth::user()->name ?? 'Ghousia Traders Admin' }}</strong>
+                        <span>{{ Auth::user() && Auth::user()->isSuperAdmin() ? 'Super Administrator' : 'Administrator' }}</span>
                     </div>
                 </div>
                 <i data-lucide="chevron-right" class="chevron-arrow"></i>
@@ -974,7 +984,11 @@
                     <div class="topbar-divider"></div>
                     <div class="admin-user-header" id="headerProfileBtn">
                         <div class="avatar-initials">
-                            {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 2)) }}
+                            {{ Auth::user()->initials ?? 'GT' }}
+                        </div>
+                        <div style="display: flex; flex-direction: column; text-align: left; margin-left: 2px;">
+                            <strong style="font-size: 0.84rem; font-weight: 700; color: #fffaf3; line-height: 1.1;">{{ Auth::user()->name ?? 'Ghousia Traders Admin' }}</strong>
+                            <span style="font-size: 0.7rem; color: #fce4be; opacity: 0.9;">{{ Auth::user() && Auth::user()->isSuperAdmin() ? 'Super Admin' : 'Admin' }}</span>
                         </div>
                         <i data-lucide="chevron-down" class="header-dropdown-arrow"></i>
                     </div>

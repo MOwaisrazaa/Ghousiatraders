@@ -222,7 +222,7 @@
                 <label for="eyebrow" class="pf-form-label">Banner Eyebrow / Small Heading</label>
                 <input type="text" class="pf-input @error('eyebrow') is-invalid @enderror"
                     id="eyebrow" name="eyebrow" value="{{ old('eyebrow', $slide->eyebrow) }}" maxlength="100"
-                    placeholder="e.g., POLANI FRAGRANCE">
+                    placeholder="e.g., GHOUSIA TRADERS">
                 @error('eyebrow')<div class="pf-error"><i class="fas fa-exclamation-circle"></i>{{ $message }}</div>@enderror
                 <div class="pf-hint">Optional. Appears above the main title. Maximum 100 characters.</div>
             </div>

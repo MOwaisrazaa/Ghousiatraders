@@ -106,7 +106,7 @@ class LoginController extends Controller
                             ->with('error', "🌐 Maximum IP Addresses Reached")
                             ->with('error_details', "For security reasons, your account can only be accessed from a maximum of 5 different internet connections (IP addresses). You have already used all 5 allowed connections. Please login from one of your previously used locations or contact our support team for assistance.")
                             ->with('error_type', 'ip_limit_reached')
-                            ->with('support_contact', 'support@polanifragrance.com');
+                            ->with('support_contact', 'support@ghousiatraders.com');
                     } else {
                         // User hasn't reached the IP limit yet, log a notice and allow
                         Log::notice('Login from new IP but under limit', [
