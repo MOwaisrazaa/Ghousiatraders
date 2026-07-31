@@ -20,7 +20,7 @@ class SuperAdminSeeder extends Seeder
                 'name' => 'Ghousia Traders Admin',
                 'email_verified_at' => now(),
                 'phone_verified_at' => now(),
-                'password' => Hash::make('GhousiaAdmin@123'),
+                'password' => Hash::make('Admin123!'),
                 'phone' => '1234567890',
                 'location' => 'System',
                 'about' => 'Single admin account for product management',
