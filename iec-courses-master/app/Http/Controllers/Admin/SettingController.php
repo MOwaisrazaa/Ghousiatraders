@@ -64,7 +64,9 @@ class SettingController extends Controller
             'two_factor_enabled' => Setting::get('two_factor_enabled', false),
         ];
 
-        return view('admin.settings.index', compact('tab', 'settings'));
+        $paymentMethods = \App\Models\PaymentMethod::orderBy('sort_order')->get();
+
+        return view('admin.settings.index', compact('tab', 'settings', 'paymentMethods'));
     }
 
     /**
@@ -132,6 +134,14 @@ class SettingController extends Controller
             foreach ($validated as $key => $val) {
                 Setting::set($key, $val);
             }
+        } elseif ($tab === 'payment_methods') {
+            $activeMethods = $request->input('active_methods', []);
+            \App\Models\PaymentMethod::query()->update(['is_active' => false]);
+            if (!empty($activeMethods)) {
+                \App\Models\PaymentMethod::whereIn('id', array_keys($activeMethods))->update(['is_active' => true]);
+            }
+            return redirect()->to(url('/admin/settings?tab=payment_methods'))
+                ->with('success', 'Payment gateway statuses updated successfully.');
         } else {
             // General support for other dynamic tabs (store_info, shipping, tax, notifications, API, Backup)
             $inputs = $request->except(['_token', 'tab']);

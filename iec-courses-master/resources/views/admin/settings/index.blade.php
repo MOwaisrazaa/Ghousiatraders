@@ -462,6 +462,20 @@
 
 <x-admin-page-header title="Settings" />
 
+@if(session('success'))
+    <div style="background: #ECFDF5; border: 1.5px solid #10B981; color: #065F46; padding: 14px 18px; border-radius: 12px; margin-bottom: 20px; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 10px;">
+        <i data-lucide="check-circle" style="width: 20px; height: 20px; color: #10B981;"></i>
+        <span>{{ session('success') }}</span>
+    </div>
+@endif
+
+@if(session('error'))
+    <div style="background: #FEF2F2; border: 1.5px solid #EF4444; color: #991B1B; padding: 14px 18px; border-radius: 12px; margin-bottom: 20px; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 10px;">
+        <i data-lucide="alert-circle" style="width: 20px; height: 20px; color: #EF4444;"></i>
+        <span>{{ session('error') }}</span>
+    </div>
+@endif
+
 <!-- Horizontal navigation tabs -->
 <div class="settings-tabs-nav">
     <a href="{{ route('admin.settings.index', ['tab' => 'general']) }}" class="settings-tab-btn {{ $tab === 'general' ? 'active' : '' }}">
@@ -657,44 +671,234 @@
                 </form>
             </div>
         @elseif($tab === 'payment_methods')
-            <!-- Payment methods configs -->
+            @php
+                $paymentMethods = $paymentMethods ?? \App\Models\PaymentMethod::orderBy('sort_order')->get();
+            @endphp
+            <!-- Simplified Payment Methods Settings UI -->
+            <style>
+                .pm-list-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                }
+                .pm-item-card {
+                    border: 1.5px solid var(--gt-border);
+                    border-radius: 14px;
+                    background: #ffffff;
+                    overflow: hidden;
+                    transition: all 0.2s ease;
+                    box-shadow: var(--gt-shadow);
+                }
+                .pm-item-card.editing {
+                    border-color: var(--gt-primary);
+                    box-shadow: 0 6px 20px rgba(53, 27, 13, 0.08);
+                }
+                .pm-row-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 14px 18px;
+                    background: #fffdf9;
+                    gap: 12px;
+                }
+                .pm-row-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .pm-icon-box {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 10px;
+                    background: #fff5e6;
+                    border: 1.5px solid rgba(215, 166, 74, 0.25);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.1rem;
+                    color: var(--gt-primary);
+                    flex-shrink: 0;
+                }
+                .pm-name-text {
+                    font-size: 0.92rem;
+                    font-weight: 800;
+                    color: var(--gt-text);
+                }
+                .pm-row-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                }
+                .pm-inline-edit-panel {
+                    display: none;
+                    padding: 20px;
+                    border-top: 1.5px solid var(--gt-border);
+                    background: #ffffff;
+                }
+                .pm-item-card.editing .pm-inline-edit-panel {
+                    display: block;
+                }
+            </style>
+
+            <!-- Global Form for Save Gateways button -->
+            <form action="{{ route('admin.settings.update') }}" method="POST" id="globalGatewaysForm">
+                @csrf
+                <input type="hidden" name="tab" value="payment_methods">
+            </form>
+
             <div class="settings-card">
                 <div class="settings-card-header">
                     <h2 class="settings-card-title">Payment Methods</h2>
-                    <p class="settings-card-subtitle">Configure gateways, display orders, and settings.</p>
+                    <p class="settings-card-subtitle">Enable/disable payment gateways or edit their public display name, icon, description, instructions, sort order and active status.</p>
                 </div>
-                <form action="{{ route('admin.settings.update') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="tab" value="payment_methods">
-                    
-                    <div style="display:flex;flex-direction:column;gap:16px;">
-                        <label style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1.5px solid var(--gt-border);border-radius:10px;background:#fffdf9;cursor:pointer;">
-                            <span style="font-size:0.85rem;font-weight:700;color:var(--gt-text);">Cash on Delivery (COD)</span>
-                            <input type="checkbox" name="payment_cod_active" value="1" {{ App\Models\Setting::get('payment_cod_active', '1') == '1' ? 'checked' : '' }}>
-                        </label>
-                        <label style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1.5px solid var(--gt-border);border-radius:10px;background:#fffdf9;cursor:pointer;">
-                            <span style="font-size:0.85rem;font-weight:700;color:var(--gt-text);">EasyPaisa Gateway</span>
-                            <input type="checkbox" name="payment_easypaisa_active" value="1" {{ App\Models\Setting::get('payment_easypaisa_active', '1') == '1' ? 'checked' : '' }}>
-                        </label>
-                        <label style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1.5px solid var(--gt-border);border-radius:10px;background:#fffdf9;cursor:pointer;">
-                            <span style="font-size:0.85rem;font-weight:700;color:var(--gt-text);">JazzCash Gateway</span>
-                            <input type="checkbox" name="payment_jazzcash_active" value="1" {{ App\Models\Setting::get('payment_jazzcash_active', '1') == '1' ? 'checked' : '' }}>
-                        </label>
-                        <label style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1.5px solid var(--gt-border);border-radius:10px;background:#fffdf9;cursor:pointer;">
-                            <span style="font-size:0.85rem;font-weight:700;color:var(--gt-text);">Direct Bank Transfer</span>
-                            <input type="checkbox" name="payment_bank_active" value="1" {{ App\Models\Setting::get('payment_bank_active', '1') == '1' ? 'checked' : '' }}>
-                        </label>
-                        <label style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1.5px solid var(--gt-border);border-radius:10px;background:#fffdf9;cursor:pointer;">
-                            <span style="font-size:0.85rem;font-weight:700;color:var(--gt-text);">Credit / Debit Card (Stripe)</span>
-                            <input type="checkbox" name="payment_card_active" value="1" {{ App\Models\Setting::get('payment_card_active', '1') == '1' ? 'checked' : '' }}>
-                        </label>
-                    </div>
 
-                    <div style="text-align:right;margin-top:16px;">
-                        <button type="submit" class="gt-btn-primary">Save Gateways</button>
-                    </div>
-                </form>
+                <div class="pm-list-container">
+                    @foreach($paymentMethods as $method)
+                        <div class="pm-item-card" id="pm-card-{{ $method->id }}">
+                            <!-- Payment Method Row Header -->
+                            <div class="pm-row-header">
+                                <div class="pm-row-info">
+                                    <div class="pm-icon-box">
+                                        <i class="{{ $method->icon ?: 'fas fa-credit-card' }}"></i>
+                                    </div>
+                                    <div>
+                                        <span class="pm-name-text">{{ $method->name }}</span>
+                                        @if(!$method->is_active)
+                                            <span style="font-size:0.7rem;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700;">Inactive</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="pm-row-actions">
+                                    <!-- Enable/Disable Checkbox using form attribute to link to globalGatewaysForm -->
+                                    <label style="display:inline-flex;align-items:center;cursor:pointer;gap:6px;" title="Toggle Active Status">
+                                        <input type="checkbox" name="active_methods[{{ $method->id }}]" form="globalGatewaysForm" value="1" {{ $method->is_active ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                                    </label>
+
+                                    <!-- Single Edit Button -->
+                                    <button type="button" class="gt-btn-outline" style="min-height:34px;padding:0 14px;font-size:0.8rem;" onclick="togglePaymentEditForm({{ $method->id }})">
+                                        <i data-lucide="edit" style="width:14px;height:14px;"></i> Edit
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- True Inline Accordion Edit Form (Directly inside pm-item-card!) -->
+                            <div class="pm-inline-edit-panel" id="pm-edit-panel-{{ $method->id }}">
+                                <form action="{{ route('admin.payment-methods.update', $method->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="_payment_method_id" value="{{ $method->id }}">
+
+                                    <div class="form-grid-2" style="margin-bottom:16px;">
+                                        <div>
+                                            <label class="gt-label">Display Name</label>
+                                            <input type="text" name="name" value="{{ old('_payment_method_id') == $method->id ? old('name') : $method->name }}" class="gt-input" style="width:100%;" required>
+                                            @if(old('_payment_method_id') == $method->id)
+                                                @error('name')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <label class="gt-label">Icon (Font Awesome Class)</label>
+                                            <input type="text" name="icon" value="{{ old('_payment_method_id') == $method->id ? old('icon') : ($method->icon ?: 'fas fa-credit-card') }}" class="gt-input" style="width:100%;" placeholder="fas fa-truck-loading" required>
+                                            @if(old('_payment_method_id') == $method->id)
+                                                @error('icon')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group-full" style="margin-bottom:16px;">
+                                        <label class="gt-label">Short Description (Customer Facing)</label>
+                                        <input type="text" name="description" value="{{ old('_payment_method_id') == $method->id ? old('description') : $method->description }}" class="gt-input" style="width:100%;" placeholder="Short summary shown below method name at Checkout">
+                                        @if(old('_payment_method_id') == $method->id)
+                                            @error('description')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
+                                        @endif
+                                    </div>
+
+                                    <div class="form-group-full" style="margin-bottom:16px;">
+                                        <label class="gt-label">Customer Instructions (Shown when selected at Checkout)</label>
+                                        <textarea name="instructions" class="gt-input" style="width:100%;min-height:80px;font-family:inherit;" placeholder="Detailed payment instructions shown when customer selects this method">{{ old('_payment_method_id') == $method->id ? old('instructions') : $method->instructions }}</textarea>
+                                        @if(old('_payment_method_id') == $method->id)
+                                            @error('instructions')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
+                                        @endif
+                                    </div>
+
+                                    <div class="form-grid-2" style="margin-bottom:16px;">
+                                        <div>
+                                            <label class="gt-label">Sort Order</label>
+                                            <input type="number" name="sort_order" value="{{ old('_payment_method_id') == $method->id ? old('sort_order') : $method->sort_order }}" class="gt-input" style="width:100%;" required>
+                                            @if(old('_payment_method_id') == $method->id)
+                                                @error('sort_order')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <label class="gt-label">Status</label>
+                                            @php
+                                                $curActiveStatus = old('_payment_method_id') == $method->id ? old('is_active') : ($method->is_active ? '1' : '0');
+                                            @endphp
+                                            <select name="is_active" class="gt-input" style="width:100%;">
+                                                <option value="1" {{ $curActiveStatus == '1' ? 'selected' : '' }}>Active</option>
+                                                <option value="0" {{ $curActiveStatus == '0' ? 'selected' : '' }}>Inactive</option>
+                                            </select>
+                                            @if(old('_payment_method_id') == $method->id)
+                                                @error('is_active')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--gt-border);">
+                                        <button type="button" class="gt-btn-outline" style="min-height:36px;padding:0 16px;font-size:0.82rem;" onclick="closePaymentEditForm({{ $method->id }})">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" class="gt-btn-primary" style="min-height:36px;padding:0 18px;font-size:0.82rem;">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div style="text-align:right;margin-top:20px;padding-top:16px;border-top:1.5px solid var(--gt-border);">
+                    <button type="submit" form="globalGatewaysForm" class="gt-btn-primary" style="background:linear-gradient(135deg, #351b0d, #44240f);">
+                        Save Gateways
+                    </button>
+                </div>
             </div>
+
+            <script>
+                function togglePaymentEditForm(id) {
+                    const targetCard = document.getElementById('pm-card-' + id);
+                    if (!targetCard) return;
+
+                    const isEditing = targetCard.classList.contains('editing');
+
+                    // Requirement: Keep only ONE payment method edit form open at a time
+                    document.querySelectorAll('.pm-item-card').forEach(function(card) {
+                        card.classList.remove('editing');
+                    });
+
+                    if (!isEditing) {
+                        targetCard.classList.add('editing');
+                        targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                }
+
+                function closePaymentEditForm(id) {
+                    const targetCard = document.getElementById('pm-card-' + id);
+                    if (targetCard) {
+                        targetCard.classList.remove('editing');
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    @if(session('open_accordion'))
+                        togglePaymentEditForm({{ session('open_accordion') }});
+                    @elseif(old('_payment_method_id'))
+                        togglePaymentEditForm({{ old('_payment_method_id') }});
+                    @endif
+                });
+            </script>
         @elseif($tab === 'shipping')
             <!-- Shipping Settings -->
             <div class="settings-card">

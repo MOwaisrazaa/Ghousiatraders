@@ -140,107 +140,58 @@
                                 <h3>Payment Method</h3>
                             </div>
                             <div class="payment-method-split">
-                                @php
-                                    $hasCod = collect($paymentMethods)->contains('key', 'cod');
-                                    $hasCard = collect($paymentMethods)->contains('key', 'card');
-                                    $hasBank = collect($paymentMethods)->contains('key', 'bank');
-                                @endphp
-
-                                <!-- Left split: radio methods -->
-                                <div class="payment-radios-column">
-                                    @if($hasCod)
-                                        <label class="payment-radio-card {{ $paymentMethod === 'cod' ? 'active' : '' }}" id="codMethod">
-                                            <input type="radio" name="paymentMethod" wire:model.live="paymentMethod" value="cod">
-                                            <div class="pay-logo-wrapper">
-                                                <svg class="pay-logo cod-logo" viewBox="0 0 160 50" xmlns="http://www.w3.org/2000/svg" style="width:160px; height:38px;">
-                                                    <rect width="160" height="50" rx="6" fill="#F4F6F6" stroke="#D5D8DC" stroke-width="1"/>
-                                                    <path d="M25 15 H42 V32 H25 Z" fill="#5C3E21"/>
-                                                    <path d="M42 20 H49 L54 26 V32 H42 Z" fill="#C29F74"/>
-                                                    <circle cx="30" cy="35" r="4" fill="#333"/>
-                                                    <circle cx="48" cy="35" r="4" fill="#333"/>
-                                                    <rect x="65" y="12" width="75" height="26" rx="4" fill="#2ECC71"/>
-                                                    <text x="102" y="30" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="15" fill="#FFF" text-anchor="middle">COD</text>
-                                                </svg>
-                                            </div>
-                                        </label>
-                                    @endif
-
-                                    @if($hasCard)
-                                        <label class="payment-radio-card {{ $paymentMethod === 'card' ? 'active' : '' }}" id="cardMethod">
-                                            <input type="radio" name="paymentMethod" wire:model.live="paymentMethod" value="card">
-                                            <div class="pay-logo-wrapper">
-                                                <div class="card-logos-flex" style="display:flex; gap: 8px;">
-                                                    <svg class="pay-logo visa-logo" viewBox="0 0 75 50" xmlns="http://www.w3.org/2000/svg" style="width:70px; height:38px;">
-                                                        <rect width="75" height="50" rx="6" fill="#FFFFFF" stroke="#D5D8DC" stroke-width="1"/>
-                                                        <path d="M12 18 L18 34 H23 L29 18 H24 L21.5 29.5 L19 18 H12 Z" fill="#1A1F71"/>
-                                                        <path d="M30 18 H34 V34 H30 Z" fill="#1A1F71"/>
-                                                        <path d="M43.5 19.5 C42 18.5 40 18 38 18 C34 18 31.5 20 31.5 23.5 C31.5 28 37.5 28 37.5 30.5 C37.5 31.5 35.5 32 34 32 C32 32 30 31 29 30.5 L28 33.5 C29.5 34.5 32 35 34 35 C38.5 35 41.5 33 41.5 29.5 C41.5 25 35.5 24.5 35.5 22.5 C35.5 21.5 37 21 38.5 21 C40.5 21 42.5 21.5 43.5 22.5 L44.5 19.5 Z" fill="#1A1F71"/>
-                                                        <path d="M52.5 18 H49 L42.5 34 H47.5 L48.5 31.5 H54.5 L55 34 H60 L56 18 H52.5 Z M50 28 L51.5 23 L53.5 28 H50 Z" fill="#1A1F71"/>
-                                                        <path d="M12 18 L15 26 L16 18 Z" fill="#F7B600"/>
-                                                    </svg>
-                                                    <svg class="pay-logo mastercard-logo" viewBox="0 0 75 50" xmlns="http://www.w3.org/2000/svg" style="width:70px; height:38px;">
-                                                        <rect width="75" height="50" rx="6" fill="#FFFFFF" stroke="#D5D8DC" stroke-width="1"/>
-                                                        <circle cx="31" cy="25" r="14" fill="#EB001B" opacity="0.9"/>
-                                                        <circle cx="44" cy="25" r="14" fill="#F79E1B" opacity="0.9"/>
-                                                    </svg>
+                                <!-- Left split: radio methods loop showing saved public name, icon, and short description -->
+                                <div class="payment-radios-column" style="display:flex;flex-direction:column;gap:12px;">
+                                    @foreach($paymentMethods as $pm)
+                                        @php
+                                            $isCurSelected = ($paymentMethod === $pm->key) || 
+                                                ($paymentMethod === 'cod' && $pm->key === 'cash') || 
+                                                ($paymentMethod === 'card' && $pm->key === 'stripe') || 
+                                                ($paymentMethod === 'bank' && $pm->key === 'banktransfer');
+                                        @endphp
+                                        <label class="payment-radio-card {{ $isCurSelected ? 'active' : '' }}" style="display:flex;align-items:center;padding:14px;border:1.5px solid {{ $isCurSelected ? '#5C3E21' : '#D5D8DC' }};border-radius:12px;background:{{ $isCurSelected ? '#FFFDF9' : '#FFFFFF' }};cursor:pointer;transition:all 0.2s;">
+                                            <input type="radio" name="paymentMethod" wire:model.live="paymentMethod" value="{{ $pm->key }}" style="accent-color:#5C3E21;width:18px;height:18px;">
+                                            <div style="margin-left:12px;display:flex;align-items:center;gap:12px;flex:1;">
+                                                <i class="{{ $pm->icon ?: 'fas fa-credit-card' }}" style="font-size:1.25rem;color:#5C3E21;width:24px;text-align:center;"></i>
+                                                <div>
+                                                    <div style="font-weight:700;font-size:0.9rem;color:#333;">{{ $pm->name }}</div>
+                                                    @if(!empty($pm->description))
+                                                        <div style="font-size:0.78rem;color:#666;margin-top:2px;">{{ $pm->description }}</div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </label>
-                                    @endif
-
-                                    @if($hasBank)
-                                        <label class="payment-radio-card {{ $paymentMethod === 'bank' ? 'active' : '' }}" id="bankMethod">
-                                            <input type="radio" name="paymentMethod" wire:model.live="paymentMethod" value="bank">
-                                            <div class="pay-logo-wrapper">
-                                                <svg class="pay-logo bank-logo" viewBox="0 0 160 50" xmlns="http://www.w3.org/2000/svg" style="width:160px; height:38px;">
-                                                    <rect width="160" height="50" rx="6" fill="#F4F6F6" stroke="#D5D8DC" stroke-width="1"/>
-                                                    <path d="M20 38 H50 V40 H20 Z M22 25 H26 V36 H22 Z M30 25 H34 V36 H30 Z M38 25 H42 V36 H38 Z M46 25 H50 V36 H46 Z M20 22 L35 12 L50 22 Z" fill="#8C1D40"/>
-                                                     <text x="65" y="30" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11" fill="#8C1D40" letter-spacing="0.5px">BANK TRANSFER</text>
-                                                </svg>
-                                            </div>
-                                        </label>
-                                    @endif
+                                    @endforeach
                                 </div>
 
-                                <!-- Right split: card details or instructions -->
+                                <!-- Right split: selected payment instructions -->
                                 <div class="payment-details-column">
-                                    @if($paymentMethod === 'card')
-                                        <div id="cardDetailsColumn">
-                                            <div class="form-group">
-                                                <label for="cardName">Cardholder Name <span class="required">*</span></label>
-                                                <input type="text" id="cardName" wire:model.defer="cardName" placeholder="Enter name on card" required>
-                                            </div>
-                                            <div class="form-group" style="margin-top: 12px;">
-                                                <label for="cardNumber">Card Number <span class="required">*</span></label>
-                                                <div class="card-input-wrapper" style="position: relative;">
-                                                    <input type="text" id="cardNumber" wire:model.defer="cardNumber" placeholder="1234 5678 9012 3456" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-grid grid-2col" style="margin-top: 12px;">
-                                                <div class="form-group">
-                                                    <label for="expiryDate">Expiry Date <span class="required">*</span></label>
-                                                    <input type="text" id="expiryDate" wire:model.defer="expiryDate" placeholder="MM / YY" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="cvv">CVV <span class="required">*</span></label>
-                                                    <input type="text" id="cvv" wire:model.defer="cvv" placeholder="123" required>
-                                                </div>
+                                    @php
+                                        $selectedMethodObj = collect($paymentMethods)->first(function($item) use ($paymentMethod) {
+                                            return $item->key === $paymentMethod ||
+                                                   ($paymentMethod === 'cod' && $item->key === 'cash') ||
+                                                   ($paymentMethod === 'card' && $item->key === 'stripe') ||
+                                                   ($paymentMethod === 'bank' && $item->key === 'banktransfer');
+                                        });
+                                    @endphp
+
+                                    @if($selectedMethodObj && !empty($selectedMethodObj->instructions))
+                                        <div class="payment-instructions-wrapper" style="padding:16px;background-color:#FFFDF9;border:1.5px solid #E6D7C3;border-left:4px solid #5C3E21;border-radius:12px;">
+                                            <h4 style="font-size:0.88rem;font-weight:800;color:#5C3E21;margin-bottom:8px;display:flex;align-items:center;gap:8px;">
+                                                <i class="{{ $selectedMethodObj->icon ?: 'fas fa-info-circle' }}"></i> {{ $selectedMethodObj->name }} Instructions
+                                            </h4>
+                                            <div style="font-size:0.82rem;color:#333;line-height:1.5;white-space:pre-line;background:#ffffff;padding:12px;border-radius:8px;border:1px solid #EFE6D8;">
+                                                {{ $selectedMethodObj->instructions }}
                                             </div>
                                         </div>
+                                    @elseif($selectedMethodObj)
+                                        <div style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:20px;">
+                                            Proceeding with {{ $selectedMethodObj->name }}.
+                                        </div>
                                     @else
-                                        @php
-                                            $selectedMethodObj = collect($paymentMethods)->firstWhere('key', $paymentMethod);
-                                        @endphp
-                                        @if($selectedMethodObj && $selectedMethodObj->instructions)
-                                            <div class="payment-instructions-wrapper" style="padding: 16px; background-color: #FDFEFE; border: 1px solid #D5D8DC; border-left: 4px solid #5C3E21; border-radius: var(--radius-sm);">
-                                                <h4 style="font-size: 0.85rem; font-weight: 700; color: #5C3E21; margin-bottom: 6px;">Payment Instructions</h4>
-                                                <p style="font-size: 0.8rem; color: var(--text-dark); line-height: 1.4; white-space: pre-line;">{{ $selectedMethodObj->instructions }}</p>
-                                            </div>
-                                        @else
-                                            <div style="font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 20px;">
-                                                Please select a payment method on the left to proceed.
-                                            </div>
-                                        @endif
+                                        <div style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:20px;">
+                                            Please select a payment method on the left to proceed.
+                                        </div>
                                     @endif
                                 </div>
                             </div>

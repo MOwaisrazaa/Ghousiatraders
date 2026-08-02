@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class PaymentMethodController extends Controller
 {
@@ -20,7 +19,6 @@ class PaymentMethodController extends Controller
     public function index()
     {
         $paymentMethods = PaymentMethod::orderBy('sort_order')->get();
-
         return view('admin.payment-methods.index', compact('paymentMethods'));
     }
 
@@ -33,97 +31,35 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * Update the specified payment method.
+     * Update specified payment method general information (6 fields).
      */
     public function update(Request $request, PaymentMethod $paymentMethod)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
             'icon' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:500',
             'instructions' => 'nullable|string',
-            'is_active' => 'boolean',
-            'sort_order' => 'integer',
+            'sort_order' => 'nullable|integer',
+            'is_active' => 'nullable|boolean',
         ]);
 
-        // Handle details separately based on payment method type
-        $details = [];
+        $paymentMethod->update([
+            'name' => $validated['name'],
+            'icon' => $validated['icon'] ?? $paymentMethod->icon,
+            'description' => $validated['description'] ?? '',
+            'instructions' => $validated['instructions'] ?? '',
+            'sort_order' => isset($validated['sort_order']) ? (int)$validated['sort_order'] : $paymentMethod->sort_order,
+            'is_active' => $request->has('is_active') ? (bool)$request->input('is_active') : $paymentMethod->is_active,
+        ]);
 
-        switch ($paymentMethod->key) {
-            case 'cash':
-                $details['color'] = $request->input('color', 'text-success');
-                break;
-
-            case 'jazzcash':
-                $validator = Validator::make($request->all(), [
-                    'account_number' => 'required|string|max:255',
-                ]);
-
-                if ($validator->fails()) {
-                    return redirect()
-                        ->back()
-                        ->withErrors($validator)
-                        ->withInput();
-                }
-
-                $details['account'] = $request->input('account_number');
-                $details['color'] = $request->input('color', 'text-danger');
-                break;
-
-            case 'easypaisa':
-                $validator = Validator::make($request->all(), [
-                    'account_number' => 'required|string|max:255',
-                ]);
-
-                if ($validator->fails()) {
-                    return redirect()
-                        ->back()
-                        ->withErrors($validator)
-                        ->withInput();
-                }
-
-                $details['account'] = $request->input('account_number');
-                $details['color'] = $request->input('color', 'text-warning');
-                break;
-
-            case 'banktransfer':
-                $validator = Validator::make($request->all(), [
-                    'bank_name' => 'required|string|max:255',
-                    'account_title' => 'required|string|max:255',
-                    'account_number' => 'required|string|max:255',
-                    'iban' => 'nullable|string|max:255',
-                ]);
-
-                if ($validator->fails()) {
-                    return redirect()
-                        ->back()
-                        ->withErrors($validator)
-                        ->withInput();
-                }
-
-                $details['bank_name'] = $request->input('bank_name');
-                $details['account_title'] = $request->input('account_title');
-                $details['account_number'] = $request->input('account_number');
-                $details['iban'] = $request->input('iban');
-                $details['color'] = $request->input('color', 'text-primary');
-                break;
-
-            case 'card':
-                $details['processor'] = $request->input('processor', 'stripe');
-                $details['color'] = $request->input('color', 'text-info');
-                break;
-        }
-
-        $validated['details'] = $details;
-
-        $paymentMethod->update($validated);
-
-        return redirect()->route('admin.payment-methods.index')
-            ->with('success', $paymentMethod->name . ' payment method has been updated.');
+        return redirect()->to(url('/admin/settings?tab=payment_methods'))
+            ->with('success', $paymentMethod->name . ' updated successfully.')
+            ->with('open_accordion', $paymentMethod->id);
     }
 
     /**
-     * Toggle the active status of the payment method.
+     * Toggle active status.
      */
     public function toggleStatus(PaymentMethod $paymentMethod)
     {
@@ -133,12 +69,11 @@ class PaymentMethodController extends Controller
 
         $status = $paymentMethod->is_active ? 'enabled' : 'disabled';
 
-        return redirect()->route('admin.payment-methods.index')
-            ->with('success', $paymentMethod->name . ' has been ' . $status . '.');
+        return back()->with('success', $paymentMethod->name . ' has been ' . $status . '.');
     }
 
     /**
-     * Update the sorting order of payment methods.
+     * Update order of payment methods.
      */
     public function updateOrder(Request $request)
     {
