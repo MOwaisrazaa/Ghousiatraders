@@ -953,9 +953,6 @@
                         <a href="{{ route('admin.settings.index', ['tab' => 'shipping']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'shipping' ? 'active' : '' }}">Shipping Settings</a>
                         <a href="{{ route('admin.settings.index', ['tab' => 'tax']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'tax' ? 'active' : '' }}">Tax Settings</a>
                         <a href="{{ route('admin.settings.index', ['tab' => 'notifications']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'notifications' ? 'active' : '' }}">Notifications</a>
-                        <a href="{{ route('admin.settings.index', ['tab' => 'roles']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'roles' ? 'active' : '' }}">Roles & Permissions</a>
-                        <a href="{{ route('admin.settings.index', ['tab' => 'api']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'api' ? 'active' : '' }}">API Settings</a>
-                        <a href="{{ route('admin.settings.index', ['tab' => 'backup']) }}" class="sidebar-submenu-link {{ request()->input('tab') === 'backup' ? 'active' : '' }}">Backup & Restore</a>
                     </div>
                 </div>
 

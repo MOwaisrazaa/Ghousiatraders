@@ -496,17 +496,6 @@
     <a href="{{ route('admin.settings.index', ['tab' => 'notifications']) }}" class="settings-tab-btn {{ $tab === 'notifications' ? 'active' : '' }}">
         <i data-lucide="bell"></i> Notifications
     </a>
-    
-    <div class="more-dropdown-container">
-        <button class="settings-tab-btn {{ in_array($tab, ['roles', 'api', 'backup']) ? 'active' : '' }}" onclick="toggleMoreMenu(event)">
-            <i data-lucide="more-horizontal"></i> More <i data-lucide="chevron-down" style="width:12px;height:12px;"></i>
-        </button>
-        <div class="more-dropdown-menu" id="moreDropdownMenu">
-            <a href="{{ route('admin.settings.index', ['tab' => 'roles']) }}" class="more-dropdown-item {{ $tab === 'roles' ? 'active' : '' }}">Roles & Permissions</a>
-            <a href="{{ route('admin.settings.index', ['tab' => 'api']) }}" class="more-dropdown-item {{ $tab === 'api' ? 'active' : '' }}">API Settings</a>
-            <a href="{{ route('admin.settings.index', ['tab' => 'backup']) }}" class="more-dropdown-item {{ $tab === 'backup' ? 'active' : '' }}">Backup & Restore</a>
-        </div>
-    </div>
 </div>
 
 <div class="settings-grid">
@@ -1201,47 +1190,8 @@
             <button class="gt-btn-outline" style="width:100%;justify-content:center;" onclick="openModal('configureSmtpModal')">Configure SMTP</button>
         </div>
 
-        <!-- 4. Appearance card -->
-        <div class="settings-card">
-            <div class="settings-card-header">
-                <h2 class="settings-card-title">Appearance</h2>
-                <p class="settings-card-subtitle">Choose your preferred admin panel theme.</p>
-            </div>
-            <form action="{{ route('admin.settings.update') }}" method="POST">
-                @csrf
-                <input type="hidden" name="tab" value="appearance">
-                
-                <div class="theme-selection-row">
-                    <div class="theme-card-option {{ $settings['theme'] === 'light' ? 'selected' : '' }}" onclick="selectTheme('light')">
-                        <i data-lucide="sun"></i>
-                        <div class="theme-card-title">Light</div>
-                    </div>
-                    <div class="theme-card-option {{ $settings['theme'] === 'dark' ? 'selected' : '' }}" onclick="selectTheme('dark')">
-                        <i data-lucide="moon"></i>
-                        <div class="theme-card-title">Dark</div>
-                    </div>
-                    <div class="theme-card-option {{ $settings['theme'] === 'system' ? 'selected' : '' }}" onclick="selectTheme('system')">
-                        <i data-lucide="monitor"></i>
-                        <div class="theme-card-title">System</div>
-                    </div>
-                </div>
-                <input type="hidden" name="theme" id="selectedThemeInput" value="{{ $settings['theme'] }}">
-
-                <div style="margin-bottom: 16px;">
-                    <span class="gt-label" style="margin-bottom:8px;">Primary Color</span>
-                    <div class="color-picker-flex">
-                        @foreach(['brown' => '#351b0d', 'blue' => '#1d4ed8', 'purple' => '#7c3aed', 'green' => '#047857', 'orange' => '#ea580c', 'red' => '#b91c1c', 'slate' => '#475569'] as $color => $hex)
-                            <div class="color-dot {{ $settings['primary_color'] === $color ? 'selected' : '' }}" style="background-color: {{ $hex }};" onclick="selectColor(this, '{{ $color }}')"></div>
-                        @endforeach
-                    </div>
-                    <input type="hidden" name="primary_color" id="selectedColorInput" value="{{ $settings['primary_color'] }}">
-                </div>
-
-                <button type="submit" class="gt-btn-primary" style="width:100%; justify-content:center;">Apply Style Preferences</button>
-            </form>
         </div>
     </div>
-</div>
 
 <!-- ================= MODALS SECTION ================= -->
 
