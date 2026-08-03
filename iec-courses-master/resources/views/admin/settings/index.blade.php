@@ -758,21 +758,27 @@
                             <!-- Payment Method Row Header -->
                             <div class="pm-row-header">
                                 <div class="pm-row-info">
-                                    <div class="pm-icon-box">
-                                        <i class="{{ $method->icon ?: 'fas fa-credit-card' }}"></i>
+                                    <div class="pm-icon-box" style="padding:4px;overflow:hidden;background:#fff;border:1.5px solid var(--gt-border);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                                        @if($method->logo_url)
+                                            <img src="{{ $method->logo_url }}" alt="{{ $method->name }}" style="max-width:100%;max-height:100%;object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                                            <i class="{{ $method->icon ?: 'fas fa-credit-card' }}" style="font-size:1.1rem;color:var(--gt-primary);display:none;"></i>
+                                        @else
+                                            <i class="{{ $method->icon ?: 'fas fa-credit-card' }}" style="font-size:1.1rem;color:var(--gt-primary);"></i>
+                                        @endif
                                     </div>
                                     <div>
                                         <span class="pm-name-text">{{ $method->name }}</span>
-                                        @if(!$method->is_active)
-                                            <span style="font-size:0.7rem;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700;">Inactive</span>
-                                        @endif
+                                        <span id="pm-inactive-badge-{{ $method->id }}" style="font-size:0.7rem;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700;display:{{ $method->is_active ? 'none' : 'inline-block' }};">Inactive</span>
                                     </div>
                                 </div>
 
                                 <div class="pm-row-actions">
-                                    <!-- Enable/Disable Checkbox using form attribute to link to globalGatewaysForm -->
+                                    <!-- Instant Enable/Disable Checkbox -->
                                     <label style="display:inline-flex;align-items:center;cursor:pointer;gap:6px;" title="Toggle Active Status">
-                                        <input type="checkbox" name="active_methods[{{ $method->id }}]" form="globalGatewaysForm" value="1" {{ $method->is_active ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                                        <input type="checkbox" id="pm-toggle-{{ $method->id }}" onchange="togglePaymentStatus({{ $method->id }}, this)" {{ $method->is_active ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);cursor:pointer;">
+                                        <span id="pm-spinner-{{ $method->id }}" style="display:none;font-size:0.75rem;color:var(--gt-primary);margin-left:2px;">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        </span>
                                     </label>
 
                                     <!-- Single Edit Button -->
@@ -858,15 +864,75 @@
                         </div>
                     @endforeach
                 </div>
-
-                <div style="text-align:right;margin-top:20px;padding-top:16px;border-top:1.5px solid var(--gt-border);">
-                    <button type="submit" form="globalGatewaysForm" class="gt-btn-primary" style="background:linear-gradient(135deg, #351b0d, #44240f);">
-                        Save Gateways
-                    </button>
-                </div>
             </div>
 
             <script>
+                function togglePaymentStatus(id, checkbox) {
+                    const isChecked = checkbox.checked;
+                    checkbox.disabled = true;
+                    const spinner = document.getElementById('pm-spinner-' + id);
+                    if (spinner) spinner.style.display = 'inline-block';
+
+                    fetch('/admin/payment-methods/' + id + '/toggle-status', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            is_active: isChecked ? 1 : 0
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('HTTP ' + response.status);
+                        return response.json();
+                    })
+                    .then(data => {
+                        checkbox.disabled = false;
+                        if (spinner) spinner.style.display = 'none';
+                        if (data.success) {
+                            showToastNotification(data.message || 'Status updated successfully.', 'success');
+                            const badge = document.getElementById('pm-inactive-badge-' + id);
+                            if (badge) {
+                                badge.style.display = data.is_active ? 'none' : 'inline-block';
+                            }
+                        } else {
+                            checkbox.checked = !isChecked;
+                            showToastNotification('Failed to update status.', 'error');
+                        }
+                    })
+                    .catch(err => {
+                        checkbox.disabled = false;
+                        if (spinner) spinner.style.display = 'none';
+                        checkbox.checked = !isChecked;
+                        showToastNotification('Network error while updating status.', 'error');
+                    });
+                }
+
+                function showToastNotification(message, type) {
+                    let toastContainer = document.getElementById('gt-toast-container');
+                    if (!toastContainer) {
+                        toastContainer = document.createElement('div');
+                        toastContainer.id = 'gt-toast-container';
+                        toastContainer.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
+                        document.body.appendChild(toastContainer);
+                    }
+
+                    const toast = document.createElement('div');
+                    const isSuccess = type === 'success';
+                    toast.style.cssText = `pointer-events:auto;min-width:280px;padding:12px 18px;border-radius:10px;font-size:0.85rem;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,0.15);display:flex;align-items:center;gap:10px;transition:all 0.3s ease;background:${isSuccess ? '#ECFDF5' : '#FEF2F2'};color:${isSuccess ? '#065F46' : '#991B1B'};border:1.5px solid ${isSuccess ? '#10B981' : '#EF4444'};`;
+                    toast.innerHTML = `<i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}" style="font-size:1.1rem;color:${isSuccess ? '#10B981' : '#EF4444'};"></i> <span>${message}</span>`;
+                    
+                    toastContainer.appendChild(toast);
+
+                    setTimeout(() => {
+                        toast.style.opacity = '0';
+                        toast.style.transform = 'translateY(-10px)';
+                        setTimeout(() => toast.remove(), 300);
+                    }, 3000);
+                }
+
                 function togglePaymentEditForm(id) {
                     const targetCard = document.getElementById('pm-card-' + id);
                     if (!targetCard) return;

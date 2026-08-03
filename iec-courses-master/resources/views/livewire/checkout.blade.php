@@ -151,8 +151,15 @@
                                         @endphp
                                         <label class="payment-radio-card {{ $isCurSelected ? 'active' : '' }}" style="display:flex;align-items:center;padding:14px;border:1.5px solid {{ $isCurSelected ? '#5C3E21' : '#D5D8DC' }};border-radius:12px;background:{{ $isCurSelected ? '#FFFDF9' : '#FFFFFF' }};cursor:pointer;transition:all 0.2s;">
                                             <input type="radio" name="paymentMethod" wire:model.live="paymentMethod" value="{{ $pm->key }}" style="accent-color:#5C3E21;width:18px;height:18px;">
-                                            <div style="margin-left:12px;display:flex;align-items:center;gap:12px;flex:1;">
-                                                <i class="{{ $pm->icon ?: 'fas fa-credit-card' }}" style="font-size:1.25rem;color:#5C3E21;width:24px;text-align:center;"></i>
+                                            <div style="margin-left:12px;display:flex;align-items:center;gap:14px;flex:1;">
+                                                <div style="width:40px;height:40px;padding:4px;overflow:hidden;background:#fff;border:1px solid #D5D8DC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                                    @if(isset($pm->logo_url) && $pm->logo_url)
+                                                        <img src="{{ $pm->logo_url }}" alt="{{ $pm->name }}" style="max-width:100%;max-height:100%;object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                                                        <i class="{{ $pm->icon ?: 'fas fa-credit-card' }}" style="font-size:1.2rem;color:#5C3E21;display:none;"></i>
+                                                    @else
+                                                        <i class="{{ $pm->icon ?: 'fas fa-credit-card' }}" style="font-size:1.2rem;color:#5C3E21;"></i>
+                                                    @endif
+                                                </div>
                                                 <div>
                                                     <div style="font-weight:700;font-size:0.9rem;color:#333;">{{ $pm->name }}</div>
                                                     @if(!empty($pm->description))

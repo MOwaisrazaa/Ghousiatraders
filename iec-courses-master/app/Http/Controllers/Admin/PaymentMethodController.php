@@ -59,17 +59,30 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * Toggle active status.
+     * Toggle active status via AJAX or POST.
      */
-    public function toggleStatus(PaymentMethod $paymentMethod)
+    public function toggleStatus(Request $request, PaymentMethod $paymentMethod)
     {
+        $newStatus = $request->has('is_active') 
+            ? (bool)$request->input('is_active') 
+            : !$paymentMethod->is_active;
+
         $paymentMethod->update([
-            'is_active' => !$paymentMethod->is_active
+            'is_active' => $newStatus
         ]);
 
-        $status = $paymentMethod->is_active ? 'enabled' : 'disabled';
+        $statusText = $paymentMethod->is_active ? 'Active' : 'Inactive';
+        $message = $paymentMethod->name . ' is now ' . $statusText . '.';
 
-        return back()->with('success', $paymentMethod->name . ' has been ' . $status . '.');
+        if ($request->wantsJson() || $request->ajax() || $request->header('Accept') === 'application/json') {
+            return response()->json([
+                'success' => true,
+                'is_active' => $paymentMethod->is_active,
+                'message' => $message,
+            ]);
+        }
+
+        return back()->with('success', $message);
     }
 
     /**
