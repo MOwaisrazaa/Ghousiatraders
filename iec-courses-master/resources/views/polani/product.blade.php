@@ -65,6 +65,7 @@
               type="button"
               data-add-to-cart
               data-add-url="{{ route('polani.cart.add', ['slug' => $product['slug']]) }}"
+              data-name="{{ $product['name'] }}"
             >
               Add to Cart
             </button>

@@ -350,11 +350,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.style.color = '';
             }, 300);
             
-            const productName = btn.getAttribute('data-name') || 'Item';
-            alert(`🛒 Added "${productName}" to your shopping cart!`);
+            const card = btn.closest('.product-card') || btn.closest('.product-details-container') || btn.closest('.product__info') || btn.closest('.product-details');
+            const productName = btn.getAttribute('data-name') || card?.querySelector('.product-name, .product__title')?.textContent?.trim() || 'Product';
+            const productImage = card ? card.querySelector('img')?.src : null;
+            const priceText = card?.querySelector('.product-price, .product__price')?.textContent?.replace(/[^0-9]/g, '') || null;
+            const productPrice = priceText ? parseInt(priceText) : null;
+            const productLink = card?.querySelector('a[href*="/product/"]')?.getAttribute('href') || '#';
+
+            if (typeof window.showStorefrontToast === 'function') {
+                window.showStorefrontToast({
+                    heading: 'Added to Cart',
+                    name: productName,
+                    price: productPrice,
+                    quantity: 1,
+                    type: 'cart',
+                    image: productImage,
+                    productUrl: productLink,
+                    actionText: 'View Cart →',
+                    actionUrl: '/shopping-cart'
+                });
+            }
             
         } catch (err) {
-            alert(err.message || 'Failed to add item to cart.');
+            if (typeof window.showStorefrontToast === 'function') {
+                window.showStorefrontToast({
+                    heading: 'Notice',
+                    name: 'Action Error',
+                    subtitle: err.message || 'Unable to add product to cart.',
+                    type: 'error'
+                });
+            }
         } finally {
             btn.disabled = false;
             btn.innerHTML = originalContent;
@@ -383,6 +408,13 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const slug = btn.getAttribute('data-product-slug');
+            const card = btn.closest('.product-card') || btn.closest('.wishlist-card') || btn.closest('.product-details');
+            const productName = btn.getAttribute('data-name') || card?.querySelector('.product-name, .product__title')?.textContent?.trim() || 'Product';
+            const productImage = card ? card.querySelector('img')?.src : null;
+            const priceText = card?.querySelector('.product-price, .product__price')?.textContent?.replace(/[^0-9]/g, '') || null;
+            const productPrice = priceText ? parseInt(priceText) : null;
+            const productLink = card?.querySelector('a[href*="/product/"]')?.getAttribute('href') || '#';
+
             if (!slug) return;
             
             const updated = toggleWishlist(slug);
@@ -392,10 +424,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.style.backgroundColor = '#E27B8A';
                 btn.style.color = '#FFFFFF';
                 btn.style.borderColor = '#E27B8A';
+                if (typeof window.showStorefrontToast === 'function') {
+                    window.showStorefrontToast({
+                        heading: 'Saved to Wishlist',
+                        name: productName,
+                        price: productPrice,
+                        type: 'wishlist',
+                        image: productImage,
+                        productUrl: productLink,
+                        actionText: 'View Wishlist →',
+                        actionUrl: '/wishlist'
+                    });
+                }
             } else {
                 btn.style.backgroundColor = '';
                 btn.style.color = '';
                 btn.style.borderColor = '';
+                if (typeof window.showStorefrontToast === 'function') {
+                    window.showStorefrontToast({
+                        heading: 'Removed from Wishlist',
+                        name: productName,
+                        subtitle: 'Item removed from your wishlist',
+                        type: 'amber',
+                        image: productImage,
+                        productUrl: productLink
+                    });
+                }
             }
             
             const globalWishCount = document.getElementById('wishlistCount');
@@ -427,7 +481,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         lucide.createIcons();
                     }, 2000);
                 }
-                alert(`📋 Promo code "${textToCopy}" copied to clipboard! Use it at checkout for 15% off.`);
+                if (typeof window.showStorefrontToast === 'function') {
+                    window.showStorefrontToast({
+                        title: 'Copied to Clipboard',
+                        message: `Promo code "${textToCopy}" copied!`,
+                        type: 'wishlist'
+                    });
+                }
             }).catch(err => {
                 console.error('Could not copy code: ', err);
             });
@@ -450,10 +510,34 @@ document.addEventListener('DOMContentLoaded', () => {
     wishlistHearts.forEach(heart => {
         heart.addEventListener('click', () => {
             const slug = heart.getAttribute('data-product-slug');
+            const card = heart.closest('.product-card') || heart.closest('.wishlist-card') || heart.closest('.product-details');
+            const productName = heart.getAttribute('data-name') || 'Product';
+            const productImage = card ? card.querySelector('img')?.src : null;
+
             if (!slug) return;
             
             const updated = toggleWishlist(slug);
             heart.classList.toggle('active');
+            
+            if (typeof window.showStorefrontToast === 'function') {
+                if (heart.classList.contains('active')) {
+                    window.showStorefrontToast({
+                        title: 'Wishlist Updated',
+                        message: `${productName} added to your wishlist.`,
+                        type: 'wishlist',
+                        image: productImage,
+                        actionText: 'View Wishlist',
+                        actionUrl: '/wishlist'
+                    });
+                } else {
+                    window.showStorefrontToast({
+                        title: 'Wishlist Updated',
+                        message: `${productName} removed from your wishlist.`,
+                        type: 'amber',
+                        image: productImage
+                    });
+                }
+            }
             
             const globalWishCount = document.getElementById('wishlistCount');
             if (globalWishCount) {

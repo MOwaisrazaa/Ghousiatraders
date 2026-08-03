@@ -124,6 +124,12 @@ class Shoppingcart extends Component
 
         $this->loadCartItems();
         $this->dispatch('cartUpdated');
+        $this->dispatch('show-toast', [
+            'message' => 'Product quantity updated in your cart.',
+            'type' => 'info',
+            'actionText' => 'View Cart',
+            'actionUrl' => route('shopping-cart')
+        ]);
     }
 
     public function decrementQuantity($itemId)
@@ -154,6 +160,12 @@ class Shoppingcart extends Component
 
         $this->loadCartItems();
         $this->dispatch('cartUpdated');
+        $this->dispatch('show-toast', [
+            'message' => 'Product quantity updated in your cart.',
+            'type' => 'info',
+            'actionText' => 'View Cart',
+            'actionUrl' => route('shopping-cart')
+        ]);
     }
 
     public function removeFromCart($itemId)
@@ -184,6 +196,10 @@ class Shoppingcart extends Component
 
         $this->loadCartItems();
         $this->dispatch('cartUpdated', count: collect($this->cartitems)->sum('quantity'));
+        $this->dispatch('show-toast', [
+            'message' => 'Product removed from your cart.',
+            'type' => 'info'
+        ]);
     }
 
     public function checkout()

@@ -51,7 +51,7 @@
                 PKR {{ number_format($price) }}
             </span>
             <div class="product-card-actions">
-                <button class="card-action-btn action-wishlist" aria-label="Add to Wishlist" title="Add to Wishlist" data-product-slug="{{ $slug }}">
+                <button class="card-action-btn action-wishlist" aria-label="Add to Wishlist" title="Add to Wishlist" data-product-slug="{{ $slug }}" data-name="{{ $name }}">
                     <i data-lucide="heart"></i>
                 </button>
                 <button class="add-to-cart-btn card-action-btn action-cart" 
