@@ -4685,43 +4685,79 @@ img {
 
 /* Empty State Styles */
 .wishlist-empty-state {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
     text-align: center;
-    padding: 60px 20px;
+    padding: 70px 24px;
+    background: #FFFFFF;
+    border-radius: var(--radius-xl, 16px);
+    box-shadow: 0 10px 30px rgba(53, 27, 13, 0.05);
+    border: 1px solid rgba(226, 123, 138, 0.15);
+    margin: 20px auto 40px auto;
+    width: 100%;
+    max-width: 680px;
+    box-sizing: border-box;
 }
 
-.empty-icon-wrapper {
-    width: 80px;
-    height: 80px;
+.wishlist-empty-state .empty-icon-wrapper {
+    width: 88px;
+    height: 88px;
     border-radius: 50%;
-    background-color: var(--bg-alt);
-    color: var(--text-muted);
+    background: linear-gradient(135deg, #FFF5F6 0%, #FFEBEF 100%);
+    color: #E27B8A;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 24px auto;
+    margin: 0 auto 22px auto;
+    font-size: 2.2rem;
+    box-shadow: 0 8px 20px rgba(226, 123, 138, 0.15);
+    transition: transform 0.3s ease;
 }
 
-.empty-icon-wrapper i {
-    width: 40px;
-    height: 40px;
+.wishlist-empty-state:hover .empty-icon-wrapper {
+    transform: scale(1.08);
 }
 
+.wishlist-empty-state .empty-state-title,
 .wishlist-empty-state h2 {
-    font-family: var(--font-heading);
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 8px;
+    font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #351B0D;
+    margin: 0 0 10px 0;
+    line-height: 1.3;
 }
 
+.wishlist-empty-state .empty-state-desc,
 .wishlist-empty-state p {
-    color: var(--text-muted);
-    margin-bottom: 24px;
+    color: #6B7280;
+    margin: 0 0 28px 0;
+    max-width: 440px;
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
-.btn-shop-now {
-    display: inline-block;
-    padding: 12px 30px;
+.wishlist-empty-state .btn-shop-now {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 32px;
+    font-weight: 700;
+    font-size: 0.98rem;
+    border-radius: 30px;
+    background: #351B0D;
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 18px rgba(53, 27, 13, 0.18);
+}
+
+.wishlist-empty-state .btn-shop-now:hover {
+    background: #5C3E21;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(53, 27, 13, 0.28);
 }
 
 /* Responsive adjustments for Wishlist Page */

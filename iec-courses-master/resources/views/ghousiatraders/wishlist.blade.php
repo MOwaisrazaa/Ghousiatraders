@@ -79,12 +79,15 @@
 
                 <!-- Empty State (Displayed if empty or after clearing items) -->
                 <div class="wishlist-empty-state" id="wishlistEmptyState" style="display: {{ count($products) == 0 ? 'flex' : 'none' }};">
-                    <div class="empty-icon-wrapper" style="width: 80px; height: 80px; border-radius: 50%; background-color: #FFF8EE; color: #D7A64A; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 2rem;">
+                    <div class="empty-icon-wrapper">
                         <i class="fas fa-heart"></i>
                     </div>
-                    <h2 style="font-family: var(--font-heading); font-size: 1.8rem; color: #351B0D; margin-bottom: 10px; font-weight: 800;">Your wishlist is empty</h2>
-                    <p style="color: #6B7280; margin-bottom: 25px; max-width: 420px; font-size: 0.98rem; line-height: 1.5;">Save your favorite items here to purchase them later.</p>
-                    <a href="{{ route('polani.collection') }}" class="btn btn-primary btn-shop-now" style="text-decoration: none; padding: 12px 28px; font-weight: 700;">Go to Shop</a>
+                    <h2 class="empty-state-title">Your wishlist is empty</h2>
+                    <p class="empty-state-desc">Save your favorite items here to purchase them later.</p>
+                    <a href="{{ route('polani.collection') }}" class="btn btn-primary btn-shop-now">
+                        <i class="fas fa-shopping-bag" style="margin-right: 8px;"></i>
+                        <span>Go to Shop</span>
+                    </a>
                 </div>
 
             </div>
