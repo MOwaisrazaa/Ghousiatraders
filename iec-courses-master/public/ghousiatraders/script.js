@@ -23,16 +23,138 @@ document.addEventListener('DOMContentLoaded', () => {
         document.cookie = "wishlist=" + encodeURIComponent(wishlist.join(",")) + "; path=/; max-age=31536000";
     }
 
-    function toggleWishlist(slug) {
+    function removeFromWishlist(slug) {
         let wishlist = getWishlist();
         const index = wishlist.indexOf(slug);
         if (index > -1) {
             wishlist.splice(index, 1);
-        } else {
-            wishlist.push(slug);
+            setWishlist(wishlist);
         }
-        setWishlist(wishlist);
         return wishlist;
+    }
+
+    function addToWishlist(slug) {
+        let wishlist = getWishlist();
+        if (!wishlist.includes(slug)) {
+            wishlist.push(slug);
+            setWishlist(wishlist);
+        }
+        return wishlist;
+    }
+
+    function toggleWishlist(slug) {
+        let wishlist = getWishlist();
+        if (wishlist.includes(slug)) {
+            return removeFromWishlist(slug);
+        } else {
+            return addToWishlist(slug);
+        }
+    }
+
+    async function handleWishlistRemoval(slug, card, deleteBtn) {
+        if (!slug) return false;
+
+        const productName = deleteBtn?.getAttribute('data-name') || card?.querySelector('.product-name, .wishlist-card-title')?.textContent?.trim() || 'Product';
+        const productImage = card?.querySelector('img')?.src || null;
+        const priceText = card?.querySelector('.product-price, .wishlist-card-price')?.textContent?.replace(/[^0-9]/g, '') || null;
+        const productPrice = priceText ? parseInt(priceText) : null;
+
+        try {
+            // 1. Call permanent wishlist removal function
+            const updatedWishlist = removeFromWishlist(slug);
+
+            // 2. Confirm removal succeeded
+            if (getWishlist().includes(slug)) {
+                throw new Error("Failed to remove item from wishlist cookie.");
+            }
+
+            // 3. Remove product card from UI only after removal succeeds
+            if (card && (card.classList.contains('wishlist-card') || card.closest('#wishlistGrid'))) {
+                card.style.transition = 'all 0.3s ease';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.88)';
+                await new Promise(resolve => setTimeout(resolve, 300));
+                card.remove();
+
+                // 4. Update Wishlist page item count
+                const remainingCards = document.querySelectorAll('#wishlistGrid .wishlist-card');
+                const heroCountText = document.getElementById('wishlistItemsCountText');
+                if (heroCountText) {
+                    heroCountText.textContent = `${remainingCards.length} ${remainingCards.length === 1 ? 'Item' : 'Items'}`;
+                }
+
+                const selectAllLabel = document.getElementById('selectAllLabel');
+                if (selectAllLabel) {
+                    selectAllLabel.textContent = `Select All (${remainingCards.length})`;
+                }
+
+                // 5. Show empty Wishlist state when final item is removed
+                if (remainingCards.length === 0) {
+                    const emptyState = document.getElementById('wishlistEmptyState');
+                    if (emptyState) emptyState.style.display = 'flex';
+                }
+            } else if (deleteBtn) {
+                deleteBtn.classList.remove('active');
+            }
+
+            // 6. Update header Wishlist count
+            const globalWishCount = document.getElementById('wishlistCount');
+            if (globalWishCount) {
+                globalWishCount.textContent = updatedWishlist.length;
+            }
+
+            // 7. Set that product's heart state to unchecked everywhere
+            const productId = deleteBtn?.getAttribute('data-product-id') || card?.getAttribute('data-product-id');
+            const targetSelector = productId 
+                ? `[data-product-slug="${CSS.escape(slug)}"], [data-product-id="${CSS.escape(productId)}"]`
+                : `[data-product-slug="${CSS.escape(slug)}"]`;
+                
+            document.querySelectorAll(targetSelector).forEach(el => {
+                if (el.classList.contains('active')) {
+                    el.classList.remove('active');
+                    el.style.backgroundColor = '';
+                    el.style.color = '';
+                    el.style.borderColor = '';
+                }
+            });
+
+            // 8. Show one removal toast and existing removal sound
+            if (typeof window.showStorefrontToast === 'function') {
+                window.showStorefrontToast({
+                    heading: 'Removed from Wishlist',
+                    name: productName,
+                    price: productPrice,
+                    subtitle: 'Item removed from your wishlist',
+                    type: 'amber',
+                    image: productImage
+                });
+            }
+
+            return true;
+        } catch (err) {
+            console.error('Wishlist removal error:', err);
+
+            // If removal fails: keep card, keep count unchanged, keep heart selected, show error toast
+            if (card) {
+                card.style.opacity = '1';
+                card.style.transform = 'none';
+            }
+            if (deleteBtn && deleteBtn.classList.contains('wishlist-heart-action')) {
+                deleteBtn.classList.add('active');
+            }
+
+            if (typeof window.showStorefrontToast === 'function') {
+                window.showStorefrontToast({
+                    heading: 'Notice',
+                    name: productName,
+                    subtitle: 'Could not remove item from wishlist. Please try again.',
+                    type: 'error',
+                    image: productImage
+                });
+            }
+
+            return false;
+        }
     }
 
     // Initialize Wishlist States on Load
@@ -405,7 +527,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Card wishlist button click listener
     const cardWishlistBtns = document.querySelectorAll('.action-wishlist');
     cardWishlistBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
             e.preventDefault();
             const slug = btn.getAttribute('data-product-slug');
             const card = btn.closest('.product-card') || btn.closest('.wishlist-card') || btn.closest('.product-details');
@@ -417,13 +539,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!slug) return;
             
-            const updated = toggleWishlist(slug);
-            btn.classList.toggle('active');
-            
-            if (btn.classList.contains('active')) {
+            const isCurrentlyActive = btn.classList.contains('active');
+            if (isCurrentlyActive) {
+                await handleWishlistRemoval(slug, card, btn);
+            } else {
+                const updated = addToWishlist(slug);
+                btn.classList.add('active');
                 btn.style.backgroundColor = '#E27B8A';
                 btn.style.color = '#FFFFFF';
                 btn.style.borderColor = '#E27B8A';
+                
+                const globalWishCount = document.getElementById('wishlistCount');
+                if (globalWishCount) {
+                    globalWishCount.textContent = updated.length;
+                }
+
                 if (typeof window.showStorefrontToast === 'function') {
                     window.showStorefrontToast({
                         heading: 'Saved to Wishlist',
@@ -436,25 +566,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         actionUrl: '/wishlist'
                     });
                 }
-            } else {
-                btn.style.backgroundColor = '';
-                btn.style.color = '';
-                btn.style.borderColor = '';
-                if (typeof window.showStorefrontToast === 'function') {
-                    window.showStorefrontToast({
-                        heading: 'Removed from Wishlist',
-                        name: productName,
-                        subtitle: 'Item removed from your wishlist',
-                        type: 'amber',
-                        image: productImage,
-                        productUrl: productLink
-                    });
-                }
-            }
-            
-            const globalWishCount = document.getElementById('wishlistCount');
-            if (globalWishCount) {
-                globalWishCount.textContent = updated.length;
             }
         });
     });
@@ -506,62 +617,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Catalog Page: Wishlist Heart Toggles & Delete Handlers
-    document.addEventListener('click', (e) => {
-        const deleteBtn = e.target.closest('.btn-delete-wishlist-item, .wishlist-heart-action');
+    document.addEventListener('click', async (e) => {
+        const deleteBtn = e.target.closest('.btn-delete-wishlist-item, .btn-delete-item, .wishlist-heart-action');
         if (!deleteBtn) return;
 
-        const slug = deleteBtn.getAttribute('data-product-slug');
+        e.preventDefault();
+        const card = deleteBtn.closest('.wishlist-card, .product-card');
+        const slug = deleteBtn.getAttribute('data-product-slug') || card?.getAttribute('data-product-slug');
         if (!slug) return;
 
-        const card = deleteBtn.closest('.wishlist-card, .product-card');
-        const productName = deleteBtn.getAttribute('data-name') || card?.querySelector('.product-name, .wishlist-card-title')?.textContent?.trim() || 'Product';
-        const productImage = card?.querySelector('img')?.src || null;
-        const priceText = card?.querySelector('.product-price, .wishlist-card-price')?.textContent?.replace(/[^0-9]/g, '') || null;
-        const productPrice = priceText ? parseInt(priceText) : null;
-
-        // Toggle wishlist state
-        const updatedWishlist = toggleWishlist(slug);
-
-        // Animate out card if on wishlist page
-        if (card && (card.classList.contains('wishlist-card') || card.closest('#wishlistGrid'))) {
-            card.style.transition = 'all 0.3s ease';
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.88)';
-            setTimeout(() => {
-                card.remove();
-
-                const remainingCards = document.querySelectorAll('#wishlistGrid .wishlist-card');
-                const heroCountText = document.getElementById('wishlistItemsCountText');
-                if (heroCountText) {
-                    heroCountText.textContent = `${remainingCards.length} ${remainingCards.length === 1 ? 'Item' : 'Items'}`;
-                }
-
-                if (remainingCards.length === 0) {
-                    const emptyState = document.getElementById('wishlistEmptyState');
-                    if (emptyState) emptyState.style.display = 'flex';
-                }
-            }, 300);
-        } else {
-            deleteBtn.classList.toggle('active');
-        }
-
-        // Update header badge
-        const globalWishCount = document.getElementById('wishlistCount');
-        if (globalWishCount) {
-            globalWishCount.textContent = updatedWishlist.length;
-        }
-
-        // Show single Removed from Wishlist toast with downward sound
-        if (typeof window.showStorefrontToast === 'function') {
-            window.showStorefrontToast({
-                heading: 'Removed from Wishlist',
-                name: productName,
-                price: productPrice,
-                subtitle: 'Item removed from your wishlist',
-                type: 'amber',
-                image: productImage
-            });
-        }
+        await handleWishlistRemoval(slug, card, deleteBtn);
     });
 
     // 8. Catalog Page: Mobile Filter Sidebar Toggle
@@ -898,48 +963,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 alert(`🛒 Added to Cart: ${title}!`);
-            }
-        });
-
-        // Delete Item button click handler (Trash icon)
-        wishlistGrid.addEventListener('click', (e) => {
-            const deleteBtn = e.target.closest('.btn-delete-item');
-            if (deleteBtn) {
-                const card = deleteBtn.closest('.wishlist-card');
-                if (card) {
-                    const slug = card.getAttribute('data-product-slug');
-                    if (slug) {
-                        toggleWishlist(slug);
-                    }
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(15px) scale(0.95)';
-                    card.style.transition = 'all 0.4s ease';
-                    setTimeout(() => {
-                        card.remove();
-                        updateWishlistCounters();
-                    }, 400);
-                }
-            }
-        });
-
-        // Heart action click handler (removes item from wishlist too)
-        wishlistGrid.addEventListener('click', (e) => {
-            const heartBtn = e.target.closest('.wishlist-heart-action');
-            if (heartBtn) {
-                const card = heartBtn.closest('.wishlist-card');
-                if (card) {
-                    const slug = card.getAttribute('data-product-slug');
-                    if (slug) {
-                        toggleWishlist(slug);
-                    }
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(15px) scale(0.95)';
-                    card.style.transition = 'all 0.4s ease';
-                    setTimeout(() => {
-                        card.remove();
-                        updateWishlistCounters();
-                    }, 400);
-                }
             }
         });
 

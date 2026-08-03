@@ -41,7 +41,7 @@
                             <div class="wishlist-card product-card" data-product-id="{{ $product->id }}" data-product-slug="{{ $slug }}">
                                 <div class="wishlist-card-header">
                                     <span class="stock-badge in-stock">In Stock</span>
-                                    <button class="wishlist-heart-action active" aria-label="Remove from Wishlist" data-product-slug="{{ $slug }}" data-name="{{ $product->name }}">
+                                    <button class="wishlist-heart-action active" aria-label="Remove from Wishlist" data-product-slug="{{ $slug }}" data-product-id="{{ $product->id }}" data-name="{{ $product->name }}">
                                         <i class="fas fa-heart"></i>
                                     </button>
                                 </div>
@@ -67,7 +67,7 @@
                                             <i class="fas fa-shopping-bag" style="font-size:0.85rem;"></i>
                                             <span>Add to Cart</span>
                                         </button>
-                                        <button class="btn-delete-item btn-delete-wishlist-item" aria-label="Delete Item" data-product-slug="{{ $slug }}" data-name="{{ $product->name }}" title="Remove from Wishlist">
+                                        <button class="btn-delete-item btn-delete-wishlist-item" aria-label="Delete Item" data-product-slug="{{ $slug }}" data-product-id="{{ $product->id }}" data-name="{{ $product->name }}" title="Remove from Wishlist">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
