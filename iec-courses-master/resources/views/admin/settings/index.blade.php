@@ -841,7 +841,7 @@
                                             @php
                                                 $curActiveStatus = old('_payment_method_id') == $method->id ? old('is_active') : ($method->is_active ? '1' : '0');
                                             @endphp
-                                            <select name="is_active" class="gt-input" style="width:100%;">
+                                            <select name="is_active" id="pm-status-select-{{ $method->id }}" onchange="syncPaymentStatusSelect({{ $method->id }}, this.value)" class="gt-input" style="width:100%;">
                                                 <option value="1" {{ $curActiveStatus == '1' ? 'selected' : '' }}>Active</option>
                                                 <option value="0" {{ $curActiveStatus == '0' ? 'selected' : '' }}>Inactive</option>
                                             </select>
@@ -867,6 +867,18 @@
             </div>
 
             <script>
+                function syncPaymentStatusSelect(id, value) {
+                    const isChecked = value === '1';
+                    const checkbox = document.getElementById('pm-toggle-' + id);
+                    if (checkbox) {
+                        checkbox.checked = isChecked;
+                    }
+                    const badge = document.getElementById('pm-inactive-badge-' + id);
+                    if (badge) {
+                        badge.style.display = isChecked ? 'none' : 'inline-block';
+                    }
+                }
+
                 function togglePaymentStatus(id, checkbox) {
                     const isChecked = checkbox.checked;
                     checkbox.disabled = true;
@@ -893,12 +905,20 @@
                         if (spinner) spinner.style.display = 'none';
                         if (data.success) {
                             showToastNotification(data.message || 'Status updated successfully.', 'success');
+                            // 1. Update top status badge
                             const badge = document.getElementById('pm-inactive-badge-' + id);
                             if (badge) {
                                 badge.style.display = data.is_active ? 'none' : 'inline-block';
                             }
+                            // 2. Synchronize Edit form Status dropdown
+                            const select = document.getElementById('pm-status-select-' + id);
+                            if (select) {
+                                select.value = data.is_active ? '1' : '0';
+                            }
                         } else {
                             checkbox.checked = !isChecked;
+                            const select = document.getElementById('pm-status-select-' + id);
+                            if (select) select.value = (!isChecked) ? '1' : '0';
                             showToastNotification('Failed to update status.', 'error');
                         }
                     })
@@ -906,6 +926,10 @@
                         checkbox.disabled = false;
                         if (spinner) spinner.style.display = 'none';
                         checkbox.checked = !isChecked;
+                        const select = document.getElementById('pm-status-select-' + id);
+                        if (select) select.value = (!isChecked) ? '1' : '0';
+                        const badge = document.getElementById('pm-inactive-badge-' + id);
+                        if (badge) badge.style.display = (!isChecked) ? 'none' : 'inline-block';
                         showToastNotification('Network error while updating status.', 'error');
                     });
                 }
