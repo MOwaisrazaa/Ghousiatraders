@@ -505,45 +505,63 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 7. Catalog Page: Wishlist Heart Toggles
-    const wishlistHearts = document.querySelectorAll('.wishlist-heart');
-    wishlistHearts.forEach(heart => {
-        heart.addEventListener('click', () => {
-            const slug = heart.getAttribute('data-product-slug');
-            const card = heart.closest('.product-card') || heart.closest('.wishlist-card') || heart.closest('.product-details');
-            const productName = heart.getAttribute('data-name') || 'Product';
-            const productImage = card ? card.querySelector('img')?.src : null;
+    // Catalog Page: Wishlist Heart Toggles & Delete Handlers
+    document.addEventListener('click', (e) => {
+        const deleteBtn = e.target.closest('.btn-delete-wishlist-item, .wishlist-heart-action');
+        if (!deleteBtn) return;
 
-            if (!slug) return;
-            
-            const updated = toggleWishlist(slug);
-            heart.classList.toggle('active');
-            
-            if (typeof window.showStorefrontToast === 'function') {
-                if (heart.classList.contains('active')) {
-                    window.showStorefrontToast({
-                        title: 'Wishlist Updated',
-                        message: `${productName} added to your wishlist.`,
-                        type: 'wishlist',
-                        image: productImage,
-                        actionText: 'View Wishlist',
-                        actionUrl: '/wishlist'
-                    });
-                } else {
-                    window.showStorefrontToast({
-                        title: 'Wishlist Updated',
-                        message: `${productName} removed from your wishlist.`,
-                        type: 'amber',
-                        image: productImage
-                    });
+        const slug = deleteBtn.getAttribute('data-product-slug');
+        if (!slug) return;
+
+        const card = deleteBtn.closest('.wishlist-card, .product-card');
+        const productName = deleteBtn.getAttribute('data-name') || card?.querySelector('.product-name, .wishlist-card-title')?.textContent?.trim() || 'Product';
+        const productImage = card?.querySelector('img')?.src || null;
+        const priceText = card?.querySelector('.product-price, .wishlist-card-price')?.textContent?.replace(/[^0-9]/g, '') || null;
+        const productPrice = priceText ? parseInt(priceText) : null;
+
+        // Toggle wishlist state
+        const updatedWishlist = toggleWishlist(slug);
+
+        // Animate out card if on wishlist page
+        if (card && (card.classList.contains('wishlist-card') || card.closest('#wishlistGrid'))) {
+            card.style.transition = 'all 0.3s ease';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.88)';
+            setTimeout(() => {
+                card.remove();
+
+                const remainingCards = document.querySelectorAll('#wishlistGrid .wishlist-card');
+                const heroCountText = document.getElementById('wishlistItemsCountText');
+                if (heroCountText) {
+                    heroCountText.textContent = `${remainingCards.length} ${remainingCards.length === 1 ? 'Item' : 'Items'}`;
                 }
-            }
-            
-            const globalWishCount = document.getElementById('wishlistCount');
-            if (globalWishCount) {
-                globalWishCount.textContent = updated.length;
-            }
-        });
+
+                if (remainingCards.length === 0) {
+                    const emptyState = document.getElementById('wishlistEmptyState');
+                    if (emptyState) emptyState.style.display = 'flex';
+                }
+            }, 300);
+        } else {
+            deleteBtn.classList.toggle('active');
+        }
+
+        // Update header badge
+        const globalWishCount = document.getElementById('wishlistCount');
+        if (globalWishCount) {
+            globalWishCount.textContent = updatedWishlist.length;
+        }
+
+        // Show single Removed from Wishlist toast with downward sound
+        if (typeof window.showStorefrontToast === 'function') {
+            window.showStorefrontToast({
+                heading: 'Removed from Wishlist',
+                name: productName,
+                price: productPrice,
+                subtitle: 'Item removed from your wishlist',
+                type: 'amber',
+                image: productImage
+            });
+        }
     });
 
     // 8. Catalog Page: Mobile Filter Sidebar Toggle

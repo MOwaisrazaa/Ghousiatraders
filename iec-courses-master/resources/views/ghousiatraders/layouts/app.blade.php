@@ -58,19 +58,38 @@
             }
         }
 
-        // Initialize on first user interaction to satisfy browser autoplay policy
-        document.addEventListener('click', initAudioContext, { once: true });
-        document.addEventListener('touchstart', initAudioContext, { once: true });
+        // Initialize on user interactions to satisfy browser autoplay policy
+        document.addEventListener('click', initAudioContext);
+        document.addEventListener('touchstart', initAudioContext);
 
-        function playToastSound(soundType) {
+        function playToastSound(soundType, heading = '') {
             if (!soundEnabled) return;
             try {
                 initAudioContext();
                 if (!audioCtx) return;
 
                 const now = audioCtx.currentTime;
+                const isRemoval = soundType === 'amber' || soundType === 'remove' || (heading && (heading.toLowerCase().includes('remove') || heading.toLowerCase().includes('clear')));
 
-                if (soundType === 'success' || soundType === 'cart') {
+                if (isRemoval) {
+                    // Distinct Soft Downward Removal Tone (G4 -> E4 -> C4)
+                    [392.00, 329.63, 261.63].forEach((freq, index) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now + index * 0.07);
+
+                        gain.gain.setValueAtTime(0.001, now + index * 0.07);
+                        gain.gain.linearRampToValueAtTime(0.12, now + index * 0.07 + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.07 + 0.25);
+
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+
+                        osc.start(now + index * 0.07);
+                        osc.stop(now + index * 0.07 + 0.28);
+                    });
+                } else if (soundType === 'success' || soundType === 'cart') {
                     // Soft Success Triad Chime (C5 -> E5 -> G5)
                     [523.25, 659.25, 783.99].forEach((freq, index) => {
                         const osc = audioCtx.createOscillator();
@@ -79,7 +98,7 @@
                         osc.frequency.setValueAtTime(freq, now + index * 0.06);
                         
                         gain.gain.setValueAtTime(0.001, now + index * 0.06);
-                        gain.gain.linearRampToValueAtTime(0.08, now + index * 0.06 + 0.02);
+                        gain.gain.linearRampToValueAtTime(0.1, now + index * 0.06 + 0.02);
                         gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.06 + 0.28);
                         
                         osc.connect(gain);
@@ -97,7 +116,7 @@
                         osc.frequency.setValueAtTime(freq, now + index * 0.05);
 
                         gain.gain.setValueAtTime(0.001, now + index * 0.05);
-                        gain.gain.linearRampToValueAtTime(0.07, now + index * 0.05 + 0.015);
+                        gain.gain.linearRampToValueAtTime(0.09, now + index * 0.05 + 0.015);
                         gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.05 + 0.2);
 
                         osc.connect(gain);
@@ -105,24 +124,6 @@
 
                         osc.start(now + index * 0.05);
                         osc.stop(now + index * 0.05 + 0.22);
-                    });
-                } else if (soundType === 'amber' || soundType === 'remove') {
-                    // Subtle Lower Tone (F4 -> C4)
-                    [349.23, 261.63].forEach((freq, index) => {
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(freq, now + index * 0.06);
-
-                        gain.gain.setValueAtTime(0.001, now + index * 0.06);
-                        gain.gain.linearRampToValueAtTime(0.06, now + index * 0.06 + 0.02);
-                        gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.06 + 0.25);
-
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-
-                        osc.start(now + index * 0.06);
-                        osc.stop(now + index * 0.06 + 0.28);
                     });
                 } else if (soundType === 'error') {
                     // Gentle Low Warning Dual Pulse
@@ -210,7 +211,7 @@
             }
 
             // Play sound effect
-            playToastSound(type);
+            playToastSound(type, heading);
 
             // Determine overlay badge icon
             let badgeIconClass = 'fa-check';
