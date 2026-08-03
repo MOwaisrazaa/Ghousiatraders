@@ -4,15 +4,6 @@
 
 @push('head')
 <style>
-    /* Stats row for 6 cards */
-    .orders-stats-row {
-        display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-        gap: 16px;
-        margin-bottom: 24px;
-        width: 100%;
-    }
-
     .orders-stat-card {
         background: #ffffff;
         border: 1.5px solid var(--gt-border);
@@ -46,32 +37,40 @@
     }
 
     .orders-stat-title {
-        font-size: 0.72rem;
+        font-size: clamp(0.72rem, 0.85vw, 0.82rem);
         font-weight: 700;
         color: var(--gt-text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.04em;
         margin-bottom: 4px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow-wrap: break-word;
+        word-break: normal;
+        white-space: normal;
+        line-height: 1.25;
+        min-width: 0;
     }
 
     .orders-stat-count {
-        font-size: 1.35rem;
+        font-size: clamp(1.25rem, 1.6vw, 1.6rem);
         font-weight: 800;
         color: var(--gt-text);
-        line-height: 1.1;
+        line-height: 1.15;
         margin-bottom: 6px;
+        word-break: break-word;
+        min-width: 0;
     }
 
     .orders-stat-growth {
-        font-size: 0.68rem;
+        font-size: clamp(0.68rem, 0.8vw, 0.78rem);
         font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 2px;
-        white-space: nowrap;
+        gap: 4px;
+        flex-wrap: wrap;
+        white-space: normal;
+        overflow-wrap: break-word;
+        width: 100%;
+        min-width: 0;
     }
 
     /* Colors and Accents */

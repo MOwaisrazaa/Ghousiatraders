@@ -4,10 +4,10 @@
 
 @section('content')
 <style>
-    /* Stats row for 5 cards */
+    /* Stats row for cards */
     .products-stats-row {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 16px;
         margin-bottom: 24px;
         width: 100%;
@@ -52,37 +52,48 @@
     }
 
     .products-stat-title {
-        font-size: 0.72rem;
+        font-size: clamp(0.72rem, 0.85vw, 0.82rem);
         font-weight: 700;
         color: var(--gt-text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.04em;
         margin-bottom: 4px;
+        overflow-wrap: break-word;
+        word-break: normal;
+        white-space: normal;
+        line-height: 1.25;
+        min-width: 0;
     }
 
     .products-stat-count {
-        font-size: 1.35rem;
+        font-size: clamp(1.25rem, 1.6vw, 1.6rem);
         font-weight: 800;
         color: var(--gt-text);
-        line-height: 1.1;
+        line-height: 1.15;
         margin-bottom: 6px;
+        word-break: break-word;
+        min-width: 0;
     }
 
     .products-stat-growth {
-        font-size: 0.68rem;
+        font-size: clamp(0.68rem, 0.8vw, 0.78rem);
         font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 2px;
-        white-space: nowrap;
+        gap: 4px;
+        flex-wrap: wrap;
+        white-space: normal;
+        overflow-wrap: break-word;
+        width: 100%;
+        min-width: 0;
     }
 
     /* Colors and Accents for Stats */
     .stat-accent-total { background: #f3f4f6; color: #4b5563; }
     .stat-accent-active { background: #ecfdf5; color: #047857; }
     .stat-accent-outofstock { background: #fef2f2; color: #b91c1c; }
-    .stat-accent-lowstock { background: #fffbeb; color: #b45309; }
-    .stat-accent-draft { background: #faf5ff; color: #6b21a8; }
+    .stat-accent-lowstock { background: #fffbe6; color: #d97706; }
+    .stat-accent-draft { background: #f3e8ff; color: #7e22ce; }
 
     /* Two-column layout */
     .products-main-layout {

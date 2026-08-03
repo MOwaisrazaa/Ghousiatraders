@@ -11,13 +11,6 @@
         gap: 30px;
     }
 
-    /* Statistics row */
-    .stats-row {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 20px;
-    }
-
     .stat-box {
         background: #ffffff;
         border: 1.5px solid var(--gt-border);
@@ -28,7 +21,7 @@
         flex-direction: column;
         justify-content: space-between;
         gap: 12px;
-        min-height: 145px; /* Equal heights */
+        min-height: 135px;
         min-width: 0;
         box-sizing: border-box;
     }

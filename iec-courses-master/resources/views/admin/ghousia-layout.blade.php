@@ -16,6 +16,7 @@
     
     <style>
         :root {
+            --admin-sidebar-width: 280px;
             --gt-bg: #fffcf8;
             --gt-sidebar-bg: #fdfaf5;
             --gt-card-bg: #ffffff;
@@ -74,13 +75,15 @@
 
         /* Shell Layout & Box Sizing */
         .admin-shell {
-            width: 100vw;
+            width: 100%;
             min-height: 100vh;
             position: relative;
             box-sizing: border-box;
+            display: flex;
+            overflow-x: hidden;
         }
 
-        /* Left Sidebar styling (fixed, independently scrollable) */
+        /* Left Sidebar styling (fixed desktop, off-canvas drawer mobile) */
         .admin-sidebar {
             background-color: var(--gt-sidebar-bg);
             border-right: 1.5px solid var(--gt-border);
@@ -91,9 +94,9 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 285px; /* Exact 285px sidebar width */
+            width: var(--admin-sidebar-width);
             z-index: 100;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
             overflow-y: auto;
             box-sizing: border-box;
         }
@@ -437,17 +440,249 @@
             color: var(--gt-primary);
         }
 
-        /* Right panel section */
+        /* Right main panel section */
         .admin-main-wrapper {
-            margin-left: 285px; /* Aligned with sidebar width */
+            margin-left: var(--admin-sidebar-width);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            width: calc(100vw - 285px); /* Exact requested width */
-            transition: all 0.3s ease;
+            width: calc(100% - var(--admin-sidebar-width));
+            transition: margin-left 0.3s ease, width 0.3s ease;
             box-sizing: border-box;
             background-color: var(--gt-bg);
             min-width: 0;
+        }
+
+        /* Unified Responsive Statistics/KPI Cards Grid */
+        .kpi-cards-grid,
+        .stats-grid,
+        .customers-stats-row,
+        .products-stats-row,
+        .orders-stats-row,
+        .dashboard-stats-row,
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .stats-grid-6 {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 1599.98px) {
+            .kpi-cards-grid,
+            .stats-grid,
+            .customers-stats-row,
+            .products-stats-row,
+            .orders-stats-row,
+            .dashboard-stats-row,
+            .stats-row,
+            .stats-grid-6 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 1199.98px) {
+            .kpi-cards-grid,
+            .stats-grid,
+            .customers-stats-row,
+            .products-stats-row,
+            .orders-stats-row,
+            .dashboard-stats-row,
+            .stats-row,
+            .stats-grid-6 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .kpi-cards-grid,
+            .stats-grid,
+            .customers-stats-row,
+            .products-stats-row,
+            .orders-stats-row,
+            .dashboard-stats-row,
+            .stats-row,
+            .stats-grid-6 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Unified KPI Card Styling */
+        .gt-kpi-card,
+        .stat-card,
+        .customers-stat-card,
+        .products-stat-card,
+        .orders-stat-card,
+        .stat-box {
+            background: #ffffff;
+            border: 1.5px solid var(--gt-border);
+            border-radius: 14px;
+            padding: 16px 18px;
+            box-shadow: var(--gt-shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-width: 0;
+            box-sizing: border-box;
+            height: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .gt-kpi-card:hover,
+        .stat-card:hover,
+        .customers-stat-card:hover,
+        .products-stat-card:hover,
+        .orders-stat-card:hover,
+        .stat-box:hover {
+            border-color: rgba(215, 166, 74, 0.45);
+            box-shadow: 0 6px 20px rgba(53, 27, 13, 0.06);
+        }
+
+        .gt-kpi-title,
+        .stat-card-title,
+        .customers-stat-title,
+        .products-stat-title,
+        .orders-stat-title,
+        .stat-box-label {
+            font-size: clamp(0.72rem, 0.85vw, 0.85rem);
+            font-weight: 700;
+            color: var(--gt-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 4px;
+            overflow-wrap: break-word;
+            word-break: normal;
+            white-space: normal;
+            line-height: 1.25;
+            min-width: 0;
+        }
+
+        .gt-kpi-value,
+        .stat-card-value,
+        .customers-stat-count,
+        .products-stat-count,
+        .orders-stat-count,
+        .stat-box-value {
+            font-size: clamp(1.25rem, 1.6vw, 1.75rem);
+            font-weight: 800;
+            color: var(--gt-text);
+            line-height: 1.15;
+            margin-bottom: 6px;
+            word-break: break-word;
+            min-width: 0;
+        }
+
+        .gt-kpi-growth,
+        .stat-card-growth,
+        .customers-stat-growth,
+        .products-stat-growth,
+        .orders-stat-growth,
+        .stat-box-growth {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: clamp(0.68rem, 0.8vw, 0.78rem);
+            font-weight: 700;
+            flex-wrap: wrap;
+            white-space: normal;
+            overflow-wrap: break-word;
+            width: 100%;
+            min-width: 0;
+        }
+
+        /* Unified Table Wrapper & Filter Controls */
+        .gt-table-wrapper,
+        .table-responsive {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+
+        .gt-filter-bar,
+        .filter-bar,
+        .filters-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-bottom: 20px;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 575.98px) {
+            .gt-filter-bar,
+            .filter-bar,
+            .filters-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        /* Responsive Mobile Drawer & Backdrop */
+        .sidebar-drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(53, 27, 13, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 95;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-drawer-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        @media (max-width: 991.98px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            }
+            .admin-sidebar.sidebar-open {
+                transform: translateX(0);
+            }
+            .admin-main-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+            .admin-topbar {
+                padding: 0 16px;
+            }
+            .admin-content {
+                padding: 16px 16px 30px 16px;
+            }
+            .shortcut-hint {
+                display: none;
+            }
+            .view-store-btn span {
+                display: none;
+            }
+            .view-store-btn {
+                padding: 8px;
+                min-height: 36px;
+            }
         }
 
         /* Sticky Top Header */
@@ -980,13 +1215,6 @@
                     </div>
                 </div>
 
-                <a href="{{ route('admin.payment-methods.index') }}" class="sidebar-nav-link {{ request()->routeIs('admin.payment-methods*') ? 'active' : '' }}">
-                    <div class="sidebar-nav-link-left">
-                        <i data-lucide="store"></i>
-                        <span>Store Settings</span>
-                    </div>
-                </a>
-
                 <a href="{{ route('admin.users-roles') }}" class="sidebar-nav-link {{ request()->routeIs('admin.users*') || request()->routeIs('admin.roles*') ? 'active' : '' }}">
                     <div class="sidebar-nav-link-left">
                         <i data-lucide="shield-check"></i>
@@ -1178,16 +1406,16 @@
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
 
-            // Toggle Sidebar collapsing
-            const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
-            const adminShell = document.getElementById('adminShell');
+            // Toggle Sidebar collapsing & mobile drawer
+            const sidebarToggleBtn = document.getElementById('sidebarToggleBtn') || document.getElementById('hamburgerBtn');
+            const adminSidebar = document.getElementById('adminSidebar');
             const sidebarDrawerOverlay = document.getElementById('sidebarDrawerOverlay');
 
-            if (sidebarToggleBtn) {
+            if (sidebarToggleBtn && adminSidebar) {
                 sidebarToggleBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    adminShell.classList.toggle('sidebar-collapsed');
-                    if (window.innerWidth <= 991) {
+                    adminSidebar.classList.toggle('sidebar-open');
+                    if (sidebarDrawerOverlay) {
                         sidebarDrawerOverlay.classList.toggle('show');
                     }
                 });
@@ -1195,7 +1423,7 @@
 
             if (sidebarDrawerOverlay) {
                 sidebarDrawerOverlay.addEventListener('click', () => {
-                    adminShell.classList.remove('sidebar-collapsed');
+                    if (adminSidebar) adminSidebar.classList.remove('sidebar-open');
                     sidebarDrawerOverlay.classList.remove('show');
                 });
             }
