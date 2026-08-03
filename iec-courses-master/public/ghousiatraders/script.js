@@ -1001,12 +1001,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Listen to Livewire's cartUpdated event to update header badge dynamically
+    // Listen to Livewire's cartUpdated event to update header badge & cart hero badge dynamically
     window.addEventListener('cartUpdated', (event) => {
-        const newCount = event.detail.count;
-        const cartCountBadge = document.getElementById('cartCount');
-        if (cartCountBadge && newCount !== undefined) {
-            cartCountBadge.textContent = newCount;
+        const detail = event.detail;
+        let newCount = undefined;
+        if (typeof detail === 'number') {
+            newCount = detail;
+        } else if (detail && detail.count !== undefined) {
+            newCount = detail.count;
+        } else if (Array.isArray(detail) && detail[0] && detail[0].count !== undefined) {
+            newCount = detail[0].count;
+        }
+
+        if (newCount !== undefined) {
+            const cartCountBadge = document.getElementById('cartCount');
+            if (cartCountBadge) {
+                cartCountBadge.textContent = newCount;
+            }
+            const cartHeroCountText = document.getElementById('cartHeroItemsCountText');
+            if (cartHeroCountText) {
+                cartHeroCountText.textContent = `${newCount} ${newCount === 1 ? 'Item' : 'Items'}`;
+            }
         }
     });
 
