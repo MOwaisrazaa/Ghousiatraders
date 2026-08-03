@@ -36,7 +36,7 @@
                                 $quantity = (int) ($isObject ? ($cartitem->quantity ?? 1) : ($cartitem['quantity'] ?? 1));
                             @endphp
 
-                            <div class="cart-item-row" data-id="{{ $itemId }}" data-price="{{ $price }}">
+                            <div class="cart-item-row" wire:key="cart-item-{{ $itemId }}" data-id="{{ $itemId }}" data-price="{{ $price }}">
                                 <div class="td-product">
                                     <div class="cart-item-img">
                                         <img src="{{ $img }}" alt="{{ $name }}">
@@ -61,8 +61,8 @@
                                 <div class="td-subtotal">
                                     <span class="subtotal-label">Subtotal:</span>
                                     <span class="val-subtotal">PKR {{ number_format($price * $quantity) }}</span>
-                                    <button class="remove-item-btn" type="button" aria-label="Remove item" wire:click="removeFromCart({{ $itemId }})">
-                                        <i data-lucide="x"></i>
+                                    <button class="remove-item-btn" type="button" aria-label="Remove item" wire:click="removeFromCart({{ $itemId }})" title="Remove item">
+                                        <i class="fas fa-times"></i>
                                     </button>
                                 </div>
                             </div>

@@ -170,35 +170,49 @@ class Shoppingcart extends Component
 
     public function removeFromCart($itemId)
     {
-        \Log::info('removeFromCart called', [
-            'itemId' => $itemId,
-            'auth_check' => auth()->check(),
-            'user_id' => auth()->id()
-        ]);
+        $removedItem = collect($this->cartitems)->first(function ($item) use ($itemId) {
+            $isObject = is_object($item);
+            $id = $isObject ? ($item->id ?? null) : ($item['id'] ?? null);
+            $courseId = $isObject ? ($item->course_id ?? null) : ($item['course_id'] ?? null);
+            return (int) $id === (int) $itemId || (int) $courseId === (int) $itemId;
+        });
+
+        $name = 'Product';
+        $price = null;
+        $img = null;
+
+        if ($removedItem) {
+            $isObject = is_object($removedItem);
+            $courseObj = $isObject ? ($removedItem->course ?? null) : ($removedItem['course'] ?? null);
+            $courseObj = is_array($courseObj) ? (object) $courseObj : $courseObj;
+            if ($courseObj && !empty($courseObj->name)) {
+                $name = $courseObj->name;
+            }
+            if ($courseObj && !empty($courseObj->image_path)) {
+                $img = asset($courseObj->image_path);
+            }
+            $price = (float) ($isObject ? ($removedItem->price ?? 0) : ($removedItem['price'] ?? 0));
+        }
 
         if (auth()->check()) {
-            $deletedCount = Cart::where(function ($query) use ($itemId) {
-                $query->where('id', $itemId)
-                      ->orWhere('course_id', $itemId);
-            })->where('user_id', auth()->id())
-              ->delete();
-            \Log::info('Database cart item deleted', [
-                'itemId' => $itemId,
-                'deleted_count' => $deletedCount
-            ]);
+            Cart::where(function ($query) use ($itemId) {
+                $query->where('id', $itemId)->orWhere('course_id', $itemId);
+            })->where('user_id', auth()->id())->delete();
         } else {
             $cart = $this->sessionCart();
-            \Log::info('Session cart before remove', ['cart' => $cart]);
             $cart = array_values(array_filter($cart, fn ($item) => (int) ($item['course_id'] ?? 0) !== (int) $itemId));
-            \Log::info('Session cart after remove', ['cart' => $cart]);
             $this->saveSessionCart($cart);
         }
 
         $this->loadCartItems();
         $this->dispatch('cartUpdated', count: collect($this->cartitems)->sum('quantity'));
         $this->dispatch('show-toast', [
-            'message' => 'Product removed from your cart.',
-            'type' => 'info'
+            'heading' => 'Removed from Cart',
+            'name' => $name,
+            'subtitle' => 'Item removed from your cart',
+            'price' => $price,
+            'image' => $img,
+            'type' => 'amber'
         ]);
     }
 
@@ -248,6 +262,12 @@ class Shoppingcart extends Component
 
         $this->loadCartItems();
         $this->dispatch('cartUpdated', count: 0);
+        $this->dispatch('show-toast', [
+            'heading' => 'Cart Cleared',
+            'name' => 'Shopping Cart',
+            'subtitle' => 'All items removed from your cart',
+            'type' => 'amber'
+        ]);
     }
 
     public function render()

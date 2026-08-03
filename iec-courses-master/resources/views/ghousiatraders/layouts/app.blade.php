@@ -270,20 +270,32 @@
             }, duration);
         };
 
-        // Listen for Livewire 'show-toast' browser events
-        document.addEventListener('livewire:initialized', () => {
-            Livewire.on('show-toast', (eventData) => {
-                const payload = Array.isArray(eventData) ? eventData[0] : eventData;
-                if (payload) {
-                    window.showStorefrontToast(payload);
-                }
-            });
-        });
+        // Universal single listener for 'show-toast' events (prevents duplicate triggers)
+        let lastToastTime = 0;
+        let lastToastName = '';
 
-        // Also support standard window custom event listener
-        window.addEventListener('show-toast', (e) => {
-            if (e.detail) {
-                window.showStorefrontToast(e.detail);
+        function handleToastEvent(data) {
+            const payload = Array.isArray(data) ? data[0] : (data?.detail ? (Array.isArray(data.detail) ? data.detail[0] : data.detail) : data);
+            if (!payload) return;
+
+            const now = Date.now();
+            const name = payload.name || payload.message || payload.heading || '';
+            if (name && name === lastToastName && (now - lastToastTime) < 500) {
+                return; // Guard against duplicate invocation within 500ms
+            }
+            lastToastTime = now;
+            lastToastName = name;
+
+            window.showStorefrontToast(payload);
+        }
+
+        window.addEventListener('show-toast', handleToastEvent);
+
+        document.addEventListener('livewire:initialized', () => {
+            if (window.Livewire) {
+                Livewire.hook('morph.updated', () => {
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                });
             }
         });
     </script>
