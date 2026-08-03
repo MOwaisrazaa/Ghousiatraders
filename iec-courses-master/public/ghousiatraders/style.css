@@ -39,6 +39,33 @@
     --radius-lg: 16px;
 }
 
+/* Ghousia Traders Custom Theme Scrollbar for Storefront */
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: #FDFBF7;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #C29F74 0%, #5C3E21 100%);
+    border-radius: 8px;
+    border: 2px solid #FDFBF7;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #DFCDBC 0%, #3E2A18 100%);
+}
+
+/* Firefox Scrollbar Support */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #C29F74 #FDFBF7;
+}
+
 * {
     margin: 0;
     padding: 0;
