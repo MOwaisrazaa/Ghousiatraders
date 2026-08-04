@@ -73,8 +73,13 @@ Route::get('/track-order', [PolaniController::class, 'trackOrder'])->name('polan
 Route::get('/product/{slug}', [PolaniController::class, 'product'])->name('polani.product');
 Route::get('/about', [PolaniController::class, 'about'])->name('polani.about');
 Route::get('/contact', [PolaniController::class, 'contact'])->name('polani.contact');
+Route::get('/shipping-returns', [PolaniController::class, 'shippingReturns'])->name('polani.shipping-returns');
 Route::get('/shipping-delivery', [PolaniController::class, 'shippingDelivery'])->name('polani.shipping');
 Route::get('/returns-refunds', [PolaniController::class, 'returnsRefunds'])->name('polani.returns');
+Route::redirect('/shipping-policy', '/shipping-returns', 301);
+Route::redirect('/returns-exchanges', '/shipping-returns', 301);
+Route::redirect('/shipping', '/shipping-returns', 301);
+Route::redirect('/returns', '/shipping-returns', 301);
 Route::get('/faq', [PolaniController::class, 'faq'])->name('polani.faq');
 Route::post('/faq/ask', [PolaniController::class, 'storeFaqQuestion'])->name('polani.faq.ask');
 Route::get('/terms-conditions', [PolaniController::class, 'termsConditions'])->name('polani.terms');

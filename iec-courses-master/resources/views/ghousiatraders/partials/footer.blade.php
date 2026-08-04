@@ -94,8 +94,7 @@
                     @endauth
                     <li><a href="{{ route('polani.track-order') }}">Order Tracking</a></li>
                     <li><a href="{{ route('polani.wishlist') }}">Wishlist</a></li>
-                    <li><a href="{{ route('polani.returns') }}">Returns & Exchanges</a></li>
-                    <li><a href="{{ route('polani.shipping') }}">Shipping Policy</a></li>
+                    <li><a href="{{ route('polani.shipping-returns') }}">Return & Shipping Policy</a></li>
                     <li><a href="{{ route('polani.privacy') }}">Privacy Policy</a></li>
                     <li><a href="{{ route('polani.terms') }}">Terms & Conditions</a></li>
                 </ul>
@@ -131,31 +130,10 @@
             <div class="copyright">
                 <p>&copy; {{ date('Y') }} {{ $footer->copyright_name ?? 'Ghousia Traders' }}. {{ $footer->footer_text ?? 'All Rights Reserved.' }}</p>
             </div>
-            <div class="payments-accepted">
-                <span class="payment-label">We Accept</span>
-                <div class="payment-logos">
-                    <!-- Visa -->
-                    <svg class="pay-logo-img" viewBox="0 0 75 50" xmlns="http://www.w3.org/2000/svg" style="width:50px; height:30px; vertical-align:middle;">
-                        <rect width="75" height="50" rx="4" fill="#FFFFFF" stroke="#D5D8DC" stroke-width="1"/>
-                        <path d="M12 18 L18 34 H23 L29 18 H24 L21.5 29.5 L19 18 H12 Z" fill="#1A1F71"/>
-                        <path d="M30 18 H34 V34 H30 Z" fill="#1A1F71"/>
-                        <path d="M43.5 19.5 C42 18.5 40 18 38 18 C34 18 31.5 20 31.5 23.5 C31.5 28 37.5 28 37.5 30.5 C37.5 31.5 35.5 32 34 32 C32 32 30 31 29 30.5 L28 33.5 C29.5 34.5 32 35 34 35 C38.5 35 41.5 33 41.5 29.5 C41.5 25 35.5 24.5 35.5 22.5 C35.5 21.5 37 21 38.5 21 C40.5 21 42.5 21.5 43.5 22.5 L44.5 19.5 Z" fill="#1A1F71"/>
-                        <path d="M52.5 18 H49 L42.5 34 H47.5 L48.5 31.5 H54.5 L55 34 H60 L56 18 H52.5 Z M50 28 L51.5 23 L53.5 28 H50 Z" fill="#1A1F71"/>
-                        <path d="M12 18 L15 26 L16 18 Z" fill="#F7B600"/>
-                    </svg>
-                    <!-- Mastercard -->
-                    <svg class="pay-logo-img" viewBox="0 0 75 50" xmlns="http://www.w3.org/2000/svg" style="width:50px; height:30px; vertical-align:middle;">
-                        <rect width="75" height="50" rx="4" fill="#FFFFFF" stroke="#D5D8DC" stroke-width="1"/>
-                        <circle cx="31" cy="25" r="14" fill="#EB001B" opacity="0.9"/>
-                        <circle cx="44" cy="25" r="14" fill="#F79E1B" opacity="0.9"/>
-                    </svg>
-                    <!-- Meezan Bank -->
-                    <img class="pay-logo-img" src="{{ asset('ghousiatraders/assets/meezan-logo.png') }}" alt="Meezan Bank" style="width:50px; height:30px; object-fit:contain; vertical-align:middle;">
-                    <!-- Easypaisa -->
-                    <img class="pay-logo-img" src="{{ asset('ghousiatraders/assets/easypaisa-logo.png') }}" alt="Easypaisa" style="width:50px; height:30px; object-fit:contain; vertical-align:middle;">
-                    <!-- JazzCash -->
-                    <img class="pay-logo-img" src="{{ asset('ghousiatraders/assets/jazzcash-logo.png') }}" alt="JazzCash" style="width:50px; height:30px; object-fit:contain; vertical-align:middle;">
-                </div>
+            <div class="powered-by">
+                <p style="margin: 0; font-size: 0.92rem; color: rgba(255, 255, 255, 0.75); font-weight: 500;">
+                    Powered by <a href="https://snipezon.com" target="_blank" rel="noopener noreferrer" style="color: #DFAC4D; text-decoration: none; font-weight: 700; transition: color 0.3s ease;">snipezon.com</a>
+                </p>
             </div>
         </div>
     </div>

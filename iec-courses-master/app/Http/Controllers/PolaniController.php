@@ -552,18 +552,22 @@ class PolaniController extends Controller
         ]);
     }
 
+    public function shippingReturns()
+    {
+        return view('ghousiatraders.shipping-returns', [
+            'cartCount' => $this->cartCount(),
+            'footer' => \App\Models\FooterSetting::getSettings(),
+        ]);
+    }
+
     public function shippingDelivery()
     {
-        return view('polani.shipping', [
-            'cartCount' => $this->cartCount(),
-        ]);
+        return redirect()->route('polani.shipping-returns', [], 301);
     }
 
     public function returnsRefunds()
     {
-        return view('polani.returns', [
-            'cartCount' => $this->cartCount(),
-        ]);
+        return redirect()->route('polani.shipping-returns', [], 301);
     }
 
     public function faq()

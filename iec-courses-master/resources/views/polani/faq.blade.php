@@ -206,7 +206,7 @@
         <details class="faq-item">
           <summary>What is your return policy?</summary>
           <div class="faq-item__body">
-            <p>We offer a hassle-free 7-day return and exchange policy for unused items in their original packaging with unbroken seals. For complete details, please visit our <a href="{{ route('polani.returns') }}">Returns & Exchanges</a> page.</p>
+            <p>We offer a hassle-free 7-day return and exchange policy for unused items in their original packaging with unbroken seals. For complete details, please visit our <a href="{{ route('polani.shipping-returns') }}">Return & Shipping Policy</a> page.</p>
           </div>
         </details>
 

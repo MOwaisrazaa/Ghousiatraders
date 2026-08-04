@@ -159,7 +159,7 @@
           The delivery of products is carried out by third-party logistics firms. While we strive to ensure timely dispatch, we are not liable for delayed deliveries caused by courier processing errors, weather conditions, or local strikes.
         </p>
         <p class="policy-section__text">
-          Our return and exchange rules are governed by our specific policy document. Please refer to our <a href="{{ route('polani.returns') }}" style="color: var(--gold); text-decoration: none;">Returns & Exchanges</a> guidelines for more information.
+          Our return and exchange rules are governed by our specific policy document. Please refer to our <a href="{{ route('polani.shipping-returns') }}" style="color: var(--gold); text-decoration: none;">Return & Shipping Policy</a> guidelines for more information.
         </p>
       </div>
 
