@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
-use App\Models\User;
+use App\Services\StoreSettingsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -24,46 +24,8 @@ class SettingController extends Controller
     {
         $tab = $request->input('tab', 'general');
 
-        // Load settings values or set defaults
-        $settings = [
-            'store_name' => Setting::get('store_name', 'Ghousia Traders'),
-            'store_email' => Setting::get('store_email', 'support@ghousiatraders.com'),
-            'store_phone' => Setting::get('store_phone', '+92 300 1234567'),
-            'store_currency' => Setting::get('store_currency', 'PKR'),
-            'store_timezone' => Setting::get('store_timezone', 'Asia/Karachi'),
-            'date_format' => Setting::get('date_format', 'F d, Y'),
-            'time_format' => Setting::get('time_format', '12h'),
-            'items_per_page' => Setting::get('items_per_page', 20),
-            
-            // Address
-            'address_line_1' => Setting::get('address_line_1', '123, Main Boulevard, Gulberg III'),
-            'address_line_2' => Setting::get('address_line_2', 'Near Liberty Market'),
-            'city' => Setting::get('city', 'Lahore'),
-            'state' => Setting::get('state', 'Punjab'),
-            'country' => Setting::get('country', 'Pakistan'),
-            'postal_code' => Setting::get('postal_code', '54000'),
-
-            // Logo & Favicon paths
-            'store_logo' => Setting::get('store_logo', 'assets/logo.png'),
-            'store_favicon' => Setting::get('store_favicon', 'assets/favicon.png'),
-
-            // Email/SMTP settings
-            'from_name' => Setting::get('from_name', 'Ghousia Traders'),
-            'from_email' => Setting::get('from_email', 'no-reply@ghousiatraders.com'),
-            'mail_driver' => Setting::get('mail_driver', 'smtp'),
-            'smtp_host' => Setting::get('smtp_host', 'smtp.mailtrap.io'),
-            'smtp_port' => Setting::get('smtp_port', '2525'),
-            'smtp_encryption' => Setting::get('smtp_encryption', 'tls'),
-            'smtp_username' => Setting::get('smtp_username', 'user123'),
-
-            // Appearance theme
-            'theme' => Setting::get('theme', 'light'),
-            'primary_color' => Setting::get('primary_color', 'brown'),
-
-            // 2FA status
-            'two_factor_enabled' => Setting::get('two_factor_enabled', false),
-        ];
-
+        // Load all database-backed settings via central StoreSettingsService
+        $settings = StoreSettingsService::all();
         $paymentMethods = \App\Models\PaymentMethod::orderBy('sort_order')->get();
 
         return view('admin.settings.index', compact('tab', 'settings', 'paymentMethods'));
@@ -88,52 +50,113 @@ class SettingController extends Controller
                 'items_per_page' => 'required|integer|min:1',
             ]);
 
-            foreach ($validated as $key => $val) {
-                Setting::set($key, $val);
-            }
+            StoreSettingsService::setMultiple($validated);
 
-            // Sync with footer_settings for storefront footer/contact details
-            $footer = \App\Models\FooterSetting::getSettings();
-            $footer->update([
-                'email' => $validated['store_email'],
-                'phone' => $validated['store_phone'],
-                'brand_name' => $validated['store_name'],
-            ]);
-        } elseif ($tab === 'address') {
+        } elseif ($tab === 'store_info') {
             $validated = $request->validate([
-                'address_line_1' => 'required|string|max:255',
+                'public_store_name' => 'nullable|string|max:255',
+                'legal_business_name' => 'nullable|string|max:255',
+                'short_store_description' => 'nullable|string',
+                'detailed_business_description' => 'nullable|string',
+                'support_email' => 'nullable|email|max:255',
+                'sales_email' => 'nullable|email|max:255',
+                'primary_phone' => 'nullable|string|max:30',
+                'secondary_phone' => 'nullable|string|max:30',
+                'whatsapp_number' => 'nullable|string|max:30',
+                'address_line_1' => 'nullable|string|max:255',
                 'address_line_2' => 'nullable|string|max:255',
-                'city' => 'required|string|max:255',
-                'state' => 'required|string|max:255',
-                'country' => 'required|string|max:255',
-                'postal_code' => 'required|string|max:20',
+                'city' => 'nullable|string|max:255',
+                'state' => 'nullable|string|max:255',
+                'country' => 'nullable|string|max:255',
+                'postal_code' => 'nullable|string|max:20',
+                'google_maps_url' => 'nullable|url|max:500',
+                'google_maps_embed_url' => 'nullable|string',
+                'business_hours_mon_sat_open' => 'nullable|string|max:50',
+                'business_hours_mon_sat_close' => 'nullable|string|max:50',
+                'business_hours_sunday_status' => 'nullable|string|in:open,closed',
+                'business_hours_sunday_open' => 'nullable|string|max:50',
+                'business_hours_sunday_close' => 'nullable|string|max:50',
+                'business_hours_custom_text' => 'nullable|string',
+                'store_tagline' => 'nullable|string|max:255',
             ]);
 
-            foreach ($validated as $key => $val) {
-                Setting::set($key, $val ?? '');
-            }
+            StoreSettingsService::setMultiple($validated);
 
-            // Sync combined address with footer_settings
-            $fullAddress = $validated['address_line_1'] . 
-                           ($validated['address_line_2'] ? ', ' . $validated['address_line_2'] : '') . 
-                           ', ' . $validated['city'] . 
-                           ', ' . $validated['state'] . 
-                           ', ' . $validated['country'] . 
-                           ' - ' . $validated['postal_code'];
-            
-            $footer = \App\Models\FooterSetting::getSettings();
-            $footer->update([
-                'address' => $fullAddress,
+        } elseif ($tab === 'header') {
+            $validated = $request->validate([
+                'topbar_free_shipping_text' => 'nullable|string|max:255',
+                'shipping_free_threshold' => 'required|numeric|min:0',
+                'topbar_quality_text' => 'nullable|string|max:255',
+                'topbar_support_text' => 'nullable|string|max:255',
+                'header_support_phone' => 'nullable|string|max:30',
+                'track_order_btn_label' => 'nullable|string|max:50',
+                'header_search_placeholder' => 'nullable|string|max:255',
+                'show_top_info_bar' => 'nullable|in:0,1',
             ]);
+
+            $validated['show_top_info_bar'] = $request->has('show_top_info_bar') ? '1' : '0';
+            StoreSettingsService::setMultiple($validated);
+
+        } elseif ($tab === 'footer') {
+            $validated = $request->validate([
+                'footer_description' => 'nullable|string',
+                'footer_phone' => 'nullable|string|max:30',
+                'footer_email' => 'nullable|email|max:255',
+                'footer_address' => 'nullable|string',
+                'footer_business_hours' => 'nullable|string',
+                'copyright_name' => 'nullable|string|max:255',
+                'copyright_text' => 'nullable|string|max:255',
+                'newsletter_heading' => 'nullable|string|max:255',
+                'newsletter_description' => 'nullable|string',
+                'newsletter_button_label' => 'nullable|string|max:50',
+                'show_payment_logos' => 'nullable|in:0,1',
+            ]);
+
+            $validated['show_payment_logos'] = $request->has('show_payment_logos') ? '1' : '0';
+            StoreSettingsService::setMultiple($validated);
+
+        } elseif ($tab === 'social') {
+            $validated = $request->validate([
+                'facebook_url' => 'nullable|url|max:255',
+                'instagram_url' => 'nullable|url|max:255',
+                'youtube_url' => 'nullable|url|max:255',
+                'tiktok_url' => 'nullable|url|max:255',
+                'whatsapp_url' => 'nullable|string|max:255',
+                'twitter_url' => 'nullable|url|max:255',
+                'linkedin_url' => 'nullable|url|max:255',
+            ]);
+
+            $toggles = [
+                'facebook_enabled' => $request->has('facebook_enabled') ? '1' : '0',
+                'instagram_enabled' => $request->has('instagram_enabled') ? '1' : '0',
+                'youtube_enabled' => $request->has('youtube_enabled') ? '1' : '0',
+                'tiktok_enabled' => $request->has('tiktok_enabled') ? '1' : '0',
+                'whatsapp_enabled' => $request->has('whatsapp_enabled') ? '1' : '0',
+                'twitter_enabled' => $request->has('twitter_enabled') ? '1' : '0',
+                'linkedin_enabled' => $request->has('linkedin_enabled') ? '1' : '0',
+            ];
+
+            StoreSettingsService::setMultiple(array_merge($validated, $toggles));
+
+        } elseif ($tab === 'shipping') {
+            $validated = $request->validate([
+                'shipping_flat_rate' => 'required|numeric|min:0',
+                'shipping_free_threshold' => 'required|numeric|min:0',
+                'shipping_estimate_days' => 'required|string|max:255',
+                'shipping_coverage_text' => 'nullable|string',
+                'courier_support_phone' => 'nullable|string|max:30',
+            ]);
+
+            StoreSettingsService::setMultiple($validated);
+
         } elseif ($tab === 'appearance') {
             $validated = $request->validate([
                 'theme' => 'required|in:light,dark,system',
                 'primary_color' => 'required|string',
             ]);
 
-            foreach ($validated as $key => $val) {
-                Setting::set($key, $val);
-            }
+            StoreSettingsService::setMultiple($validated);
+
         } elseif ($tab === 'payment_methods') {
             $activeMethods = $request->input('active_methods', []);
             \App\Models\PaymentMethod::query()->update(['is_active' => false]);
@@ -143,39 +166,58 @@ class SettingController extends Controller
             return redirect()->to(url('/admin/settings?tab=payment_methods'))
                 ->with('success', 'Payment gateway statuses updated successfully.');
         } else {
-            // General support for other dynamic tabs (store_info, shipping, tax, notifications, API, Backup)
             $inputs = $request->except(['_token', 'tab']);
-            foreach ($inputs as $key => $val) {
-                Setting::set($key, $val);
-            }
+            StoreSettingsService::setMultiple($inputs);
         }
 
-        return back()->with('success', 'Settings updated successfully.');
+        return redirect()->to(url('/admin/settings?tab=' . $tab))
+            ->with('success', 'Settings updated successfully.');
     }
 
     /**
-     * Upload logo and favicon.
+     * Upload logo and favicon assets safely.
      */
     public function uploadLogo(Request $request)
     {
         $request->validate([
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'favicon' => 'nullable|file|mimes:png,ico|max:512',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'logo_light' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'logo_dark' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'favicon' => 'nullable|file|mimes:png,ico,svg|max:512',
+            'footer_logo' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
         ]);
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
             $path = $file->store('logos', 'public');
-            Setting::set('store_logo', 'storage/' . $path);
+            StoreSettingsService::set('store_logo', 'storage/' . $path);
+        }
+
+        if ($request->hasFile('logo_light')) {
+            $file = $request->file('logo_light');
+            $path = $file->store('logos', 'public');
+            StoreSettingsService::set('store_logo_light', 'storage/' . $path);
+        }
+
+        if ($request->hasFile('logo_dark')) {
+            $file = $request->file('logo_dark');
+            $path = $file->store('logos', 'public');
+            StoreSettingsService::set('store_logo_dark', 'storage/' . $path);
         }
 
         if ($request->hasFile('favicon')) {
             $file = $request->file('favicon');
             $path = $file->store('favicons', 'public');
-            Setting::set('store_favicon', 'storage/' . $path);
+            StoreSettingsService::set('store_favicon', 'storage/' . $path);
         }
 
-        return back()->with('success', 'Profile assets updated successfully.');
+        if ($request->hasFile('footer_logo')) {
+            $file = $request->file('footer_logo');
+            $path = $file->store('logos', 'public');
+            StoreSettingsService::set('footer_logo', 'storage/' . $path);
+        }
+
+        return back()->with('success', 'Store branding assets uploaded and updated successfully.');
     }
 
     /**
@@ -214,8 +256,8 @@ class SettingController extends Controller
             return back()->with('success', 'Password updated successfully.');
 
         } elseif ($action === 'toggle_2fa') {
-            $currentStatus = Setting::get('two_factor_enabled', false);
-            Setting::set('two_factor_enabled', !$currentStatus);
+            $currentStatus = StoreSettingsService::get('two_factor_enabled', false);
+            StoreSettingsService::set('two_factor_enabled', !$currentStatus);
             return back()->with('success', 'Two-factor Authentication status updated.');
         }
 
@@ -233,7 +275,6 @@ class SettingController extends Controller
             ]);
 
             try {
-                // Try sending a raw test email
                 $testEmail = $request->test_email;
                 Mail::raw('This is a test email from Ghousia Traders settings SMTP test configuration.', function($message) use ($testEmail) {
                     $message->to($testEmail)->subject('SMTP Mail Test');
@@ -255,13 +296,10 @@ class SettingController extends Controller
         ]);
 
         if ($request->filled('smtp_password')) {
-            // Securely encrypt and save the SMTP password
-            Setting::set('smtp_password', encrypt($request->smtp_password));
+            StoreSettingsService::set('smtp_password', encrypt($request->smtp_password));
         }
 
-        foreach ($validated as $key => $val) {
-            Setting::set($key, $val);
-        }
+        StoreSettingsService::setMultiple($validated);
 
         return back()->with('success', 'SMTP settings saved successfully.');
     }

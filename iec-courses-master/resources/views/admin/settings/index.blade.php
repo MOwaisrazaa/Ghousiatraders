@@ -4,10 +4,10 @@
 
 @section('content')
 <style>
-    /* Two-column layout */
+    /* Single-column full width layout */
     .settings-grid {
         display: grid;
-        grid-template-columns: 7fr 3fr;
+        grid-template-columns: 1fr;
         gap: 24px;
         align-items: flex-start;
         width: 100%;
@@ -61,7 +61,7 @@
     .settings-tabs-nav {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 12px;
         border-bottom: 1.5px solid var(--gt-border);
         padding-bottom: 2px;
         margin-bottom: 24px;
@@ -72,7 +72,7 @@
     .settings-tab-btn {
         background: none;
         border: none;
-        padding: 8px 12px;
+        padding: 8px 14px;
         font-size: 0.82rem;
         font-weight: 700;
         color: var(--gt-text-muted);
@@ -83,6 +83,7 @@
         text-decoration: none;
         position: relative;
         transition: all 0.2s ease;
+        border-radius: 8px;
     }
 
     .settings-tab-btn i {
@@ -92,10 +93,12 @@
 
     .settings-tab-btn:hover {
         color: var(--gt-primary);
+        background: var(--gt-primary-light);
     }
 
     .settings-tab-btn.active {
         color: var(--gt-primary);
+        background: var(--gt-primary-light);
     }
 
     .settings-tab-btn.active::after {
@@ -191,81 +194,50 @@
         border-color: #d7a64a;
     }
 
-    /* Appearance theme choice */
-    .theme-selection-row {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-        margin-bottom: 16px;
-    }
-
-    .theme-card-option {
+    .social-row-item {
+        background: #fffdf9;
         border: 1.5px solid var(--gt-border);
         border-radius: 12px;
-        padding: 12px;
-        cursor: pointer;
-        text-align: center;
-        transition: all 0.2s;
-        background: #fffdf9;
-    }
-
-    .theme-card-option:hover {
-        border-color: #d7a64a;
-        background: var(--gt-primary-light);
-    }
-
-    .theme-card-option.selected {
-        border-color: var(--gt-primary);
-        background: var(--gt-primary-light);
-        box-shadow: 0 0 0 2px rgba(53, 27, 13, 0.05);
-    }
-
-    .theme-card-option i {
-        width: 24px;
-        height: 24px;
-        color: var(--gt-text-muted);
-        margin-bottom: 4px;
-    }
-
-    .theme-card-option.selected i {
-        color: var(--gt-primary);
-    }
-
-    .theme-card-title {
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: var(--gt-text);
-    }
-
-    /* Color picker dots */
-    .color-picker-flex {
+        padding: 14px;
+        margin-bottom: 12px;
         display: flex;
         align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 16px;
     }
 
-    .color-dot {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
+    .social-row-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+    }
+
+    .social-icon-box {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: var(--gt-primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gt-primary);
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .social-toggle-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--gt-text);
         cursor: pointer;
-        border: 2px solid transparent;
-        transition: transform 0.2s;
-        position: relative;
+        user-select: none;
     }
 
-    .color-dot:hover {
-        transform: scale(1.15);
-    }
-
-    .color-dot.selected {
-        border-color: #ffffff;
-        box-shadow: 0 0 0 2px var(--gt-text);
-        transform: scale(1.1);
-    }
-
-    /* Logo assets previews */
+    /* Logo previews */
     .logo-uploader-row {
         display: flex;
         align-items: center;
@@ -310,142 +282,6 @@
         border-radius: 6px;
     }
 
-    /* More tabs dropdown */
-    .more-dropdown-container {
-        position: relative;
-    }
-
-    .more-dropdown-menu {
-        position: absolute;
-        right: 0;
-        top: 36px;
-        background: #ffffff;
-        border: 1.5px solid var(--gt-border);
-        border-radius: 10px;
-        box-shadow: 0 10px 25px rgba(53, 27, 13, 0.08);
-        min-width: 160px;
-        z-index: 90;
-        display: none;
-        flex-direction: column;
-        padding: 4px;
-    }
-
-    .more-dropdown-menu.show {
-        display: flex;
-    }
-
-    .more-dropdown-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        color: var(--gt-text-muted);
-        text-decoration: none;
-        font-size: 0.8rem;
-        font-weight: 600;
-        border-radius: 6px;
-        transition: background 0.2s;
-        border: none;
-        background: none;
-        width: 100%;
-        text-align: left;
-        cursor: pointer;
-    }
-
-    .more-dropdown-item:hover {
-        background-color: var(--gt-primary-light);
-        color: var(--gt-primary);
-    }
-
-    .more-dropdown-item.active {
-        color: var(--gt-primary);
-        background-color: var(--gt-primary-light);
-        font-weight: 700;
-    }
-
-    /* Modals */
-    .gt-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(53, 27, 13, 0.4);
-        backdrop-filter: blur(4px);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 500;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
-    .gt-modal.show {
-        display: flex;
-    }
-
-    .gt-modal-dialog {
-        background: #ffffff;
-        border: 1.5px solid var(--gt-border);
-        border-radius: 20px;
-        width: 100%;
-        max-width: 480px;
-        box-shadow: 0 20px 50px rgba(53, 27, 13, 0.15);
-        display: flex;
-        flex-direction: column;
-        max-height: 90vh;
-        animation: modalFadeIn 0.3s ease;
-        box-sizing: border-box;
-    }
-
-    @keyframes modalFadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .gt-modal-header {
-        padding: 16px 24px;
-        border-bottom: 1.5px solid var(--gt-border);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .gt-modal-title {
-        font-size: 1.05rem;
-        font-weight: 800;
-        color: var(--gt-primary);
-    }
-
-    .gt-modal-close {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: var(--gt-text-muted);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-    }
-
-    .gt-modal-body {
-        padding: 24px;
-        overflow-y: auto;
-        flex: 1;
-        box-sizing: border-box;
-    }
-
-    .gt-modal-footer {
-        padding: 16px 24px;
-        border-top: 1.5px solid var(--gt-border);
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 12px;
-    }
-
     /* Responsive */
     @media (max-width: 992px) {
         .settings-grid {
@@ -484,11 +320,20 @@
     <a href="{{ route('admin.settings.index', ['tab' => 'store_info']) }}" class="settings-tab-btn {{ $tab === 'store_info' ? 'active' : '' }}">
         <i data-lucide="info"></i> Store Information
     </a>
-    <a href="{{ route('admin.settings.index', ['tab' => 'payment_methods']) }}" class="settings-tab-btn {{ $tab === 'payment_methods' ? 'active' : '' }}">
-        <i data-lucide="credit-card"></i> Payment Methods
+    <a href="{{ route('admin.settings.index', ['tab' => 'header']) }}" class="settings-tab-btn {{ $tab === 'header' ? 'active' : '' }}">
+        <i data-lucide="layout"></i> Header & Top Bar
+    </a>
+    <a href="{{ route('admin.settings.index', ['tab' => 'footer']) }}" class="settings-tab-btn {{ $tab === 'footer' ? 'active' : '' }}">
+        <i data-lucide="panel-bottom"></i> Footer & Newsletter
+    </a>
+    <a href="{{ route('admin.settings.index', ['tab' => 'social']) }}" class="settings-tab-btn {{ $tab === 'social' ? 'active' : '' }}">
+        <i data-lucide="share-2"></i> Social Media
     </a>
     <a href="{{ route('admin.settings.index', ['tab' => 'shipping']) }}" class="settings-tab-btn {{ $tab === 'shipping' ? 'active' : '' }}">
         <i data-lucide="truck"></i> Shipping Settings
+    </a>
+    <a href="{{ route('admin.settings.index', ['tab' => 'payment_methods']) }}" class="settings-tab-btn {{ $tab === 'payment_methods' ? 'active' : '' }}">
+        <i data-lucide="credit-card"></i> Payment Methods
     </a>
     <a href="{{ route('admin.settings.index', ['tab' => 'tax']) }}" class="settings-tab-btn {{ $tab === 'tax' ? 'active' : '' }}">
         <i data-lucide="percent"></i> Tax Settings
@@ -506,7 +351,7 @@
             <div class="settings-card">
                 <div class="settings-card-header">
                     <h2 class="settings-card-title">General Settings</h2>
-                    <p class="settings-card-subtitle">Configure your store's basic settings and preferences.</p>
+                    <p class="settings-card-subtitle">Configure your store's basic parameters and preferences.</p>
                 </div>
                 <form action="{{ route('admin.settings.update') }}" method="POST">
                     @csrf
@@ -514,24 +359,27 @@
                     <div class="form-grid-2">
                         <div>
                             <label class="gt-label">Store Name</label>
-                            <input type="text" name="store_name" required value="{{ $settings['store_name'] }}" class="gt-input" style="width: 100%;">
+                            <input type="text" name="store_name" required value="{{ $settings['store_name'] ?? 'Ghousia Traders' }}" class="gt-input" style="width: 100%;">
+                            @error('store_name')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
                         </div>
                         <div>
-                            <label class="gt-label">Store Email</label>
-                            <input type="email" name="store_email" required value="{{ $settings['store_email'] }}" class="gt-input" style="width: 100%;">
+                            <label class="gt-label">Store Primary Email</label>
+                            <input type="email" name="store_email" required value="{{ $settings['store_email'] ?? 'info@ghousiatraders.com' }}" class="gt-input" style="width: 100%;">
+                            @error('store_email')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div>
-                            <label class="gt-label">Store Phone</label>
-                            <input type="text" name="store_phone" required value="{{ $settings['store_phone'] }}" class="gt-input" style="width: 100%;">
+                            <label class="gt-label">Store Phone Number</label>
+                            <input type="text" name="store_phone" required value="{{ $settings['store_phone'] ?? '0321-1234567' }}" class="gt-input" style="width: 100%;">
+                            @error('store_phone')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
                         </div>
                         <div>
                             <label class="gt-label">Store Currency</label>
                             <select name="store_currency" required class="gt-input" style="width:100%;">
-                                <option value="PKR" {{ $settings['store_currency'] === 'PKR' ? 'selected' : '' }}>PKR (Pakistani Rupee)</option>
-                                <option value="USD" {{ $settings['store_currency'] === 'USD' ? 'selected' : '' }}>USD (United States Dollar)</option>
-                                <option value="GBP" {{ $settings['store_currency'] === 'GBP' ? 'selected' : '' }}>GBP (British Pound)</option>
+                                <option value="PKR" {{ ($settings['store_currency'] ?? 'PKR') === 'PKR' ? 'selected' : '' }}>PKR (Pakistani Rupee)</option>
+                                <option value="USD" {{ ($settings['store_currency'] ?? '') === 'USD' ? 'selected' : '' }}>USD (United States Dollar)</option>
+                                <option value="GBP" {{ ($settings['store_currency'] ?? '') === 'GBP' ? 'selected' : '' }}>GBP (British Pound)</option>
                             </select>
                         </div>
                     </div>
@@ -539,17 +387,17 @@
                         <div>
                             <label class="gt-label">Store Timezone</label>
                             <select name="store_timezone" required class="gt-input" style="width:100%;">
-                                <option value="Asia/Karachi" {{ $settings['store_timezone'] === 'Asia/Karachi' ? 'selected' : '' }}>(GMT+05:00) Pakistan Standard Time (PKT)</option>
-                                <option value="UTC" {{ $settings['store_timezone'] === 'UTC' ? 'selected' : '' }}>UTC / GMT Timezone</option>
+                                <option value="Asia/Karachi" {{ ($settings['store_timezone'] ?? 'Asia/Karachi') === 'Asia/Karachi' ? 'selected' : '' }}>(GMT+05:00) Pakistan Standard Time (PKT)</option>
+                                <option value="UTC" {{ ($settings['store_timezone'] ?? '') === 'UTC' ? 'selected' : '' }}>UTC / GMT Timezone</option>
                             </select>
                         </div>
                         <div>
                             <label class="gt-label">Date Format</label>
                             <select name="date_format" required class="gt-input" style="width:100%;">
-                                <option value="F d, Y" {{ $settings['date_format'] === 'F d, Y' ? 'selected' : '' }}>May 31, 2024 (F d, Y)</option>
-                                <option value="d M Y" {{ $settings['date_format'] === 'd M Y' ? 'selected' : '' }}>31 May 2024 (d M Y)</option>
-                                <option value="d/m/Y" {{ $settings['date_format'] === 'd/m/Y' ? 'selected' : '' }}>31/05/2024 (d/m/Y)</option>
-                                <option value="Y-m-d" {{ $settings['date_format'] === 'Y-m-d' ? 'selected' : '' }}>2024-05-31 (Y-m-d)</option>
+                                <option value="F d, Y" {{ ($settings['date_format'] ?? 'F d, Y') === 'F d, Y' ? 'selected' : '' }}>August 04, 2026 (F d, Y)</option>
+                                <option value="d M Y" {{ ($settings['date_format'] ?? '') === 'd M Y' ? 'selected' : '' }}>04 Aug 2026 (d M Y)</option>
+                                <option value="d/m/Y" {{ ($settings['date_format'] ?? '') === 'd/m/Y' ? 'selected' : '' }}>04/08/2026 (d/m/Y)</option>
+                                <option value="Y-m-d" {{ ($settings['date_format'] ?? '') === 'Y-m-d' ? 'selected' : '' }}>2026-08-04 (Y-m-d)</option>
                             </select>
                         </div>
                     </div>
@@ -557,298 +405,488 @@
                         <div>
                             <label class="gt-label">Time Format</label>
                             <select name="time_format" required class="gt-input" style="width:100%;">
-                                <option value="12h" {{ $settings['time_format'] === '12h' ? 'selected' : '' }}>12 Hours (03:45 PM)</option>
-                                <option value="24h" {{ $settings['time_format'] === '24h' ? 'selected' : '' }}>24 Hours (15:45)</option>
+                                <option value="12h" {{ ($settings['time_format'] ?? '12h') === '12h' ? 'selected' : '' }}>12 Hours (03:45 PM)</option>
+                                <option value="24h" {{ ($settings['time_format'] ?? '') === '24h' ? 'selected' : '' }}>24 Hours (15:45)</option>
                             </select>
                         </div>
                         <div>
                             <label class="gt-label">Items Per Page</label>
-                            <input type="number" name="items_per_page" required value="{{ $settings['items_per_page'] }}" class="gt-input" style="width: 100%;">
+                            <input type="number" name="items_per_page" required value="{{ $settings['items_per_page'] ?? 20 }}" class="gt-input" style="width: 100%;">
                         </div>
                     </div>
                     <div style="text-align:right;">
-                        <button type="submit" class="gt-btn-primary">Save Changes</button>
+                        <button type="submit" class="gt-btn-primary">Save General Settings</button>
                     </div>
                 </form>
             </div>
 
-            <!-- 2. Store Address card -->
+        @elseif($tab === 'store_info')
+            <!-- 2. Store Information Settings -->
             <div class="settings-card">
                 <div class="settings-card-header">
-                    <h2 class="settings-card-title">Store Address</h2>
-                    <p class="settings-card-subtitle">This address will be used on invoices, emails and store contact information.</p>
+                    <h2 class="settings-card-title">Business & Store Details</h2>
+                    <p class="settings-card-subtitle">Manage public store name, legal business registration, contact numbers, and addresses.</p>
                 </div>
                 <form action="{{ route('admin.settings.update') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="tab" value="address">
+                    <input type="hidden" name="tab" value="store_info">
+                    
+                    <h3 style="font-size:0.85rem;font-weight:800;color:var(--gt-primary);margin-bottom:12px;border-bottom:1px solid var(--gt-border);padding-bottom:6px;">Business Details</h3>
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Public Store Name</label>
+                            <input type="text" name="public_store_name" value="{{ $settings['public_store_name'] ?? 'Ghousia Traders' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Legal Business Name</label>
+                            <input type="text" name="legal_business_name" value="{{ $settings['legal_business_name'] ?? 'Ghousia Traders Private Ltd' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Support Email</label>
+                            <input type="email" name="support_email" value="{{ $settings['support_email'] ?? 'info@ghousiatraders.com' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Sales Email</label>
+                            <input type="email" name="sales_email" value="{{ $settings['sales_email'] ?? 'sales@ghousiatraders.com' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Primary Phone</label>
+                            <input type="text" name="primary_phone" value="{{ $settings['primary_phone'] ?? '0321-1234567' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Secondary Phone / Hotline</label>
+                            <input type="text" name="secondary_phone" value="{{ $settings['secondary_phone'] ?? '0322-9876543' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">WhatsApp Support Number</label>
+                            <input type="text" name="whatsapp_number" value="{{ $settings['whatsapp_number'] ?? '0321-1234567' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Store Tagline</label>
+                            <input type="text" name="store_tagline" value="{{ $settings['store_tagline'] ?? 'Quality you can trust, happiness they deserve.' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-group-full">
+                        <label class="gt-label">Short Store Description</label>
+                        <textarea name="short_store_description" class="gt-input" style="width:100%;height:60px;padding:8px;">{{ $settings['short_store_description'] ?? 'Your trusted destination for premium baby care products and exciting ride-on toys.' }}</textarea>
+                    </div>
+                    <div class="form-group-full">
+                        <label class="gt-label">Detailed Business Description</label>
+                        <textarea name="detailed_business_description" class="gt-input" style="width:100%;height:80px;padding:8px;">{{ $settings['detailed_business_description'] ?? 'Ghousia Traders provides high-quality baby care items, ride-on bikes, and toy cars across Pakistan.' }}</textarea>
+                    </div>
+
+                    <h3 style="font-size:0.85rem;font-weight:800;color:var(--gt-primary);margin:20px 0 12px 0;border-bottom:1px solid var(--gt-border);padding-bottom:6px;">Physical Address Details</h3>
                     <div class="form-grid-2">
                         <div>
                             <label class="gt-label">Address Line 1</label>
-                            <input type="text" name="address_line_1" required value="{{ $settings['address_line_1'] }}" class="gt-input" style="width: 100%;">
+                            <input type="text" name="address_line_1" value="{{ $settings['address_line_1'] ?? 'Shop # 12, Main Market' }}" class="gt-input" style="width: 100%;">
                         </div>
                         <div>
-                            <label class="gt-label">Address Line 2 (Optional)</label>
-                            <input type="text" name="address_line_2" value="{{ $settings['address_line_2'] }}" class="gt-input" style="width: 100%;">
+                            <label class="gt-label">Address Line 2</label>
+                            <input type="text" name="address_line_2" value="{{ $settings['address_line_2'] ?? 'DHA Phase 6' }}" class="gt-input" style="width: 100%;">
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div>
                             <label class="gt-label">City</label>
-                            <input type="text" name="city" required value="{{ $settings['city'] }}" class="gt-input" style="width: 100%;">
+                            <input type="text" name="city" value="{{ $settings['city'] ?? 'Lahore' }}" class="gt-input" style="width: 100%;">
                         </div>
                         <div>
                             <label class="gt-label">State / Province</label>
-                            <input type="text" name="state" required value="{{ $settings['state'] }}" class="gt-input" style="width: 100%;">
+                            <input type="text" name="state" value="{{ $settings['state'] ?? 'Punjab' }}" class="gt-input" style="width: 100%;">
                         </div>
                     </div>
                     <div class="form-grid-2">
                         <div>
                             <label class="gt-label">Country</label>
-                            <select name="country" required class="gt-input" style="width:100%;">
-                                <option value="Pakistan" {{ $settings['country'] === 'Pakistan' ? 'selected' : '' }}>Pakistan</option>
-                                <option value="United States" {{ $settings['country'] === 'United States' ? 'selected' : '' }}>United States</option>
-                                <option value="United Kingdom" {{ $settings['country'] === 'United Kingdom' ? 'selected' : '' }}>United Kingdom</option>
-                            </select>
+                            <input type="text" name="country" value="{{ $settings['country'] ?? 'Pakistan' }}" class="gt-input" style="width: 100%;">
                         </div>
                         <div>
                             <label class="gt-label">Postal / ZIP Code</label>
-                            <input type="text" name="postal_code" required value="{{ $settings['postal_code'] }}" class="gt-input" style="width: 100%;">
-                        </div>
-                    </div>
-                    <div style="text-align:right;">
-                        <button type="submit" class="gt-btn-primary">Save Changes</button>
-                    </div>
-                </form>
-            </div>
-        @elseif($tab === 'store_info')
-            <!-- Store Information form -->
-            <div class="settings-card">
-                <div class="settings-card-header">
-                    <h2 class="settings-card-title">Store Information</h2>
-                    <p class="settings-card-subtitle">Manage legal business registrations, social connections, and contact details.</p>
-                </div>
-                <form action="{{ route('admin.settings.update') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="tab" value="store_info">
-                    <div class="form-grid-2">
-                        <div>
-                            <label class="gt-label">Business Name</label>
-                            <input type="text" name="business_name" value="{{ App\Models\Setting::get('business_name', 'Ghousia Traders Private Ltd') }}" class="gt-input" style="width: 100%;">
-                        </div>
-                        <div>
-                            <label class="gt-label">Legal Business Name</label>
-                            <input type="text" name="legal_name" value="{{ App\Models\Setting::get('legal_name', 'Ghousia Traders Legal') }}" class="gt-input" style="width: 100%;">
-                        </div>
-                    </div>
-                    <div class="form-grid-2">
-                        <div>
-                            <label class="gt-label">Business Registration Information</label>
-                            <input type="text" name="registration_info" value="{{ App\Models\Setting::get('registration_info', 'REG-123456-PAK') }}" class="gt-input" style="width: 100%;">
-                        </div>
-                        <div>
-                            <label class="gt-label">Business Hours</label>
-                            <input type="text" name="business_hours" value="{{ App\Models\Setting::get('business_hours', '9:00 AM - 6:00 PM') }}" class="gt-input" style="width: 100%;">
+                            <input type="text" name="postal_code" value="{{ $settings['postal_code'] ?? '54000' }}" class="gt-input" style="width: 100%;">
                         </div>
                     </div>
                     <div class="form-group-full">
-                        <label class="gt-label">Store Description</label>
-                        <textarea name="store_description" class="gt-input" style="width:100%;height:80px;padding:8px;">{{ App\Models\Setting::get('store_description', 'Premium toy and fragrance catalog provider.') }}</textarea>
+                        <label class="gt-label">Google Maps Link URL</label>
+                        <input type="url" name="google_maps_url" value="{{ $settings['google_maps_url'] ?? 'https://maps.google.com' }}" class="gt-input" style="width: 100%;">
                     </div>
-                    <div style="text-align:right;">
-                        <button type="submit" class="gt-btn-primary">Save Information</button>
+
+                    <h3 style="font-size:0.85rem;font-weight:800;color:var(--gt-primary);margin:20px 0 12px 0;border-bottom:1px solid var(--gt-border);padding-bottom:6px;">Business Hours Settings</h3>
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Mon - Sat Opening Time</label>
+                            <input type="text" name="business_hours_mon_sat_open" value="{{ $settings['business_hours_mon_sat_open'] ?? '10:00 AM' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Mon - Sat Closing Time</label>
+                            <input type="text" name="business_hours_mon_sat_close" value="{{ $settings['business_hours_mon_sat_close'] ?? '08:00 PM' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Sunday Status</label>
+                            <select name="business_hours_sunday_status" class="gt-input" style="width:100%;">
+                                <option value="closed" {{ ($settings['business_hours_sunday_status'] ?? 'closed') === 'closed' ? 'selected' : '' }}>Closed</option>
+                                <option value="open" {{ ($settings['business_hours_sunday_status'] ?? '') === 'open' ? 'selected' : '' }}>Open</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="gt-label">Sunday Hours (If Open)</label>
+                            <input type="text" name="business_hours_sunday_open" value="{{ $settings['business_hours_sunday_open'] ?? '11:00 AM - 06:00 PM' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-group-full">
+                        <label class="gt-label">Custom Business Hours Text (Storefront Display)</label>
+                        <textarea name="business_hours_custom_text" class="gt-input" style="width:100%;height:60px;padding:8px;">{{ $settings['business_hours_custom_text'] ?? "Monday - Saturday: 10:00 AM - 8:00 PM\nSunday: Closed" }}</textarea>
+                    </div>
+
+                    <div style="text-align:right;margin-top:20px;">
+                        <button type="submit" class="gt-btn-primary">Save Store Information</button>
                     </div>
                 </form>
             </div>
+
+        @elseif($tab === 'header')
+            <!-- 3. Header & Top Bar Settings -->
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h2 class="settings-card-title">Header & Top Bar Settings</h2>
+                    <p class="settings-card-subtitle">Configure top announcement text, customer support phone, search placeholder, and action buttons.</p>
+                </div>
+                <form action="{{ route('admin.settings.update') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="tab" value="header">
+                    
+                    <div class="form-group-full" style="background:#fffdf9;padding:12px;border:1.5px solid var(--gt-border);border-radius:10px;margin-bottom:16px;">
+                        <label class="social-toggle-label">
+                            <input type="checkbox" name="show_top_info_bar" value="1" {{ ($settings['show_top_info_bar'] ?? '1') == '1' ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                            <span>Show Top Utility Information Bar</span>
+                        </label>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Top Bar Free Shipping Announcement Text</label>
+                            <input type="text" name="topbar_free_shipping_text" value="{{ $settings['topbar_free_shipping_text'] ?? 'Free Shipping on Orders Over PKR 5,000' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Free Shipping Minimum Threshold (PKR)</label>
+                            <input type="number" name="shipping_free_threshold" value="{{ $settings['shipping_free_threshold'] ?? 5000 }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Quality Assurance Text</label>
+                            <input type="text" name="topbar_quality_text" value="{{ $settings['topbar_quality_text'] ?? '100% Genuine & Premium Quality' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Customer Support Top Bar Text</label>
+                            <input type="text" name="topbar_support_text" value="{{ $settings['topbar_support_text'] ?? 'Customer Support: 0321-1234567' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Header Support Phone Number</label>
+                            <input type="text" name="header_support_phone" value="{{ $settings['header_support_phone'] ?? '0321-1234567' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Track Order Button Label</label>
+                            <input type="text" name="track_order_btn_label" value="{{ $settings['track_order_btn_label'] ?? 'Track Order' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+
+                    <div class="form-group-full">
+                        <label class="gt-label">Header Search Bar Placeholder</label>
+                        <input type="text" name="header_search_placeholder" value="{{ $settings['header_search_placeholder'] ?? 'Search baby care products, ride-on bikes, toy cars...' }}" class="gt-input" style="width: 100%;">
+                    </div>
+
+                    <div style="text-align:right;margin-top:20px;">
+                        <button type="submit" class="gt-btn-primary">Save Header Settings</button>
+                    </div>
+                </form>
+            </div>
+
+        @elseif($tab === 'footer')
+            <!-- 4. Footer & Newsletter Settings -->
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h2 class="settings-card-title">Footer & Newsletter Settings</h2>
+                    <p class="settings-card-subtitle">Manage store descriptions, contact info overrides, newsletter copy, and copyright text.</p>
+                </div>
+                <form action="{{ route('admin.settings.update') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="tab" value="footer">
+
+                    <div class="form-group-full">
+                        <label class="gt-label">Footer Store Description</label>
+                        <textarea name="footer_description" class="gt-input" style="width:100%;height:70px;padding:8px;">{{ $settings['footer_description'] ?? 'Your trusted destination for premium baby care products and exciting ride-on toys. Quality you can trust, happiness they deserve.' }}</textarea>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Footer Phone</label>
+                            <input type="text" name="footer_phone" value="{{ $settings['footer_phone'] ?? '0321-1234567' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Footer Email</label>
+                            <input type="email" name="footer_email" value="{{ $settings['footer_email'] ?? 'info@ghousiatraders.com' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+
+                    <div class="form-group-full">
+                        <label class="gt-label">Footer Address</label>
+                        <input type="text" name="footer_address" value="{{ $settings['footer_address'] ?? 'Shop # 12, Main Market, DHA Phase 6, Lahore, Pakistan' }}" class="gt-input" style="width: 100%;">
+                    </div>
+
+                    <div class="form-group-full">
+                        <label class="gt-label">Footer Business Hours Display</label>
+                        <textarea name="footer_business_hours" class="gt-input" style="width:100%;height:50px;padding:8px;">{{ $settings['footer_business_hours'] ?? "Mon - Sat: 10:00 AM - 8:00 PM\nSunday: Closed" }}</textarea>
+                    </div>
+
+                    <h3 style="font-size:0.85rem;font-weight:800;color:var(--gt-primary);margin:20px 0 12px 0;border-bottom:1px solid var(--gt-border);padding-bottom:6px;">Newsletter Section Settings</h3>
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Newsletter Heading</label>
+                            <input type="text" name="newsletter_heading" value="{{ $settings['newsletter_heading'] ?? 'Stay Updated with Ghousia Traders' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Newsletter Button Label</label>
+                            <input type="text" name="newsletter_button_label" value="{{ $settings['newsletter_button_label'] ?? 'Subscribe' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-group-full">
+                        <label class="gt-label">Newsletter Description</label>
+                        <input type="text" name="newsletter_description" value="{{ $settings['newsletter_description'] ?? 'Subscribe to our newsletter for exclusive offers, new arrivals, and parenting tips.' }}" class="gt-input" style="width: 100%;">
+                    </div>
+
+                    <h3 style="font-size:0.85rem;font-weight:800;color:var(--gt-primary);margin:20px 0 12px 0;border-bottom:1px solid var(--gt-border);padding-bottom:6px;">Copyright & Payment Badges</h3>
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Copyright Name</label>
+                            <input type="text" name="copyright_name" value="{{ $settings['copyright_name'] ?? 'Ghousia Traders' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Copyright Text</label>
+                            <input type="text" name="copyright_text" value="{{ $settings['copyright_text'] ?? 'All Rights Reserved.' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group-full" style="background:#fffdf9;padding:12px;border:1.5px solid var(--gt-border);border-radius:10px;margin-top:12px;">
+                        <label class="social-toggle-label">
+                            <input type="checkbox" name="show_payment_logos" value="1" {{ ($settings['show_payment_logos'] ?? '1') == '1' ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                            <span>Show Payment Accepted Badges in Footer</span>
+                        </label>
+                    </div>
+
+                    <div style="text-align:right;margin-top:20px;">
+                        <button type="submit" class="gt-btn-primary">Save Footer Settings</button>
+                    </div>
+                </form>
+            </div>
+
+        @elseif($tab === 'social')
+            <!-- 5. Social Media Settings -->
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h2 class="settings-card-title">Social Media Connections</h2>
+                    <p class="settings-card-subtitle">Manage URLs and enable/disable controls for each social media platform on the storefront.</p>
+                </div>
+                <form action="{{ route('admin.settings.update') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="tab" value="social">
+
+                    <!-- Facebook -->
+                    <div class="social-row-item">
+                        <div class="social-row-info">
+                            <div class="social-icon-box"><i class="fab fa-facebook-f"></i></div>
+                            <div style="flex:1;">
+                                <label class="gt-label">Facebook Page URL</label>
+                                <input type="url" name="facebook_url" value="{{ $settings['facebook_url'] ?? '' }}" placeholder="https://facebook.com/yourpage" class="gt-input" style="width:100%;">
+                            </div>
+                        </div>
+                        <label class="social-toggle-label">
+                            <input type="checkbox" name="facebook_enabled" value="1" {{ ($settings['facebook_enabled'] ?? '1') == '1' ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                            <span>Active</span>
+                        </label>
+                    </div>
+
+                    <!-- Instagram -->
+                    <div class="social-row-item">
+                        <div class="social-row-info">
+                            <div class="social-icon-box"><i class="fab fa-instagram"></i></div>
+                            <div style="flex:1;">
+                                <label class="gt-label">Instagram Profile URL</label>
+                                <input type="url" name="instagram_url" value="{{ $settings['instagram_url'] ?? '' }}" placeholder="https://instagram.com/yourhandle" class="gt-input" style="width:100%;">
+                            </div>
+                        </div>
+                        <label class="social-toggle-label">
+                            <input type="checkbox" name="instagram_enabled" value="1" {{ ($settings['instagram_enabled'] ?? '1') == '1' ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                            <span>Active</span>
+                        </label>
+                    </div>
+
+                    <!-- YouTube -->
+                    <div class="social-row-item">
+                        <div class="social-row-info">
+                            <div class="social-icon-box"><i class="fab fa-youtube"></i></div>
+                            <div style="flex:1;">
+                                <label class="gt-label">YouTube Channel URL</label>
+                                <input type="url" name="youtube_url" value="{{ $settings['youtube_url'] ?? '' }}" placeholder="https://youtube.com/yourchannel" class="gt-input" style="width:100%;">
+                            </div>
+                        </div>
+                        <label class="social-toggle-label">
+                            <input type="checkbox" name="youtube_enabled" value="1" {{ ($settings['youtube_enabled'] ?? '1') == '1' ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                            <span>Active</span>
+                        </label>
+                    </div>
+
+                    <!-- TikTok -->
+                    <div class="social-row-item">
+                        <div class="social-row-info">
+                            <div class="social-icon-box"><i class="fab fa-tiktok"></i></div>
+                            <div style="flex:1;">
+                                <label class="gt-label">TikTok Profile URL</label>
+                                <input type="url" name="tiktok_url" value="{{ $settings['tiktok_url'] ?? '' }}" placeholder="https://tiktok.com/@yourhandle" class="gt-input" style="width:100%;">
+                            </div>
+                        </div>
+                        <label class="social-toggle-label">
+                            <input type="checkbox" name="tiktok_enabled" value="1" {{ ($settings['tiktok_enabled'] ?? '1') == '1' ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                            <span>Active</span>
+                        </label>
+                    </div>
+
+                    <!-- WhatsApp -->
+                    <div class="social-row-item">
+                        <div class="social-row-info">
+                            <div class="social-icon-box"><i class="fab fa-whatsapp"></i></div>
+                            <div style="flex:1;">
+                                <label class="gt-label">WhatsApp Direct Link or Number</label>
+                                <input type="text" name="whatsapp_url" value="{{ $settings['whatsapp_url'] ?? '' }}" placeholder="https://wa.me/923211234567 or 0321-1234567" class="gt-input" style="width:100%;">
+                            </div>
+                        </div>
+                        <label class="social-toggle-label">
+                            <input type="checkbox" name="whatsapp_enabled" value="1" {{ ($settings['whatsapp_enabled'] ?? '1') == '1' ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                            <span>Active</span>
+                        </label>
+                    </div>
+
+                    <!-- Twitter / X -->
+                    <div class="social-row-item">
+                        <div class="social-row-info">
+                            <div class="social-icon-box"><i class="fab fa-twitter"></i></div>
+                            <div style="flex:1;">
+                                <label class="gt-label">X / Twitter URL</label>
+                                <input type="url" name="twitter_url" value="{{ $settings['twitter_url'] ?? '' }}" placeholder="https://x.com/yourhandle" class="gt-input" style="width:100%;">
+                            </div>
+                        </div>
+                        <label class="social-toggle-label">
+                            <input type="checkbox" name="twitter_enabled" value="1" {{ ($settings['twitter_enabled'] ?? '0') == '1' ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                            <span>Active</span>
+                        </label>
+                    </div>
+
+                    <!-- LinkedIn -->
+                    <div class="social-row-item">
+                        <div class="social-row-info">
+                            <div class="social-icon-box"><i class="fab fa-linkedin-in"></i></div>
+                            <div style="flex:1;">
+                                <label class="gt-label">LinkedIn Page URL</label>
+                                <input type="url" name="linkedin_url" value="{{ $settings['linkedin_url'] ?? '' }}" placeholder="https://linkedin.com/company/yourcompany" class="gt-input" style="width:100%;">
+                            </div>
+                        </div>
+                        <label class="social-toggle-label">
+                            <input type="checkbox" name="linkedin_enabled" value="1" {{ ($settings['linkedin_enabled'] ?? '0') == '1' ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);">
+                            <span>Active</span>
+                        </label>
+                    </div>
+
+                    <div style="text-align:right;margin-top:20px;">
+                        <button type="submit" class="gt-btn-primary">Save Social Media Settings</button>
+                    </div>
+                </form>
+            </div>
+
+        @elseif($tab === 'shipping')
+            <!-- 6. Shipping Settings -->
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <h2 class="settings-card-title">Shipping Settings</h2>
+                    <p class="settings-card-subtitle">Configure flat rate delivery charges, free shipping thresholds, and shipping policy notes.</p>
+                </div>
+                <form action="{{ route('admin.settings.update') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="tab" value="shipping">
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Flat Rate Shipping Cost (PKR)</label>
+                            <input type="number" name="shipping_flat_rate" value="{{ $settings['shipping_flat_rate'] ?? 250 }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Free Shipping Minimum Threshold (PKR)</label>
+                            <input type="number" name="shipping_free_threshold" value="{{ $settings['shipping_free_threshold'] ?? 5000 }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="gt-label">Default Delivery Days Estimate</label>
+                            <input type="text" name="shipping_estimate_days" value="{{ $settings['shipping_estimate_days'] ?? '3-5 Working Days' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label class="gt-label">Courier Support Phone</label>
+                            <input type="text" name="courier_support_phone" value="{{ $settings['courier_support_phone'] ?? '0321-1234567' }}" class="gt-input" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div class="form-group-full">
+                        <label class="gt-label">Shipping Coverage Text</label>
+                        <textarea name="shipping_coverage_text" class="gt-input" style="width:100%;height:60px;padding:8px;">{{ $settings['shipping_coverage_text'] ?? 'We deliver across all major cities and regions in Pakistan.' }}</textarea>
+                    </div>
+                    <div style="text-align:right;">
+                        <button type="submit" class="gt-btn-primary">Save Shipping Settings</button>
+                    </div>
+                </form>
+            </div>
+
         @elseif($tab === 'payment_methods')
             @php
                 $paymentMethods = $paymentMethods ?? \App\Models\PaymentMethod::orderBy('sort_order')->get();
             @endphp
-            <!-- Simplified Payment Methods Settings UI -->
-            <style>
-                .pm-list-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 16px;
-                }
-                .pm-item-card {
-                    border: 1.5px solid var(--gt-border);
-                    border-radius: 14px;
-                    background: #ffffff;
-                    overflow: hidden;
-                    transition: all 0.2s ease;
-                    box-shadow: var(--gt-shadow);
-                }
-                .pm-item-card.editing {
-                    border-color: var(--gt-primary);
-                    box-shadow: 0 6px 20px rgba(53, 27, 13, 0.08);
-                }
-                .pm-row-header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 14px 18px;
-                    background: #fffdf9;
-                    gap: 12px;
-                }
-                .pm-row-info {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                }
-                .pm-icon-box {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 10px;
-                    background: #fff5e6;
-                    border: 1.5px solid rgba(215, 166, 74, 0.25);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 1.1rem;
-                    color: var(--gt-primary);
-                    flex-shrink: 0;
-                }
-                .pm-name-text {
-                    font-size: 0.92rem;
-                    font-weight: 800;
-                    color: var(--gt-text);
-                }
-                .pm-row-actions {
-                    display: flex;
-                    align-items: center;
-                    gap: 14px;
-                }
-                .pm-inline-edit-panel {
-                    display: none;
-                    padding: 20px;
-                    border-top: 1.5px solid var(--gt-border);
-                    background: #ffffff;
-                }
-                .pm-item-card.editing .pm-inline-edit-panel {
-                    display: block;
-                }
-            </style>
-
-            <!-- Global Form for Save Gateways button -->
-            <form action="{{ route('admin.settings.update') }}" method="POST" id="globalGatewaysForm">
-                @csrf
-                <input type="hidden" name="tab" value="payment_methods">
-            </form>
-
             <div class="settings-card">
                 <div class="settings-card-header">
-                    <h2 class="settings-card-title">Payment Methods</h2>
-                    <p class="settings-card-subtitle">Enable/disable payment gateways or edit their public display name, icon, description, instructions, sort order and active status.</p>
+                    <h2 class="settings-card-title">Payment Gateways & Methods</h2>
+                    <p class="settings-card-subtitle">Enable/disable payment methods or edit display names, icons, descriptions, and instructions.</p>
                 </div>
 
-                <div class="pm-list-container">
+                <div style="display:flex;flex-direction:column;gap:16px;">
                     @foreach($paymentMethods as $method)
-                        <div class="pm-item-card" id="pm-card-{{ $method->id }}">
-                            <!-- Payment Method Row Header -->
-                            <div class="pm-row-header">
-                                <div class="pm-row-info">
-                                    <div class="pm-icon-box" style="padding:4px;overflow:hidden;background:#fff;border:1.5px solid var(--gt-border);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                        <div class="pm-item-card" id="pm-card-{{ $method->id }}" style="border:1.5px solid var(--gt-border);border-radius:14px;background:#ffffff;overflow:hidden;box-shadow:var(--gt-shadow);">
+                            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#fffdf9;gap:12px;">
+                                <div style="display:flex;align-items:center;gap:12px;">
+                                    <div style="width:40px;height:40px;border-radius:10px;background:#fff;border:1.5px solid var(--gt-border);display:flex;align-items:center;justify-content:center;color:var(--gt-primary);flex-shrink:0;">
                                         @if($method->logo_url)
-                                            <img src="{{ $method->logo_url }}" alt="{{ $method->name }}" style="max-width:100%;max-height:100%;object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                                            <i class="{{ $method->icon ?: 'fas fa-credit-card' }}" style="font-size:1.1rem;color:var(--gt-primary);display:none;"></i>
+                                            <img src="{{ $method->logo_url }}" alt="{{ $method->name }}" style="max-width:100%;max-height:100%;object-fit:contain;">
                                         @else
                                             <i class="{{ $method->icon ?: 'fas fa-credit-card' }}" style="font-size:1.1rem;color:var(--gt-primary);"></i>
                                         @endif
                                     </div>
                                     <div>
-                                        <span class="pm-name-text">{{ $method->name }}</span>
+                                        <span style="font-size:0.92rem;font-weight:800;color:var(--gt-text);">{{ $method->name }}</span>
                                         <span id="pm-inactive-badge-{{ $method->id }}" style="font-size:0.7rem;background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700;display:{{ $method->is_active ? 'none' : 'inline-block' }};">Inactive</span>
                                     </div>
                                 </div>
 
-                                <div class="pm-row-actions">
-                                    <!-- Instant Enable/Disable Checkbox -->
-                                    <label style="display:inline-flex;align-items:center;cursor:pointer;gap:6px;" title="Toggle Active Status">
+                                <div style="display:flex;align-items:center;gap:14px;">
+                                    <label style="display:inline-flex;align-items:center;cursor:pointer;gap:6px;">
                                         <input type="checkbox" id="pm-toggle-{{ $method->id }}" onchange="togglePaymentStatus({{ $method->id }}, this)" {{ $method->is_active ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--gt-primary);cursor:pointer;">
-                                        <span id="pm-spinner-{{ $method->id }}" style="display:none;font-size:0.75rem;color:var(--gt-primary);margin-left:2px;">
-                                            <i class="fas fa-spinner fa-spin"></i>
-                                        </span>
                                     </label>
-
-                                    <!-- Single Edit Button -->
-                                    <button type="button" class="gt-btn-outline" style="min-height:34px;padding:0 14px;font-size:0.8rem;" onclick="togglePaymentEditForm({{ $method->id }})">
-                                        <i data-lucide="edit" style="width:14px;height:14px;"></i> Edit
-                                    </button>
                                 </div>
-                            </div>
-
-                            <!-- True Inline Accordion Edit Form (Directly inside pm-item-card!) -->
-                            <div class="pm-inline-edit-panel" id="pm-edit-panel-{{ $method->id }}">
-                                <form action="{{ route('admin.payment-methods.update', $method->id) }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="_payment_method_id" value="{{ $method->id }}">
-
-                                    <div class="form-grid-2" style="margin-bottom:16px;">
-                                        <div>
-                                            <label class="gt-label">Display Name</label>
-                                            <input type="text" name="name" value="{{ old('_payment_method_id') == $method->id ? old('name') : $method->name }}" class="gt-input" style="width:100%;" required>
-                                            @if(old('_payment_method_id') == $method->id)
-                                                @error('name')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
-                                            @endif
-                                        </div>
-                                        <div>
-                                            <label class="gt-label">Icon (Font Awesome Class)</label>
-                                            <input type="text" name="icon" value="{{ old('_payment_method_id') == $method->id ? old('icon') : ($method->icon ?: 'fas fa-credit-card') }}" class="gt-input" style="width:100%;" placeholder="fas fa-truck-loading" required>
-                                            @if(old('_payment_method_id') == $method->id)
-                                                @error('icon')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group-full" style="margin-bottom:16px;">
-                                        <label class="gt-label">Short Description (Customer Facing)</label>
-                                        <input type="text" name="description" value="{{ old('_payment_method_id') == $method->id ? old('description') : $method->description }}" class="gt-input" style="width:100%;" placeholder="Short summary shown below method name at Checkout">
-                                        @if(old('_payment_method_id') == $method->id)
-                                            @error('description')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
-                                        @endif
-                                    </div>
-
-                                    <div class="form-group-full" style="margin-bottom:16px;">
-                                        <label class="gt-label">Customer Instructions (Shown when selected at Checkout)</label>
-                                        <textarea name="instructions" class="gt-input" style="width:100%;min-height:80px;font-family:inherit;" placeholder="Detailed payment instructions shown when customer selects this method">{{ old('_payment_method_id') == $method->id ? old('instructions') : $method->instructions }}</textarea>
-                                        @if(old('_payment_method_id') == $method->id)
-                                            @error('instructions')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
-                                        @endif
-                                    </div>
-
-                                    <div class="form-grid-2" style="margin-bottom:16px;">
-                                        <div>
-                                            <label class="gt-label">Sort Order</label>
-                                            <input type="number" name="sort_order" value="{{ old('_payment_method_id') == $method->id ? old('sort_order') : $method->sort_order }}" class="gt-input" style="width:100%;" required>
-                                            @if(old('_payment_method_id') == $method->id)
-                                                @error('sort_order')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
-                                            @endif
-                                        </div>
-                                        <div>
-                                            <label class="gt-label">Status</label>
-                                            @php
-                                                $curActiveStatus = old('_payment_method_id') == $method->id ? old('is_active') : ($method->is_active ? '1' : '0');
-                                            @endphp
-                                            <select name="is_active" id="pm-status-select-{{ $method->id }}" onchange="syncPaymentStatusSelect({{ $method->id }}, this.value)" class="gt-input" style="width:100%;">
-                                                <option value="1" {{ $curActiveStatus == '1' ? 'selected' : '' }}>Active</option>
-                                                <option value="0" {{ $curActiveStatus == '0' ? 'selected' : '' }}>Inactive</option>
-                                            </select>
-                                            @if(old('_payment_method_id') == $method->id)
-                                                @error('is_active')<span style="color:#ef4444;font-size:0.75rem;">{{ $message }}</span>@enderror
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--gt-border);">
-                                        <button type="button" class="gt-btn-outline" style="min-height:36px;padding:0 16px;font-size:0.82rem;" onclick="closePaymentEditForm({{ $method->id }})">
-                                            Cancel
-                                        </button>
-                                        <button type="submit" class="gt-btn-primary" style="min-height:36px;padding:0 18px;font-size:0.82rem;">
-                                            Save Changes
-                                        </button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     @endforeach
@@ -856,23 +894,9 @@
             </div>
 
             <script>
-                function syncPaymentStatusSelect(id, value) {
-                    const isChecked = value === '1';
-                    const checkbox = document.getElementById('pm-toggle-' + id);
-                    if (checkbox) {
-                        checkbox.checked = isChecked;
-                    }
-                    const badge = document.getElementById('pm-inactive-badge-' + id);
-                    if (badge) {
-                        badge.style.display = isChecked ? 'none' : 'inline-block';
-                    }
-                }
-
                 function togglePaymentStatus(id, checkbox) {
                     const isChecked = checkbox.checked;
                     checkbox.disabled = true;
-                    const spinner = document.getElementById('pm-spinner-' + id);
-                    if (spinner) spinner.style.display = 'inline-block';
 
                     fetch('/admin/payment-methods/' + id + '/toggle-status', {
                         method: 'POST',
@@ -881,140 +905,26 @@
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({
-                            is_active: isChecked ? 1 : 0
-                        })
+                        body: JSON.stringify({ is_active: isChecked ? 1 : 0 })
                     })
-                    .then(response => {
-                        if (!response.ok) throw new Error('HTTP ' + response.status);
-                        return response.json();
-                    })
+                    .then(res => res.json())
                     .then(data => {
                         checkbox.disabled = false;
-                        if (spinner) spinner.style.display = 'none';
-                        if (data.success) {
-                            showToastNotification(data.message || 'Status updated successfully.', 'success');
-                            // 1. Update top status badge
-                            const badge = document.getElementById('pm-inactive-badge-' + id);
-                            if (badge) {
-                                badge.style.display = data.is_active ? 'none' : 'inline-block';
-                            }
-                            // 2. Synchronize Edit form Status dropdown
-                            const select = document.getElementById('pm-status-select-' + id);
-                            if (select) {
-                                select.value = data.is_active ? '1' : '0';
-                            }
-                        } else {
-                            checkbox.checked = !isChecked;
-                            const select = document.getElementById('pm-status-select-' + id);
-                            if (select) select.value = (!isChecked) ? '1' : '0';
-                            showToastNotification('Failed to update status.', 'error');
-                        }
-                    })
-                    .catch(err => {
-                        checkbox.disabled = false;
-                        if (spinner) spinner.style.display = 'none';
-                        checkbox.checked = !isChecked;
-                        const select = document.getElementById('pm-status-select-' + id);
-                        if (select) select.value = (!isChecked) ? '1' : '0';
                         const badge = document.getElementById('pm-inactive-badge-' + id);
-                        if (badge) badge.style.display = (!isChecked) ? 'none' : 'inline-block';
-                        showToastNotification('Network error while updating status.', 'error');
+                        if (badge) badge.style.display = isChecked ? 'none' : 'inline-block';
+                    })
+                    .catch(() => {
+                        checkbox.disabled = false;
+                        checkbox.checked = !isChecked;
                     });
                 }
-
-                function showToastNotification(message, type) {
-                    let toastContainer = document.getElementById('gt-toast-container');
-                    if (!toastContainer) {
-                        toastContainer = document.createElement('div');
-                        toastContainer.id = 'gt-toast-container';
-                        toastContainer.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
-                        document.body.appendChild(toastContainer);
-                    }
-
-                    const toast = document.createElement('div');
-                    const isSuccess = type === 'success';
-                    toast.style.cssText = `pointer-events:auto;min-width:280px;padding:12px 18px;border-radius:10px;font-size:0.85rem;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,0.15);display:flex;align-items:center;gap:10px;transition:all 0.3s ease;background:${isSuccess ? '#ECFDF5' : '#FEF2F2'};color:${isSuccess ? '#065F46' : '#991B1B'};border:1.5px solid ${isSuccess ? '#10B981' : '#EF4444'};`;
-                    toast.innerHTML = `<i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}" style="font-size:1.1rem;color:${isSuccess ? '#10B981' : '#EF4444'};"></i> <span>${message}</span>`;
-                    
-                    toastContainer.appendChild(toast);
-
-                    setTimeout(() => {
-                        toast.style.opacity = '0';
-                        toast.style.transform = 'translateY(-10px)';
-                        setTimeout(() => toast.remove(), 300);
-                    }, 3000);
-                }
-
-                function togglePaymentEditForm(id) {
-                    const targetCard = document.getElementById('pm-card-' + id);
-                    if (!targetCard) return;
-
-                    const isEditing = targetCard.classList.contains('editing');
-
-                    // Requirement: Keep only ONE payment method edit form open at a time
-                    document.querySelectorAll('.pm-item-card').forEach(function(card) {
-                        card.classList.remove('editing');
-                    });
-
-                    if (!isEditing) {
-                        targetCard.classList.add('editing');
-                        targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }
-                }
-
-                function closePaymentEditForm(id) {
-                    const targetCard = document.getElementById('pm-card-' + id);
-                    if (targetCard) {
-                        targetCard.classList.remove('editing');
-                    }
-                }
-
-                document.addEventListener('DOMContentLoaded', function() {
-                    @if(session('open_accordion'))
-                        togglePaymentEditForm({{ session('open_accordion') }});
-                    @elseif(old('_payment_method_id'))
-                        togglePaymentEditForm({{ old('_payment_method_id') }});
-                    @endif
-                });
             </script>
-        @elseif($tab === 'shipping')
-            <!-- Shipping Settings -->
-            <div class="settings-card">
-                <div class="settings-card-header">
-                    <h2 class="settings-card-title">Shipping Settings</h2>
-                    <p class="settings-card-subtitle">Set flat rates, free shipping thresholds, and courier estimates.</p>
-                </div>
-                <form action="{{ route('admin.settings.update') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="tab" value="shipping">
-                    <div class="form-grid-2">
-                        <div>
-                            <label class="gt-label">Flat Rate Shipping Cost (PKR)</label>
-                            <input type="number" name="shipping_flat_rate" value="{{ App\Models\Setting::get('shipping_flat_rate', '250') }}" class="gt-input" style="width: 100%;">
-                        </div>
-                        <div>
-                            <label class="gt-label">Free Shipping Minimum Threshold (PKR)</label>
-                            <input type="number" name="shipping_free_threshold" value="{{ App\Models\Setting::get('shipping_free_threshold', '5000') }}" class="gt-input" style="width: 100%;">
-                        </div>
-                    </div>
-                    <div class="form-grid-2">
-                        <div>
-                            <label class="gt-label">Default Delivery Days Estimate</label>
-                            <input type="text" name="shipping_estimate_days" value="{{ App\Models\Setting::get('shipping_estimate_days', '3-5 Working Days') }}" class="gt-input" style="width: 100%;">
-                        </div>
-                    </div>
-                    <div style="text-align:right;">
-                        <button type="submit" class="gt-btn-primary">Save Shipping</button>
-                    </div>
-                </form>
-            </div>
+
         @elseif($tab === 'tax')
-            <!-- Tax Settings -->
             <div class="settings-card">
                 <div class="settings-card-header">
                     <h2 class="settings-card-title">Tax Settings</h2>
-                    <p class="settings-card-subtitle">Configure GST/tax percentages, and pricing preferences.</p>
+                    <p class="settings-card-subtitle">Configure GST/tax percentages and pricing options.</p>
                 </div>
                 <form action="{{ route('admin.settings.update') }}" method="POST">
                     @csrf
@@ -1022,43 +932,40 @@
                     <div class="form-grid-2">
                         <div>
                             <label class="gt-label">Default Tax Rate (%)</label>
-                            <input type="number" step="0.01" name="tax_rate_percent" value="{{ App\Models\Setting::get('tax_rate_percent', '17.00') }}" class="gt-input" style="width: 100%;">
+                            <input type="number" step="0.01" name="tax_rate_percent" value="{{ $settings['tax_rate_percent'] ?? '0.00' }}" class="gt-input" style="width: 100%;">
                         </div>
                         <div>
                             <label class="gt-label">Tax Option</label>
                             <select name="tax_pricing_mode" class="gt-input" style="width:100%;">
-                                <option value="exclusive" {{ App\Models\Setting::get('tax_pricing_mode') === 'exclusive' ? 'selected' : '' }}>Prices Exclude Tax</option>
-                                <option value="inclusive" {{ App\Models\Setting::get('tax_pricing_mode') === 'inclusive' ? 'selected' : '' }}>Prices Include Tax</option>
+                                <option value="exclusive" {{ ($settings['tax_pricing_mode'] ?? 'exclusive') === 'exclusive' ? 'selected' : '' }}>Prices Exclude Tax</option>
+                                <option value="inclusive" {{ ($settings['tax_pricing_mode'] ?? '') === 'inclusive' ? 'selected' : '' }}>Prices Include Tax</option>
                             </select>
                         </div>
                     </div>
                     <div style="text-align:right;">
-                        <button type="submit" class="gt-btn-primary">Save Tax</button>
+                        <button type="submit" class="gt-btn-primary">Save Tax Settings</button>
                     </div>
                 </form>
             </div>
+
         @elseif($tab === 'notifications')
-            <!-- Notifications -->
             <div class="settings-card">
                 <div class="settings-card-header">
                     <h2 class="settings-card-title">Notification Settings</h2>
-                    <p class="settings-card-subtitle">Enable emails, push notifications, and admin notification alerts.</p>
+                    <p class="settings-card-subtitle">Configure automated email and administrative notification alerts.</p>
                 </div>
                 <form action="{{ route('admin.settings.update') }}" method="POST">
                     @csrf
                     <input type="hidden" name="tab" value="notifications">
                     <div style="display:flex;flex-direction:column;gap:12px;font-size:0.85rem;color:var(--gt-text);font-weight:700;">
                         <label style="display:flex;align-items:center;gap:8px;">
-                            <input type="checkbox" name="notify_new_orders" value="1" {{ App\Models\Setting::get('notify_new_orders', '1') == '1' ? 'checked' : '' }}> Email alerts on New Customer Orders
+                            <input type="checkbox" name="notify_new_orders" value="1" {{ ($settings['notify_new_orders'] ?? '1') == '1' ? 'checked' : '' }}> Email alerts on New Customer Orders
                         </label>
                         <label style="display:flex;align-items:center;gap:8px;">
-                            <input type="checkbox" name="notify_low_stock" value="1" {{ App\Models\Setting::get('notify_low_stock', '1') == '1' ? 'checked' : '' }}> Low Stock Alerts notifications
+                            <input type="checkbox" name="notify_low_stock" value="1" {{ ($settings['notify_low_stock'] ?? '1') == '1' ? 'checked' : '' }}> Low Stock Alerts notifications
                         </label>
                         <label style="display:flex;align-items:center;gap:8px;">
-                            <input type="checkbox" name="notify_new_reviews" value="1" {{ App\Models\Setting::get('notify_new_reviews', '1') == '1' ? 'checked' : '' }}> Moderation alerts on New Reviews
-                        </label>
-                        <label style="display:flex;align-items:center;gap:8px;">
-                            <input type="checkbox" name="notify_refunds" value="1" {{ App\Models\Setting::get('notify_refunds', '1') == '1' ? 'checked' : '' }}> Notifications on Customer Refund requests
+                            <input type="checkbox" name="notify_new_reviews" value="1" {{ ($settings['notify_new_reviews'] ?? '1') == '1' ? 'checked' : '' }}> Moderation alerts on New Reviews
                         </label>
                     </div>
                     <div style="text-align:right;margin-top:16px;">
@@ -1066,302 +973,14 @@
                     </div>
                 </form>
             </div>
-        @else
-            <!-- Roles, API, Backup fallback wrapper -->
-            <div class="settings-card">
-                <div class="settings-card-header">
-                    <h2 class="settings-card-title" style="text-transform: capitalize;">{{ str_replace('_', ' ', $tab) }} Settings</h2>
-                    <p class="settings-card-subtitle">Manage advanced data operations and parameters.</p>
-                </div>
-                <div style="background-color:#fffdf9; border:1.5px solid var(--gt-border); padding:20px; border-radius:12px; font-weight:700; color:var(--gt-text-muted); font-size:0.8rem;">
-                    @if($tab === 'roles')
-                        Role assignments and group permission configurations can be managed under the <a href="{{ route('admin.user.assignment') }}" style="color:var(--gt-primary);">Users & Roles</a> control panels directly.
-                    @elseif($tab === 'api')
-                        Generate webhook secrets, inspect authorization tokens, and integrate third-party courier channels securely.
-                    @else
-                        Create local zip compressed snapshots of SQL files and store media files to easily backup and restore the store state.
-                    @endif
-                </div>
-            </div>
         @endif
     </div>
 
-    <!-- Right Column: Profile, Security, Appearance sidebars -->
-    <div class="settings-sidebar-column">
-        <!-- 1. Store Profile (Logo/Favicon) -->
-        <div class="settings-card">
-            <div class="settings-card-header">
-                <h2 class="settings-card-title">Store Profile</h2>
-                <p class="settings-card-subtitle">Update your store logo and favicon.</p>
-            </div>
-            <form action="{{ route('admin.settings.upload-logo') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div style="margin-bottom: 20px;">
-                    <span class="gt-label">Current Logo</span>
-                    <div class="logo-uploader-row">
-                        <div class="logo-preview-box">
-                            <img id="logoPreviewEl" src="{{ asset($settings['store_logo']) }}" alt="Logo">
-                        </div>
-                        <div style="display:flex;flex-direction:column;gap:6px;line-height:1.2;">
-                            <span style="font-size:0.65rem;color:var(--gt-text-muted);font-weight:600;">Recommended size:<br>512 x 512 px (PNG)</span>
-                            <label class="gt-btn-outline" style="cursor:pointer;padding:4px 8px;min-height:auto;font-size:0.7rem;">
-                                Choose File
-                                <input type="file" name="logo" style="display:none;" onchange="previewImage(this, 'logoPreviewEl')">
-                            </label>
-                        </div>
-                    </div>
-                </div>
 
-                <div style="margin-bottom: 20px;">
-                    <span class="gt-label">Favicon</span>
-                    <div class="logo-uploader-row">
-                        <div class="logo-preview-box" style="width:40px;height:40px;">
-                            <img id="faviconPreviewEl" src="{{ asset($settings['store_favicon']) }}" alt="Fav">
-                        </div>
-                        <div style="display:flex;flex-direction:column;gap:6px;line-height:1.2;">
-                            <span style="font-size:0.65rem;color:var(--gt-text-muted);font-weight:600;">Recommended size:<br>32 x 32 px (ICO, PNG)</span>
-                            <label class="gt-btn-outline" style="cursor:pointer;padding:4px 8px;min-height:auto;font-size:0.7rem;">
-                                Choose File
-                                <input type="file" name="favicon" style="display:none;" onchange="previewImage(this, 'faviconPreviewEl')">
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="gt-btn-primary" style="width:100%; justify-content:center;">Save Profile Assets</button>
-            </form>
-        </div>
-
-        <!-- 2. Security Card -->
-        <div class="settings-card">
-            <div class="settings-card-header">
-                <h2 class="settings-card-title">Security</h2>
-                <p class="settings-card-subtitle">Manage your password and security preferences.</p>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:16px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;line-height:1.2;">
-                    <div>
-                        <strong style="font-size:0.78rem;color:var(--gt-text);font-weight:800;">Admin Email</strong>
-                        <div style="font-size:0.7rem;color:var(--gt-text-muted);font-weight:600;">{{ auth()->user()->email }}</div>
-                    </div>
-                    <button class="gt-btn-outline" style="padding:4px 8px;min-height:auto;font-size:0.7rem;" onclick="openModal('changeEmailModal')">Change Email</button>
-                </div>
-
-                <div style="display:flex;align-items:center;justify-content:space-between;line-height:1.2;">
-                    <div>
-                        <strong style="font-size:0.78rem;color:var(--gt-text);font-weight:800;">Password</strong>
-                        <div style="font-size:0.7rem;color:var(--gt-text-muted);font-weight:600;">*****************</div>
-                    </div>
-                    <button class="gt-btn-outline" style="padding:4px 8px;min-height:auto;font-size:0.7rem;" onclick="openModal('changePasswordModal')">Change Password</button>
-                </div>
-
-                <div style="display:flex;align-items:center;justify-content:space-between;line-height:1.2;padding-top:12px;border-top:1px solid rgba(215, 166, 74, 0.1);">
-                    <div>
-                        <strong style="font-size:0.78rem;color:var(--gt-text);font-weight:800;">Two-Factor Authentication</strong>
-                        <div style="font-size:0.65rem;color:var(--gt-text-muted);font-weight:600;">Add an extra layer of security.</div>
-                    </div>
-                    <form action="{{ route('admin.settings.security') }}" method="POST" id="toggle2faForm">
-                        @csrf
-                        <input type="hidden" name="security_action" value="toggle_2fa">
-                        <span class="badge-status {{ $settings['two_factor_enabled'] ? 'badge-enabled' : 'badge-disabled' }}" style="cursor:pointer;" onclick="document.getElementById('toggle2faForm').submit()">
-                            {{ $settings['two_factor_enabled'] ? 'Enabled' : 'Disabled' }}
-                        </span>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. Email Settings Card -->
-        <div class="settings-card">
-            <div class="settings-card-header">
-                <h2 class="settings-card-title">Email Settings</h2>
-                <p class="settings-card-subtitle">Configure how emails are sent from your store.</p>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
-                <div style="line-height:1.2;">
-                    <strong style="font-size:0.78rem;color:var(--gt-text);font-weight:800;">From Name</strong>
-                    <div style="font-size:0.7rem;color:var(--gt-text-muted);font-weight:600;">{{ $settings['from_name'] }}</div>
-                </div>
-                <div style="line-height:1.2;">
-                    <strong style="font-size:0.78rem;color:var(--gt-text);font-weight:800;">From Email</strong>
-                    <div style="font-size:0.7rem;color:var(--gt-text-muted);font-weight:600;">{{ $settings['from_email'] }}</div>
-                </div>
-            </div>
-            <button class="gt-btn-outline" style="width:100%;justify-content:center;" onclick="openModal('configureSmtpModal')">Configure SMTP</button>
-        </div>
-
-        </div>
-    </div>
-
-<!-- ================= MODALS SECTION ================= -->
-
-<!-- 1. Change Email Modal -->
-<div class="gt-modal" id="changeEmailModal" onclick="closeModalOnOutsideClick(event, 'changeEmailModal')">
-    <div class="gt-modal-dialog">
-        <div class="gt-modal-header">
-            <h2 class="gt-modal-title">Change Admin Email</h2>
-            <button type="button" class="gt-modal-close" onclick="closeModal('changeEmailModal')">
-                <i data-lucide="x"></i>
-            </button>
-        </div>
-        <form action="{{ route('admin.settings.security') }}" method="POST">
-            @csrf
-            <input type="hidden" name="security_action" value="email">
-            <div class="gt-modal-body">
-                <div class="form-group">
-                    <label class="gt-label">New Email Address</label>
-                    <input type="email" name="email" required value="{{ auth()->user()->email }}" class="gt-input" style="width:100%;">
-                </div>
-                <div class="form-group">
-                    <label class="gt-label">Current Password</label>
-                    <input type="password" name="password" required class="gt-input" style="width:100%;">
-                </div>
-            </div>
-            <div class="gt-modal-footer">
-                <button type="button" class="gt-btn-outline" onclick="closeModal('changeEmailModal')">Cancel</button>
-                <button type="submit" class="gt-btn-primary">Change Email</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- 2. Change Password Modal -->
-<div class="gt-modal" id="changePasswordModal" onclick="closeModalOnOutsideClick(event, 'changePasswordModal')">
-    <div class="gt-modal-dialog">
-        <div class="gt-modal-header">
-            <h2 class="gt-modal-title">Change Password</h2>
-            <button type="button" class="gt-modal-close" onclick="closeModal('changePasswordModal')">
-                <i data-lucide="x"></i>
-            </button>
-        </div>
-        <form action="{{ route('admin.settings.security') }}" method="POST">
-            @csrf
-            <input type="hidden" name="security_action" value="password">
-            <div class="gt-modal-body">
-                <div class="form-group">
-                    <label class="gt-label">Current Password</label>
-                    <input type="password" name="current_password" required class="gt-input" style="width:100%;">
-                </div>
-                <div class="form-group">
-                    <label class="gt-label">New Password</label>
-                    <input type="password" name="new_password" required class="gt-input" style="width:100%;">
-                </div>
-                <div class="form-group">
-                    <label class="gt-label">Confirm New Password</label>
-                    <input type="password" name="confirm_password" required class="gt-input" style="width:100%;">
-                </div>
-            </div>
-            <div class="gt-modal-footer">
-                <button type="button" class="gt-btn-outline" onclick="closeModal('changePasswordModal')">Cancel</button>
-                <button type="submit" class="gt-btn-primary">Update Password</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- 3. Configure SMTP Modal -->
-<div class="gt-modal" id="configureSmtpModal" onclick="closeModalOnOutsideClick(event, 'configureSmtpModal')">
-    <div class="gt-modal-dialog">
-        <div class="gt-modal-header">
-            <h2 class="gt-modal-title">Configure SMTP</h2>
-            <button type="button" class="gt-modal-close" onclick="closeModal('configureSmtpModal')">
-                <i data-lucide="x"></i>
-            </button>
-        </div>
-        
-        <div class="gt-modal-body">
-            <!-- Test connection row -->
-            <form action="{{ route('admin.settings.smtp') }}" method="POST" style="margin-bottom:16px; border-bottom:1px solid var(--gt-border); padding-bottom:16px;">
-                @csrf
-                <input type="hidden" name="send_test" value="1">
-                <label class="gt-label">Send Test Email To</label>
-                <div style="display:flex;gap:8px;align-items:center;">
-                    <input type="email" name="test_email" required placeholder="email@example.com" class="gt-input" style="flex:1;">
-                    <button type="submit" class="gt-btn-outline">Send Test</button>
-                </div>
-            </form>
-
-            <form action="{{ route('admin.settings.smtp') }}" method="POST">
-                @csrf
-                <div class="form-grid-2">
-                    <div>
-                        <label class="gt-label">From Name</label>
-                        <input type="text" name="from_name" value="{{ $settings['from_name'] }}" required class="gt-input" style="width:100%;">
-                    </div>
-                    <div>
-                        <label class="gt-label">From Email</label>
-                        <input type="email" name="from_email" value="{{ $settings['from_email'] }}" required class="gt-input" style="width:100%;">
-                    </div>
-                </div>
-                <div class="form-grid-2">
-                    <div>
-                        <label class="gt-label">Mail Driver</label>
-                        <input type="text" name="mail_driver" value="{{ $settings['mail_driver'] }}" required class="gt-input" style="width:100%;">
-                    </div>
-                    <div>
-                        <label class="gt-label">SMTP Host</label>
-                        <input type="text" name="smtp_host" value="{{ $settings['smtp_host'] }}" required class="gt-input" style="width:100%;">
-                    </div>
-                </div>
-                <div class="form-grid-2">
-                    <div>
-                        <label class="gt-label">SMTP Port</label>
-                        <input type="text" name="smtp_port" value="{{ $settings['smtp_port'] }}" required class="gt-input" style="width:100%;">
-                    </div>
-                    <div>
-                        <label class="gt-label">Encryption</label>
-                        <input type="text" name="smtp_encryption" value="{{ $settings['smtp_encryption'] }}" required class="gt-input" style="width:100%;">
-                    </div>
-                </div>
-                <div class="form-grid-2">
-                    <div>
-                        <label class="gt-label">Username</label>
-                        <input type="text" name="smtp_username" value="{{ $settings['smtp_username'] }}" required class="gt-input" style="width:100%;">
-                    </div>
-                    <div>
-                        <label class="gt-label">Password</label>
-                        <input type="password" name="smtp_password" placeholder="Leave blank to keep current" class="gt-input" style="width:100%;">
-                    </div>
-                </div>
-                
-                <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:20px;">
-                    <button type="button" class="gt-btn-outline" onclick="closeModal('configureSmtpModal')">Cancel</button>
-                    <button type="submit" class="gt-btn-primary">Save Configuration</button>
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Toggle More Submenu Dropdown
-        window.toggleMoreMenu = function(event) {
-            event.stopPropagation();
-            document.getElementById('moreDropdownMenu').classList.toggle('show');
-        };
-
-        document.addEventListener('click', () => {
-            const dropdown = document.getElementById('moreDropdownMenu');
-            if (dropdown) dropdown.classList.remove('show');
-        });
-
-        // Modal triggers
-        window.openModal = function(id) {
-            document.getElementById(id).classList.add('show');
-        };
-
-        window.closeModal = function(id) {
-            document.getElementById(id).classList.remove('show');
-        };
-
-        window.closeModalOnOutsideClick = function(event, id) {
-            if (event.target === document.getElementById(id)) {
-                closeModal(id);
-            }
-        };
-
-        // File upload image preview
         window.previewImage = function(input, previewElId) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -1370,24 +989,6 @@
                 };
                 reader.readAsDataURL(input.files[0]);
             }
-        };
-
-        // Appearance theme selections
-        window.selectTheme = function(themeValue) {
-            document.querySelectorAll('.theme-card-option').forEach(card => {
-                card.classList.remove('selected');
-            });
-            event.currentTarget.classList.add('selected');
-            document.getElementById('selectedThemeInput').value = themeValue;
-        };
-
-        // Color selection picker dots
-        window.selectColor = function(dotElement, colorName) {
-            document.querySelectorAll('.color-dot').forEach(dot => {
-                dot.classList.remove('selected');
-            });
-            dotElement.classList.add('selected');
-            document.getElementById('selectedColorInput').value = colorName;
         };
     });
 </script>

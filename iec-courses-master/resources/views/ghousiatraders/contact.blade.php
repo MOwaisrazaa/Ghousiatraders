@@ -4,7 +4,16 @@
 
 @section('content')
     @php
-        $footer = \App\Models\FooterSetting::getSettings();
+        $phone = store_setting('primary_phone', store_setting('store_phone', '0321-1234567'));
+        $email = store_setting('support_email', store_setting('store_email', 'info@ghousiatraders.com'));
+        $address = store_setting('footer_address', store_setting('address_line_1', 'Shop # 12, Main Market, DHA Phase 6, Lahore, Pakistan'));
+        $businessHours = store_setting('business_hours_custom_text', "Monday - Saturday: 10:00 AM - 8:00 PM\nSunday: Closed");
+
+        $fbUrl = store_setting('facebook_enabled', '1') == '1' ? store_setting('facebook_url') : null;
+        $igUrl = store_setting('instagram_enabled', '1') == '1' ? store_setting('instagram_url') : null;
+        $ytUrl = store_setting('youtube_enabled', '1') == '1' ? store_setting('youtube_url') : null;
+        $ttUrl = store_setting('tiktok_enabled', '1') == '1' ? store_setting('tiktok_url') : null;
+        $waUrl = store_setting('whatsapp_enabled', '1') == '1' ? store_setting('whatsapp_url') : null;
     @endphp
 
     <main>
@@ -69,7 +78,7 @@
                         </div>
                         <div class="info-text">
                             <h4>Call Us</h4>
-                            <p style="font-weight: 600;">{{ $footer->phone ?? '0321-1234567' }}</p>
+                            <p style="font-weight: 600;">{{ $phone }}</p>
                             <p>Mon - Sat: 10:00 AM - 8:00 PM</p>
                         </div>
                     </div>
@@ -80,7 +89,7 @@
                         </div>
                         <div class="info-text">
                             <h4>Email Us</h4>
-                            <p style="font-weight: 600;">{{ $footer->email ?? 'info@ghousiatraders.com' }}</p>
+                            <p style="font-weight: 600;">{{ $email }}</p>
                             <p>We reply within 24 hours</p>
                         </div>
                     </div>
@@ -91,7 +100,7 @@
                         </div>
                         <div class="info-text">
                             <h4>Visit Us</h4>
-                            <p>{{ $footer->address ?? 'Shop # 12, Main Market, DHA Phase 6, Lahore, Pakistan' }}</p>
+                            <p>{{ $address }}</p>
                         </div>
                     </div>
 
@@ -101,18 +110,28 @@
                         </div>
                         <div class="info-text">
                             <h4>Working Hours</h4>
-                            <p>Monday - Saturday: 10:00 AM - 8:00 PM</p>
-                            <p>Sunday: Closed</p>
+                            <p>{!! nl2br(e($businessHours)) !!}</p>
                         </div>
                     </div>
 
                     <div class="contact-socials-wrapper">
                         <h4>Follow Us</h4>
                         <div class="social-icons-row">
-                            <a href="{{ $footer->facebook_url ?? '#' }}" class="social-btn facebook" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><i data-lucide="facebook"></i></a>
-                            <a href="{{ $footer->instagram_url ?? '#' }}" class="social-btn instagram" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><i data-lucide="instagram"></i></a>
-                            <a href="{{ $footer->tiktok_url ?? '#' }}" class="social-btn whatsapp" aria-label="TikTok" target="_blank" rel="noopener noreferrer"><i data-lucide="message-circle"></i></a>
-                            <a href="{{ $footer->youtube_url ?? '#' }}" class="social-btn youtube" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><i data-lucide="youtube"></i></a>
+                            @if(!empty($fbUrl) && $fbUrl !== '#')
+                                <a href="{{ $fbUrl }}" class="social-btn facebook" aria-label="Facebook" target="_blank" rel="noopener noreferrer"><i data-lucide="facebook"></i></a>
+                            @endif
+                            @if(!empty($igUrl) && $igUrl !== '#')
+                                <a href="{{ $igUrl }}" class="social-btn instagram" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><i data-lucide="instagram"></i></a>
+                            @endif
+                            @if(!empty($ttUrl) && $ttUrl !== '#')
+                                <a href="{{ $ttUrl }}" class="social-btn tiktok" aria-label="TikTok" target="_blank" rel="noopener noreferrer"><i data-lucide="video"></i></a>
+                            @endif
+                            @if(!empty($ytUrl) && $ytUrl !== '#')
+                                <a href="{{ $ytUrl }}" class="social-btn youtube" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><i data-lucide="youtube"></i></a>
+                            @endif
+                            @if(!empty($waUrl) && $waUrl !== '#')
+                                <a href="{{ str_contains($waUrl, 'http') ? $waUrl : 'https://wa.me/' . preg_replace('/[^0-9]/', '', $waUrl) }}" class="social-btn whatsapp" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer"><i data-lucide="message-circle"></i></a>
+                            @endif
                         </div>
                     </div>
                 </div>

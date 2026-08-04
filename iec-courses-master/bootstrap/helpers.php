@@ -8,6 +8,13 @@ function is_current_route($routeName)
     return request()->routeIs($routeName) ? 'active' : '';
 }
 
+if (!function_exists('store_setting')) {
+    function store_setting($key, $default = null)
+    {
+        return \App\Services\StoreSettingsService::get($key, $default);
+    }
+}
+
 
 function in_array_r($needle, $haystack, $strict = false)
 {

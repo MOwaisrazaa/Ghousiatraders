@@ -1200,7 +1200,7 @@
                     </div>
                     <p class="help-support-desc">We're here to help you with your order. Our support team is ready to assist you.</p>
                     <div class="help-actions-stack">
-                        <a href="https://wa.me/923211234567" target="_blank" class="btn-contact-support">
+                        <a href="{{ str_contains(store_setting('whatsapp_number', store_setting('store_phone', '0321-1234567')), 'http') ? store_setting('whatsapp_number', store_setting('store_phone', '0321-1234567')) : 'https://wa.me/' . preg_replace('/[^0-9]/', '', store_setting('whatsapp_number', store_setting('store_phone', '923211234567'))) }}" target="_blank" class="btn-contact-support">
                             <i data-lucide="phone"></i>
                             <span>Contact Support</span>
                         </a>

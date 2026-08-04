@@ -557,10 +557,10 @@
                   <h2 class="policy-section-heading">13. Contact Us</h2>
                   <p class="policy-section-p">For questions, shipping inquiries, or return assistance, reach out to Ghousia Traders Customer Care:</p>
                   <ul class="policy-section-list">
-                      <li><strong>Phone / WhatsApp:</strong> {{ $footer->phone ?? '0321-1234567' }}</li>
-                      <li><strong>Email:</strong> {{ $footer->email ?? 'info@ghousiatraders.com' }}</li>
-                      <li><strong>Store Address:</strong> {{ $footer->address ?? 'Shop # 12, Main Market, DHA Phase 6, Lahore, Pakistan' }}</li>
-                      <li><strong>Support Hours:</strong> Monday - Saturday: 10:00 AM - 8:00 PM (Sunday Closed)</li>
+                      <li><strong>Phone / WhatsApp:</strong> {{ store_setting('footer_phone', store_setting('primary_phone', store_setting('store_phone', '0321-1234567'))) }}</li>
+                      <li><strong>Email:</strong> {{ store_setting('footer_email', store_setting('support_email', store_setting('store_email', 'info@ghousiatraders.com'))) }}</li>
+                      <li><strong>Store Address:</strong> {{ store_setting('footer_address', store_setting('address_line_1', 'Shop # 12, Main Market, DHA Phase 6, Lahore, Pakistan')) }}</li>
+                      <li><strong>Support Hours:</strong> {!! nl2br(e(store_setting('footer_business_hours', store_setting('business_hours_custom_text', "Monday - Saturday: 10:00 AM - 8:00 PM (Sunday Closed)")))) !!}</li>
                   </ul>
               </div>
 

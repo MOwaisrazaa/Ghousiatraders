@@ -1,64 +1,63 @@
+@if(store_setting('show_top_info_bar', '1') == '1')
 <!-- 1. Top Utility Bar -->
 <div class="top-bar">
     <div class="top-bar-container">
         <div class="top-bar-item">
             <i data-lucide="truck" class="top-bar-icon"></i>
-            <span>Free Shipping on Orders Over PKR 5,000</span>
+            <span>{{ store_setting('topbar_free_shipping_text', 'Free Shipping on Orders Over PKR ' . number_format((float) store_setting('shipping_free_threshold', 5000))) }}</span>
         </div>
         <div class="top-bar-item">
             <i data-lucide="shield-check" class="top-bar-icon"></i>
-            <span>100% Genuine & Premium Quality</span>
+            <span>{{ store_setting('topbar_quality_text', '100% Genuine & Premium Quality') }}</span>
         </div>
         <div class="top-bar-item">
             <i data-lucide="headset" class="top-bar-icon"></i>
-            <span>Customer Support: 0321-1234567</span>
+            <span>{{ store_setting('topbar_support_text') ?: ('Customer Support: ' . store_setting('header_support_phone', store_setting('store_phone', '0321-1234567'))) }}</span>
         </div>
     </div>
 </div>
+@endif
 
 <!-- 2. Main Header / Navigation -->
 <header class="main-header">
     <div class="header-container main-header-row">
-        <!-- Mobile Menu Toggle (Left on mobile, hidden on desktop) -->
+        <!-- Mobile Menu Toggle -->
         <button class="action-btn mobile-menu-toggle" id="menuToggle" aria-label="Toggle Menu">
             <i data-lucide="menu"></i>
         </button>
 
         <!-- Left Side: Brand Logo -->
         <a href="{{ route('home') }}" class="logo brand-logo-link">
-            <svg viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <!-- Premium Gold Metallic Gradient -->
-                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#FFF3D6" />
-                        <stop offset="20%" stop-color="#F5D393" />
-                        <stop offset="40%" stop-color="#E5B252" />
-                        <stop offset="60%" stop-color="#FFF7E6" />
-                        <stop offset="80%" stop-color="#F5D393" />
-                        <stop offset="100%" stop-color="#C68C2E" />
-                    </linearGradient>
-                    <!-- Warm Radiant Gold/Bronze for 3D extrusion sides -->
-                    <linearGradient id="bronzeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#9C7338" />
-                        <stop offset="50%" stop-color="#7A5626" />
-                        <stop offset="100%" stop-color="#5B3C14" />
-                    </linearGradient>
-                    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feDropShadow dx="2" dy="3" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.65" />
-                    </filter>
-                </defs>
-                
-                <!-- Calligraphic Cursive 3D Text "Ghousia Traders" -->
-                <g filter="url(#shadow)">
-                    <!-- 3D Extrusion Layers (Dark Bronze) -->
-                    <text x="160" y="54" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">Ghousia Traders</text>
-                    <text x="160" y="53" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">Ghousia Traders</text>
-                    <text x="160" y="52" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">Ghousia Traders</text>
-                    
-                    <!-- Front Face (Gold Gradient) -->
-                    <text x="160" y="51" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#goldGrad)" text-anchor="middle">Ghousia Traders</text>
-                </g>
-            </svg>
+            @if(store_setting('store_logo') && file_exists(public_path(store_setting('store_logo'))))
+                <img src="{{ asset(store_setting('store_logo')) }}" alt="{{ store_setting('public_store_name', 'Ghousia Traders') }}" style="max-height: 50px; object-fit: contain;">
+            @else
+                <svg viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FFF3D6" />
+                            <stop offset="20%" stop-color="#F5D393" />
+                            <stop offset="40%" stop-color="#E5B252" />
+                            <stop offset="60%" stop-color="#FFF7E6" />
+                            <stop offset="80%" stop-color="#F5D393" />
+                            <stop offset="100%" stop-color="#C68C2E" />
+                        </linearGradient>
+                        <linearGradient id="bronzeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#9C7338" />
+                            <stop offset="50%" stop-color="#7A5626" />
+                            <stop offset="100%" stop-color="#5B3C14" />
+                        </linearGradient>
+                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feDropShadow dx="2" dy="3" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.65" />
+                        </filter>
+                    </defs>
+                    <g filter="url(#shadow)">
+                        <text x="160" y="54" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">{{ store_setting('public_store_name', 'Ghousia Traders') }}</text>
+                        <text x="160" y="53" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">{{ store_setting('public_store_name', 'Ghousia Traders') }}</text>
+                        <text x="160" y="52" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#bronzeGrad)" text-anchor="middle">{{ store_setting('public_store_name', 'Ghousia Traders') }}</text>
+                        <text x="160" y="51" font-family="'Great Vibes', 'Playball', 'Pinyon Script', cursive" font-size="44" font-weight="bold" fill="url(#goldGrad)" text-anchor="middle">{{ store_setting('public_store_name', 'Ghousia Traders') }}</text>
+                    </g>
+                </svg>
+            @endif
         </a>
 
         <!-- Center: Desktop Search Bar -->
@@ -66,7 +65,7 @@
             <form class="header-search-form" action="{{ route('polani.collection') }}" method="GET">
                 <div class="header-search-input-wrapper">
                     <i data-lucide="search" class="search-input-icon"></i>
-                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Search baby care products, ride-on bikes, toy cars..." class="header-search-input" id="headerSearchInput">
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ store_setting('header_search_placeholder', 'Search baby care products, ride-on bikes, toy cars...') }}" class="header-search-input" id="headerSearchInput">
                     <button type="submit" class="header-search-submit-btn">Search</button>
                 </div>
             </form>
@@ -77,7 +76,7 @@
             <!-- Track Order Outlined Button -->
             <a href="{{ route('polani.track-order') }}" class="track-order-outline-btn {{ request()->routeIs('polani.track-order') ? 'active' : '' }}">
                 <i data-lucide="truck"></i>
-                <span>Track Order</span>
+                <span>{{ store_setting('track_order_btn_label', 'Track Order') }}</span>
             </a>
 
             <!-- Account Icon -->
@@ -133,12 +132,12 @@
         </div>
     </div>
 
-    <!-- Mobile Search Row (visible only on mobile/tablet) -->
+    <!-- Mobile Search Row -->
     <div class="mobile-search-row">
         <form class="header-search-form" action="{{ route('polani.collection') }}" method="GET">
             <div class="header-search-input-wrapper">
                 <i data-lucide="search" class="search-input-icon"></i>
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Search baby care products, ride-on bikes, toy cars..." class="header-search-input" id="mobileSearchInput">
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ store_setting('header_search_placeholder', 'Search baby care products, ride-on bikes, toy cars...') }}" class="header-search-input" id="mobileSearchInput">
                 <button type="submit" class="header-search-submit-btn">Search</button>
             </div>
         </form>
@@ -193,7 +192,7 @@
     </div>
 </header>
 
-<!-- Mobile Navigation Drawer Overlay & Content -->
+<!-- Mobile Navigation Drawer -->
 <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
 <div class="mobile-drawer" id="mobileDrawer">
     <div class="mobile-drawer-header">
@@ -237,7 +236,7 @@
             
             <a href="{{ route('polani.track-order') }}" class="mobile-drawer-link mobile-track-order-link {{ request()->routeIs('polani.track-order') ? 'active' : '' }}">
                 <i data-lucide="truck"></i>
-                <span>Track Order</span>
+                <span>{{ store_setting('track_order_btn_label', 'Track Order') }}</span>
             </a>
         </nav>
     </div>

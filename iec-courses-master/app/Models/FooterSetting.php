@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
+use App\Services\StoreSettingsService;
 
 class FooterSetting extends Model
 {
@@ -26,27 +26,25 @@ class FooterSetting extends Model
 
     public static function getSettings()
     {
-        $defaults = [
-            'brand_name' => 'Polani',
-            'brand_tagline' => 'Fragrance',
-            'brand_description' => 'Crafted with passion. Bottled with elegance. Made for moments that matter.',
-            'facebook_url' => null,
-            'instagram_url' => null,
-            'tiktok_url' => null,
-            'youtube_url' => null,
-            'linkedin_url' => null,
-            'address' => 'Dany Craft Tower, 1st Floor, Shop no. F6, M.A Jinnah Road, Karachi',
-            'email' => 'polanifragnance@gmail.com',
-            'phone' => '+92 324 9206345',
-            'copyright_name' => 'Polani Fragrance',
+        $phone = store_setting('footer_phone') ?: store_setting('primary_phone', store_setting('store_phone', '0321-1234567'));
+        $email = store_setting('footer_email') ?: store_setting('support_email', store_setting('store_email', 'info@ghousiatraders.com'));
+        $address = store_setting('footer_address') ?: store_setting('address_line_1', 'Shop # 12, Main Market, DHA Phase 6, Lahore, Pakistan');
+
+        return new self([
+            'brand_name' => store_setting('public_store_name', store_setting('store_name', 'Ghousia Traders')),
+            'brand_tagline' => store_setting('store_tagline', 'Quality you can trust, happiness they deserve.'),
+            'brand_description' => store_setting('footer_description', store_setting('short_store_description')),
+            'facebook_url' => store_setting('facebook_enabled', '1') == '1' ? store_setting('facebook_url') : null,
+            'instagram_url' => store_setting('instagram_enabled', '1') == '1' ? store_setting('instagram_url') : null,
+            'tiktok_url' => store_setting('tiktok_enabled', '1') == '1' ? store_setting('tiktok_url') : null,
+            'youtube_url' => store_setting('youtube_enabled', '1') == '1' ? store_setting('youtube_url') : null,
+            'linkedin_url' => store_setting('linkedin_enabled', '0') == '1' ? store_setting('linkedin_url') : null,
+            'address' => $address,
+            'email' => $email,
+            'phone' => $phone,
+            'copyright_name' => store_setting('copyright_name', 'Ghousia Traders'),
             'copyright_url' => url('/'),
-            'footer_text' => 'All rights reserved.',
-        ];
-
-        if (!Schema::hasTable('footer_settings')) {
-            return new self($defaults);
-        }
-
-        return self::firstOrCreate([], $defaults);
+            'footer_text' => store_setting('copyright_text', 'All Rights Reserved.'),
+        ]);
     }
 }

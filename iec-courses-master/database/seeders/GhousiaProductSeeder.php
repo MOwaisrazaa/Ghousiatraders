@@ -243,8 +243,9 @@ class GhousiaProductSeeder extends Seeder
             $catId = $categoryModels[$p['category_slug']]->id;
 
             Course::updateOrCreate(
-                ['sku' => $p['sku']],
+                ['slug' => $p['slug']],
                 [
+                    'sku' => $p['sku'],
                     'name' => $p['name'],
                     'slug' => $p['slug'],
                     'category_id' => $catId,

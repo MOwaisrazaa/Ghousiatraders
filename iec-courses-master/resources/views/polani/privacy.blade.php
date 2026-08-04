@@ -438,7 +438,7 @@
                   <span class="policy-section-num">Section 09</span>
                   <h2 class="policy-section-heading">9. Contact Us</h2>
                   <p class="policy-section-p">If you have any questions or feedback regarding our Privacy Policy or data security measures, please contact us:</p>
-                  <p class="policy-section-p">Email our support desk at <strong>info@ghousiatraders.com</strong> or call our hotline at <strong>0321-1234567</strong>.</p>
+                  <p class="policy-section-p">Email our support desk at <strong>{{ store_setting('support_email', store_setting('store_email', 'info@ghousiatraders.com')) }}</strong> or call our hotline at <strong>{{ store_setting('primary_phone', store_setting('store_phone', '0321-1234567')) }}</strong>.</p>
               </div>
 
               <!-- Last Updated Date Box -->
