@@ -334,15 +334,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 
-    // 6. Mock Social Login Alert
-    const socialButtons = document.querySelectorAll('.btn-social-signup');
-    socialButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const provider = btn.querySelector('span') ? btn.querySelector('span').textContent.trim() : btn.textContent.trim();
-            alert(`🔗 Redirecting to ${provider} authentication...`);
-        });
-    });
+    // 6. Social Login Buttons (Handled via server-side Google OAuth route)
+    // Static demo alert removed so real OAuth redirection works cleanly.
 
     // 7. General Header Sticky Scroll Listener
     const mainHeader = document.querySelector('.main-header');

@@ -129,15 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Mock Social Login Buttons Click feedback
-    const socialButtons = document.querySelectorAll('.btn-social');
-    socialButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const provider = btn.textContent.trim();
-            alert(`🔗 Redirecting to ${provider} authentication...`);
-        });
-    });
+    // 4. Social Login Buttons (Handled via server-side Google OAuth route)
+    // Static demo alert removed so real OAuth redirection works cleanly.
 
     // 5. Promo/Newsletter Strip Form Submission
     const promoForm = document.getElementById('promoNewsletterForm');
