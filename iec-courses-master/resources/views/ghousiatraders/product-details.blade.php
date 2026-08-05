@@ -63,15 +63,22 @@
 
                     <div class="pdp-rating-row">
                         <div class="pdp-stars">
-                            <i data-lucide="star"></i>
-                            <i data-lucide="star"></i>
-                            <i data-lucide="star"></i>
-                            <i data-lucide="star"></i>
-                            <i data-lucide="star"></i>
+                            @php $topR = round($product['rating']); @endphp
+                            @for($s = 1; $s <= 5; $s++)
+                                <i data-lucide="star" class="{{ $s <= $topR ? 'star-filled' : '' }}" style="{{ $s <= $topR ? 'fill:#DFAC4D; color:#DFAC4D;' : 'color:#CBD5E1;' }}"></i>
+                            @endfor
                         </div>
-                        <span class="pdp-rating-score">({{ number_format($product['rating'] ?? 4.8, 1) }})</span>
+                        <span class="pdp-rating-score">
+                            @if($product['reviews'] > 0)
+                                ({{ number_format($product['rating'], 1) }})
+                            @else
+                                (No reviews yet)
+                            @endif
+                        </span>
                         <span class="pdp-rating-divider">|</span>
-                        <a href="#pdpTabsSection" class="pdp-reviews-link" id="scrollToReviewsLink">128 Reviews</a>
+                        <a href="#pdpFullReviewsSection" class="pdp-reviews-link" id="scrollToReviewsLink">
+                            {{ $product['reviews'] }} {{ $product['reviews'] == 1 ? 'Review' : 'Reviews' }}
+                        </a>
                     </div>
 
                     <!-- Price Box -->
@@ -210,28 +217,36 @@
                     <!-- Compact Purchase Trust Strip -->
                     <div class="pdp-trust-strip">
                         <div class="trust-item">
-                            <i data-lucide="truck"></i>
+                            <div class="trust-icon-box">
+                                <i data-lucide="truck"></i>
+                            </div>
                             <div class="trust-text">
                                 <strong>Fast Delivery</strong>
                                 <span>Across Pakistan</span>
                             </div>
                         </div>
                         <div class="trust-item">
-                            <i data-lucide="rotate-ccw"></i>
+                            <div class="trust-icon-box">
+                                <i data-lucide="rotate-ccw"></i>
+                            </div>
                             <div class="trust-text">
                                 <strong>7 Days Easy Returns</strong>
                                 <span>Hassle-free</span>
                             </div>
                         </div>
                         <div class="trust-item">
-                            <i data-lucide="shield-check"></i>
+                            <div class="trust-icon-box">
+                                <i data-lucide="shield-check"></i>
+                            </div>
                             <div class="trust-text">
                                 <strong>Secure Payments</strong>
                                 <span>100% Protected</span>
                             </div>
                         </div>
                         <div class="trust-item">
-                            <i data-lucide="award"></i>
+                            <div class="trust-icon-box">
+                                <i data-lucide="award"></i>
+                            </div>
                             <div class="trust-text">
                                 <strong>100% Genuine</strong>
                                 <span>Premium Quality</span>
@@ -328,7 +343,7 @@
     </section>
 
     <!-- 4. Product Tabs & Customer Reviews Layout Section -->
-    <section class="pdp-content-reviews-grid" id="pdpTabsSection">
+    <section class="pdp-tabs-reviews-section" id="pdpTabsSection">
         <div class="section-container pdp-tabs-reviews-layout">
             
             <!-- Left Main Column: Tabbed Content -->
@@ -341,7 +356,7 @@
                         Specifications
                     </button>
                     <button class="pdp-tab-btn" role="tab" aria-selected="false" id="tab-btn-reviews" onclick="switchPdpTab('reviews')">
-                        Reviews (128)
+                        Reviews ({{ $ratingCount }})
                     </button>
                     <button class="pdp-tab-btn" role="tab" aria-selected="false" id="tab-btn-shipping" onclick="switchPdpTab('shipping')">
                         Shipping &amp; Returns
@@ -402,57 +417,48 @@
                     <div class="pdp-tab-panel" id="tab-reviews" role="tabpanel" style="display: none;">
                         <div class="reviews-tab-content">
                             <div class="reviews-summary-box">
-                                <div class="summary-score">4.8</div>
+                                <div class="summary-score">{{ number_format($averageRating, 1) }}</div>
                                 <div class="summary-stars">
-                                    <i data-lucide="star" class="star-filled"></i>
-                                    <i data-lucide="star" class="star-filled"></i>
-                                    <i data-lucide="star" class="star-filled"></i>
-                                    <i data-lucide="star" class="star-filled"></i>
-                                    <i data-lucide="star" class="star-filled"></i>
-                                    <span>Based on 128 Customer Reviews</span>
+                                    @php $tabAvg = round($averageRating); @endphp
+                                    @for($s = 1; $s <= 5; $s++)
+                                        <i data-lucide="star" class="{{ $s <= $tabAvg ? 'star-filled' : '' }}" style="{{ $s <= $tabAvg ? 'fill:#DFAC4D; color:#DFAC4D;' : 'color:#CBD5E1;' }}"></i>
+                                    @endfor
+                                    <span>Based on {{ $ratingCount }} {{ $ratingCount == 1 ? 'Customer Review' : 'Customer Reviews' }}</span>
                                 </div>
                             </div>
 
                             <div class="tab-reviews-list">
-                                <div class="review-card-item">
-                                    <div class="review-card-header">
-                                        <div class="reviewer-avatar">HR</div>
-                                        <div class="reviewer-meta">
-                                            <h5>Hamza R. <span class="verified-badge"><i data-lucide="check"></i> Verified Purchase</span></h5>
-                                            <div class="review-stars">
-                                                <i data-lucide="star" class="star-filled"></i>
-                                                <i data-lucide="star" class="star-filled"></i>
-                                                <i data-lucide="star" class="star-filled"></i>
-                                                <i data-lucide="star" class="star-filled"></i>
-                                                <i data-lucide="star" class="star-filled"></i>
+                                @forelse($approvedRatings as $tRev)
+                                    @php
+                                        $tName = $tRev->user?->name ?: ($tRev->reviewer_name ?: 'Customer');
+                                        $tParts = explode(' ', trim($tName));
+                                        $tInitials = strtoupper(substr($tParts[0] ?? 'C', 0, 1) . substr($tParts[1] ?? '', 0, 1));
+                                    @endphp
+                                    <div class="review-card-item">
+                                        <div class="review-card-header">
+                                            <div class="reviewer-avatar">{{ $tInitials }}</div>
+                                            <div class="reviewer-meta">
+                                                <h5>{{ $tName }} @if($tRev->is_verified_purchase) <span class="verified-badge"><i data-lucide="check"></i> Verified Purchase</span> @endif</h5>
+                                                <div class="review-stars">
+                                                    @for($ts = 1; $ts <= 5; $ts++)
+                                                        <i data-lucide="star" class="{{ $ts <= $tRev->rating ? 'star-filled' : '' }}" style="{{ $ts <= $tRev->rating ? 'fill:#DFAC4D; color:#DFAC4D;' : 'color:#CBD5E1;' }}"></i>
+                                                    @endfor
+                                                </div>
                                             </div>
+                                            <span class="review-date">{{ $tRev->created_at ? $tRev->created_at->format('M d, Y') : '' }}</span>
                                         </div>
-                                        <span class="review-date">May 12, 2024</span>
+                                        @if(!empty($tRev->title))
+                                            <h5 style="margin-bottom: 4px; font-weight:700; color:#3E2A18;">{{ $tRev->title }}</h5>
+                                        @endif
+                                        <p class="review-body">
+                                            {{ $tRev->comment }}
+                                        </p>
                                     </div>
-                                    <p class="review-body">
-                                        Excellent build quality! My kids love it. Fast delivery across Lahore within 2 days.
-                                    </p>
-                                </div>
-
-                                <div class="review-card-item">
-                                    <div class="review-card-header">
-                                        <div class="reviewer-avatar">UK</div>
-                                        <div class="reviewer-meta">
-                                            <h5>Usman K. <span class="verified-badge"><i data-lucide="check"></i> Verified Purchase</span></h5>
-                                            <div class="review-stars">
-                                                <i data-lucide="star" class="star-filled"></i>
-                                                <i data-lucide="star" class="star-filled"></i>
-                                                <i data-lucide="star" class="star-filled"></i>
-                                                <i data-lucide="star" class="star-filled"></i>
-                                                <i data-lucide="star" class="star-filled"></i>
-                                            </div>
-                                        </div>
-                                        <span class="review-date">Apr 28, 2024</span>
+                                @empty
+                                    <div class="pdp-reviews-empty-state">
+                                        <p>No customer reviews yet. Be the first verified customer to review this product.</p>
                                     </div>
-                                    <p class="review-body">
-                                        Really happy with the purchase. Smooth performance and genuine product packaging.
-                                    </p>
-                                </div>
+                                @endforelse
                             </div>
                         </div>
                     </div>
@@ -475,76 +481,200 @@
                 </div>
             </div>
 
-            <!-- Right Side Column: Customer Reviews Card (Matching Reference Image) -->
-            <div class="pdp-reviews-sidebar-card">
-                <div class="reviews-sidebar-header">
-                    <h3>Customer Reviews</h3>
-                    <a href="javascript:void(0)" class="view-all-reviews-link" onclick="switchPdpTab('reviews'); document.getElementById('pdpTabsSection').scrollIntoView({behavior:'smooth'});">View All</a>
+            <!-- Right Main Column: Add Your Review Form Card -->
+            <div class="pdp-add-review-card">
+                <div class="add-review-header">
+                    <h3>Add Your Review</h3>
+                    <p class="add-review-subtext">Share your genuine experience with this product.</p>
                 </div>
 
-                <div class="reviews-sidebar-list">
-                    <div class="sidebar-review-item">
-                        <div class="review-avatar-row">
-                            <div class="avatar-circle">HR</div>
-                            <div class="avatar-info">
-                                <strong class="user-name">Hamza R.</strong>
-                                <span class="review-subdate">May 12, 2024</span>
-                            </div>
+                @guest
+                    <div class="review-auth-notice">
+                        <div class="auth-notice-icon">
+                            <i data-lucide="lock"></i>
                         </div>
-                        <div class="sidebar-review-stars">
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                        </div>
-                        <p class="sidebar-review-text">
-                            “Excellent build quality! My son loves it. Battery backup is also great.”
-                        </p>
+                        <h4>Sign in required</h4>
+                        <p>Please sign in to write a review for this product.</p>
+                        <a href="{{ Route::has('login') ? route('login') : route('sign-in') }}" class="btn-pdp-signin">
+                            <i data-lucide="log-in"></i> Sign In to Review
+                        </a>
                     </div>
+                @else
+                    @if(!$userHasPurchased && !auth()->user()->hasRole(['Admin', 'Super Admin']))
+                        <div class="review-purchased-notice">
+                            <div class="notice-icon">
+                                <i data-lucide="shield-alert"></i>
+                            </div>
+                            <h4>Verified Purchase Required</h4>
+                            <p>Only customers who have purchased this product can submit a review.</p>
+                        </div>
+                    @else
+                        <form id="pdpReviewForm" action="{{ route('products.rate', ['course' => $product['db_id']]) }}" method="POST">
+                            @csrf
+                            <div id="reviewFormToast" class="review-form-toast" style="display: none;"></div>
 
-                    <div class="sidebar-review-item">
-                        <div class="review-avatar-row">
-                            <div class="avatar-circle">UK</div>
-                            <div class="avatar-info">
-                                <strong class="user-name">Usman K.</strong>
-                                <span class="review-subdate">Apr 28, 2024</span>
+                            <!-- Customer Identity -->
+                            <div class="review-form-group">
+                                <label class="review-form-label">Reviewer Name</label>
+                                <input type="text" class="review-form-input readonly-input" value="{{ auth()->user()->name }}" readonly disabled>
+                                <span class="input-help-text">Showing your logged-in account name.</span>
                             </div>
-                        </div>
-                        <div class="sidebar-review-stars">
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                        </div>
-                        <p class="sidebar-review-text">
-                            “Really happy with the purchase. Smooth ride and easy to assemble.”
-                        </p>
-                    </div>
 
-                    <div class="sidebar-review-item">
-                        <div class="review-avatar-row">
-                            <div class="avatar-circle">AM</div>
-                            <div class="avatar-info">
-                                <strong class="user-name">Adeel M.</strong>
-                                <span class="review-subdate">Apr 10, 2024</span>
+                            <!-- Star Rating Selector -->
+                            <div class="review-form-group">
+                                <label class="review-form-label">Your Rating <span class="req-star">*</span></label>
+                                <div class="pdp-star-selector" id="pdpStarSelector">
+                                    <input type="hidden" name="rating" id="reviewRatingInput" value="{{ $userReview ? $userReview->rating : 5 }}" required>
+                                    @php $currentRating = $userReview ? $userReview->rating : 5; @endphp
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <button type="button" class="star-select-btn {{ $i <= $currentRating ? 'selected' : '' }}" data-value="{{ $i }}" aria-label="Rate {{ $i }} star">
+                                            <i data-lucide="star"></i>
+                                        </button>
+                                    @endfor
+                                    <span class="rating-val-text" id="ratingValText">{{ $currentRating }} of 5 Stars</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="sidebar-review-stars">
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                            <i data-lucide="star" class="star-filled"></i>
-                        </div>
-                        <p class="sidebar-review-text">
-                            “Very stylish and premium look. Perfect gift for kids!”
-                        </p>
-                    </div>
-                </div>
+
+                            <!-- Review Title (Optional) -->
+                            <div class="review-form-group">
+                                <label class="review-form-label" for="reviewTitleInput">Review Title <span class="optional-tag">(Optional)</span></label>
+                                <input type="text" name="title" id="reviewTitleInput" class="review-form-input" placeholder="e.g. Excellent build quality & fast delivery!" value="{{ $userReview ? $userReview->title : '' }}" maxlength="255">
+                            </div>
+
+                            <!-- Review Comment (Required) -->
+                            <div class="review-form-group">
+                                <label class="review-form-label" for="reviewCommentInput">Review Comment <span class="req-star">*</span></label>
+                                <textarea name="comment" id="reviewCommentInput" class="review-form-textarea" rows="4" placeholder="Write your detailed feedback here..." required>{{ $userReview ? $userReview->comment : '' }}</textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn-pdp-submit-review" id="btnSubmitReview">
+                                <i data-lucide="send"></i>
+                                <span id="btnSubmitReviewText">{{ $userReview ? 'Update Your Review' : 'Submit Review' }}</span>
+                            </button>
+                        </form>
+                    @endif
+                @endguest
             </div>
 
+        </div>
+    </section>
+
+    <!-- 5. Full-Width Customer Reviews Section -->
+    <section class="pdp-fullwidth-reviews-section" id="pdpFullReviewsSection">
+        <div class="section-container">
+            <div class="pdp-fullwidth-reviews-card">
+                
+                <div class="reviews-fullwidth-header">
+                    <div class="reviews-title-area">
+                        <h2>Customer Reviews</h2>
+                        <p class="reviews-subtitle">Real feedback from verified Ghousia Traders customers.</p>
+                    </div>
+
+                    <!-- Summary Stat Box -->
+                    <div class="reviews-summary-row">
+                        <div class="summary-score-column">
+                            <span class="score-number">{{ number_format($averageRating, 1) }}</span>
+                            <div class="score-stars">
+                                @php $aVal = round($averageRating); @endphp
+                                @for($s = 1; $s <= 5; $s++)
+                                    <i data-lucide="star" class="{{ $s <= $aVal ? 'star-filled' : '' }}" style="{{ $s <= $aVal ? 'fill:#DFAC4D; color:#DFAC4D;' : 'color:#CBD5E1;' }}"></i>
+                                @endfor
+                            </div>
+                            <span class="score-count-label">Based on {{ $ratingCount }} {{ $ratingCount == 1 ? 'approved review' : 'approved reviews' }}</span>
+                        </div>
+
+                        <!-- Rating Breakdown Bars -->
+                        <div class="rating-breakdown-bars">
+                            @for($star = 5; $star >= 1; $star--)
+                                @php
+                                    $cnt = $ratingBreakdown[$star] ?? 0;
+                                    $pct = $ratingCount > 0 ? round(($cnt / $ratingCount) * 100) : 0;
+                                @endphp
+                                <div class="breakdown-row">
+                                    <span class="star-label">{{ $star }} <i data-lucide="star" class="star-tiny" style="width:12px; height:12px; fill:#DFAC4D; color:#DFAC4D; display:inline-block; vertical-align:middle;"></i></span>
+                                    <div class="bar-track">
+                                        <div class="bar-fill" style="width: {{ $pct }}%;"></div>
+                                    </div>
+                                    <span class="count-label">{{ $cnt }} ({{ $pct }}%)</span>
+                                </div>
+                            @endfor
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="pdp-divider" style="margin: 24px 0;">
+
+                <!-- Sorting Toolbar -->
+                <div class="reviews-toolbar">
+                    <div class="toolbar-left">
+                        <span class="showing-count-text">Showing {{ $approvedRatings->total() }} {{ $approvedRatings->total() == 1 ? 'review' : 'reviews' }}</span>
+                    </div>
+                    <div class="toolbar-right">
+                        <label for="reviewSortSelect" class="sort-label">Sort by:</label>
+                        <select id="reviewSortSelect" class="review-sort-select" onchange="window.location.href='?sort=' + this.value + '#pdpFullReviewsSection';">
+                            <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Newest</option>
+                            <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Oldest</option>
+                            <option value="highest_rating" {{ $sort === 'highest_rating' ? 'selected' : '' }}>Highest Rating</option>
+                            <option value="lowest_rating" {{ $sort === 'lowest_rating' ? 'selected' : '' }}>Lowest Rating</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Reviews Grid List -->
+                <div class="pdp-full-reviews-list">
+                    @forelse($approvedRatings as $rItem)
+                        @php
+                            $uName = $rItem->user?->name ?: ($rItem->reviewer_name ?: 'Customer');
+                            $parts = explode(' ', trim($uName));
+                            $initials = strtoupper(substr($parts[0] ?? 'C', 0, 1) . substr($parts[1] ?? '', 0, 1));
+                        @endphp
+                        <div class="pdp-review-card-item">
+                            <div class="pdp-review-card-header">
+                                <div class="pdp-reviewer-avatar">{{ $initials }}</div>
+                                <div class="pdp-reviewer-meta">
+                                    <h5>
+                                        <span>{{ $uName }}</span>
+                                        @if($rItem->is_verified_purchase)
+                                            <span class="verified-badge"><i data-lucide="check-circle-2"></i> Verified Purchase</span>
+                                        @endif
+                                    </h5>
+                                    <div class="pdp-review-stars">
+                                        @for($st = 1; $st <= 5; $st++)
+                                            <i data-lucide="star" class="{{ $st <= $rItem->rating ? 'star-filled' : '' }}" style="{{ $st <= $rItem->rating ? 'fill:#DFAC4D; color:#DFAC4D;' : 'color:#CBD5E1;' }}"></i>
+                                        @endfor
+                                    </div>
+                                </div>
+                                <span class="pdp-review-date">{{ $rItem->created_at ? $rItem->created_at->format('M d, Y') : '' }}</span>
+                            </div>
+
+                            @if(!empty($rItem->title))
+                                <h4 class="pdp-review-item-title">{{ $rItem->title }}</h4>
+                            @endif
+
+                            <p class="pdp-review-item-body">
+                                {{ $rItem->comment }}
+                            </p>
+                        </div>
+                    @empty
+                        <div class="pdp-reviews-empty-state">
+                            <div class="empty-icon-box">
+                                <i data-lucide="message-square-quote"></i>
+                            </div>
+                            <h3>No customer reviews yet</h3>
+                            <p>Be the first verified customer to review this product.</p>
+                        </div>
+                    @endforelse
+                </div>
+
+                <!-- Pagination -->
+                @if($approvedRatings->hasPages())
+                    <div class="pdp-reviews-pagination">
+                        {{ $approvedRatings->links() }}
+                    </div>
+                @endif
+
+            </div>
         </div>
     </section>
 
@@ -660,6 +790,118 @@
                 const baseUrl = cartBtn.getAttribute('data-add-url');
                 const qty = qtyInput.value || 1;
                 cartBtn.setAttribute('data-add-url', baseUrl + '?quantity=' + qty);
+            });
+        }
+
+        // Star Rating Selector Logic
+        const starBtns = document.querySelectorAll('#pdpStarSelector .star-select-btn');
+        const ratingHiddenInput = document.getElementById('reviewRatingInput');
+        const ratingValText = document.getElementById('ratingValText');
+
+        if (starBtns.length > 0 && ratingHiddenInput) {
+            function updateStarDisplay(val) {
+                starBtns.forEach(btn => {
+                    const bVal = parseInt(btn.getAttribute('data-value'));
+                    if (bVal <= val) {
+                        btn.classList.add('selected');
+                    } else {
+                        btn.classList.remove('selected');
+                    }
+                });
+                if (ratingValText) {
+                    ratingValText.textContent = val + ' of 5 Stars';
+                }
+            }
+
+            starBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const selectedVal = parseInt(this.getAttribute('data-value'));
+                    ratingHiddenInput.value = selectedVal;
+                    updateStarDisplay(selectedVal);
+                });
+
+                btn.addEventListener('mouseenter', function() {
+                    const hoverVal = parseInt(this.getAttribute('data-value'));
+                    updateStarDisplay(hoverVal);
+                });
+            });
+
+            const starContainer = document.getElementById('pdpStarSelector');
+            if (starContainer) {
+                starContainer.addEventListener('mouseleave', function() {
+                    const currentVal = parseInt(ratingHiddenInput.value) || 5;
+                    updateStarDisplay(currentVal);
+                });
+            }
+        }
+
+        // AJAX Review Form Submission
+        const reviewForm = document.getElementById('pdpReviewForm');
+        const submitBtn = document.getElementById('btnSubmitReview');
+        const submitBtnText = document.getElementById('btnSubmitReviewText');
+        const toastBox = document.getElementById('reviewFormToast');
+
+        if (reviewForm) {
+            reviewForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    if (submitBtnText) submitBtnText.textContent = 'Submitting...';
+                }
+
+                if (toastBox) {
+                    toastBox.style.display = 'none';
+                    toastBox.className = 'review-form-toast';
+                }
+
+                const formData = new FormData(reviewForm);
+
+                fetch(reviewForm.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        if (toastBox) {
+                            toastBox.className = 'review-form-toast toast-success';
+                            toastBox.textContent = data.message || 'Review submitted successfully!';
+                            toastBox.style.display = 'block';
+                        }
+                        if (window.showStorefrontToast) {
+                            window.showStorefrontToast(data.message || 'Review submitted successfully!', 'success');
+                        }
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1200);
+                    } else {
+                        if (toastBox) {
+                            toastBox.className = 'review-form-toast toast-error';
+                            toastBox.textContent = data.message || 'Error submitting review.';
+                            toastBox.style.display = 'block';
+                        }
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            if (submitBtnText) submitBtnText.textContent = 'Submit Review';
+                        }
+                    }
+                })
+                .catch(err => {
+                    if (toastBox) {
+                        toastBox.className = 'review-form-toast toast-error';
+                        toastBox.textContent = 'An unexpected error occurred. Please try again.';
+                        toastBox.style.display = 'block';
+                    }
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        if (submitBtnText) submitBtnText.textContent = 'Submit Review';
+                    }
+                });
             });
         }
     });

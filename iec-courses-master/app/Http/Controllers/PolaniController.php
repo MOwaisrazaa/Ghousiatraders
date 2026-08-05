@@ -98,8 +98,8 @@ class PolaniController extends Controller
             'stock' => (int) $course->stock,
             'status' => $course->status,
             'is_featured' => (bool) $course->is_featured,
-            'rating' => $course->average_rating ?? 5.0,
-            'reviews' => $course->rating_count ?? 1,
+            'rating' => $course->average_rating,
+            'reviews' => $course->rating_count,
             'category_slug' => $categoryFilter,
             'category_name' => $category,
             'image' => asset($imagePath),
@@ -138,6 +138,106 @@ class PolaniController extends Controller
             'Oud' => '10–12 hours',
             default => '8–10 hours',
         };
+    }
+
+    public function product(string $slug)
+    {
+        $productModel = Course::with('category')->where('slug', $slug)->firstOrFail();
+
+        $relatedProducts = Course::where('category_id', $productModel->category_id)
+            ->where('id', '!=', $productModel->id)
+            ->where('status', 'active')
+            ->take(4)
+            ->get();
+
+        if ($relatedProducts->count() < 4) {
+            $extra = Course::where('id', '!=', $productModel->id)
+                ->where('status', 'active')
+                ->whereNotIn('id', $relatedProducts->pluck('id'))
+                ->take(4 - $relatedProducts->count())
+                ->get();
+            $relatedProducts = $relatedProducts->concat($extra);
+        }
+
+        // Ratings query
+        $sort = request('sort', 'newest');
+        $ratingsQuery = $productModel->ratings()
+            ->where(function($q) {
+                $q->where('status', 'approved')
+                  ->orWhere('is_approved', true)
+                  ->orWhere('show_publicly', true);
+            })
+            ->with('user:id,name,email');
+
+        switch ($sort) {
+            case 'oldest':
+                $ratingsQuery->orderBy('created_at', 'asc');
+                break;
+            case 'highest_rating':
+                $ratingsQuery->orderBy('rating', 'desc')->orderBy('created_at', 'desc');
+                break;
+            case 'lowest_rating':
+                $ratingsQuery->orderBy('rating', 'asc')->orderBy('created_at', 'desc');
+                break;
+            case 'newest':
+            default:
+                $ratingsQuery->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $approvedRatings = $ratingsQuery->paginate(5)->withQueryString();
+
+        // Calculate star breakdown for 5, 4, 3, 2, 1 stars
+        $allApprovedRatings = $productModel->ratings()
+            ->where(function($q) {
+                $q->where('status', 'approved')
+                  ->orWhere('is_approved', true)
+                  ->orWhere('show_publicly', true);
+            })->get();
+
+        $ratingCount = $allApprovedRatings->count();
+        $averageRating = $ratingCount > 0 ? round($allApprovedRatings->avg('rating'), 1) : 0;
+
+        $ratingBreakdown = [
+            5 => $allApprovedRatings->where('rating', 5)->count(),
+            4 => $allApprovedRatings->where('rating', 4)->count(),
+            3 => $allApprovedRatings->where('rating', 3)->count(),
+            2 => $allApprovedRatings->where('rating', 2)->count(),
+            1 => $allApprovedRatings->where('rating', 1)->count(),
+        ];
+
+        $userHasPurchased = false;
+        $userReview = null;
+
+        if (auth()->check()) {
+            $user = auth()->user();
+            $userHasPurchased = \App\Models\Order::where('user_id', $user->id)
+                ->whereNotIn('status', ['cancelled', 'rejected'])
+                ->where(function($q) use ($productModel) {
+                    $q->where('cart_items', 'like', '%"course_id":' . $productModel->id . '%')
+                      ->orWhere('cart_items', 'like', '%"course_id": ' . $productModel->id . '%')
+                      ->orWhere('cart_items', 'like', '%"id":' . $productModel->id . '%')
+                      ->orWhere('cart_items', 'like', '%"id": ' . $productModel->id . '%')
+                      ->orWhere('cart_items', 'like', '%"id":"' . $productModel->slug . '"%')
+                      ->orWhere('cart_items', 'like', '%"slug":"' . $productModel->slug . '"%');
+                })
+                ->exists();
+
+            $userReview = $productModel->ratings()->where('user_id', $user->id)->first();
+        }
+
+        return view('ghousiatraders.product-details', [
+            'product' => $this->productViewModel($productModel),
+            'relatedProducts' => $relatedProducts,
+            'cartCount' => $this->cartCount(),
+            'approvedRatings' => $approvedRatings,
+            'ratingCount' => $ratingCount,
+            'averageRating' => $averageRating,
+            'ratingBreakdown' => $ratingBreakdown,
+            'userHasPurchased' => $userHasPurchased,
+            'userReview' => $userReview,
+            'sort' => $sort,
+        ]);
     }
 
     private function projectionForCategory(?string $category): string
@@ -505,32 +605,6 @@ class PolaniController extends Controller
                 'email' => $emailInput,
                 'phone' => $phoneInput,
             ],
-        ]);
-    }
-
-    public function product(string $slug)
-    {
-        $productModel = Course::with('category')->where('slug', $slug)->firstOrFail();
-
-        $relatedProducts = Course::where('category_id', $productModel->category_id)
-            ->where('id', '!=', $productModel->id)
-            ->where('status', 'active')
-            ->take(4)
-            ->get();
-
-        if ($relatedProducts->count() < 4) {
-            $extra = Course::where('id', '!=', $productModel->id)
-                ->where('status', 'active')
-                ->whereNotIn('id', $relatedProducts->pluck('id'))
-                ->take(4 - $relatedProducts->count())
-                ->get();
-            $relatedProducts = $relatedProducts->concat($extra);
-        }
-
-        return view('ghousiatraders.product-details', [
-            'product' => $this->productViewModel($productModel),
-            'relatedProducts' => $relatedProducts,
-            'cartCount' => $this->cartCount(),
         ]);
     }
 

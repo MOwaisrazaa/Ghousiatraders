@@ -18,10 +18,12 @@ class Rating extends Model
         'user_id',
         'reviewer_name',
         'rating',
+        'title',
         'comment',
         'is_approved',
         'show_publicly',
         'status',
+        'is_verified_purchase',
         'moderation_note',
         'rateable_type',
         'rateable_id',
@@ -35,6 +37,7 @@ class Rating extends Model
     protected $casts = [
         'is_approved' => 'boolean',
         'show_publicly' => 'boolean',
+        'is_verified_purchase' => 'boolean',
     ];
 
     /**

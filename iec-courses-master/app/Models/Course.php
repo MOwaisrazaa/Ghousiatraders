@@ -142,9 +142,15 @@ class Course extends Model
      */
     public function getAverageRatingAttribute()
     {
-        return $this->ratings()
-            ->where('is_approved', true)
-            ->avg('rating') ?: 0;
+        $avg = $this->ratings()
+            ->where(function($q) {
+                $q->where('status', 'approved')
+                  ->orWhere('is_approved', true)
+                  ->orWhere('show_publicly', true);
+            })
+            ->avg('rating');
+            
+        return $avg ? round((float) $avg, 1) : 0;
     }
 
     /**
@@ -153,7 +159,11 @@ class Course extends Model
     public function getRatingCountAttribute()
     {
         return $this->ratings()
-            ->where('is_approved', true)
+            ->where(function($q) {
+                $q->where('status', 'approved')
+                  ->orWhere('is_approved', true)
+                  ->orWhere('show_publicly', true);
+            })
             ->count();
     }
 

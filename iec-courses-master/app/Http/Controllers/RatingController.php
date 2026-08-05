@@ -20,23 +20,33 @@ class RatingController extends Controller
      */
     public function storeCourseRating(Request $request, $courseId)
     {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please sign in to write a review.'
+            ], 401);
+        }
+
         // Validate request
         $validator = Validator::make($request->all(), [
             'rating' => 'required|integer|between:1,5',
-            'comment' => 'nullable|string|max:1000',
-            'name' => 'nullable|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'comment' => 'required|string|max:2000',
+        ], [
+            'rating.required' => 'Please select a star rating between 1 and 5.',
+            'comment.required' => 'Please enter your review comment.',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error',
+                'message' => $validator->errors()->first(),
                 'errors' => $validator->errors()
             ], 422);
         }
 
         // Check if course exists
-        $course = Course::find($courseId);
+        $course = $courseId instanceof Course ? $courseId : Course::find($courseId);
         if (!$course) {
             return response()->json([
                 'success' => false,
@@ -44,19 +54,60 @@ class RatingController extends Controller
             ], 404);
         }
 
-        $reviewerName = $request->input('name') ?: (Auth::check() ? null : 'Anonymous');
+        $user = Auth::user();
 
-        // Create new rating
-        $rating = $course->ratings()->create([
-            'user_id' => Auth::id(),
-            'reviewer_name' => $reviewerName,
-            'rating' => $request->rating,
-            'comment' => $request->comment,
-            'is_approved' => true,
-            'show_publicly' => true,
-        ]);
-        
-        $message = 'Rating submitted successfully';
+        // Check verified purchase eligibility from orders table
+        $hasPurchased = \App\Models\Order::where('user_id', $user->id)
+            ->whereNotIn('status', ['cancelled', 'rejected'])
+            ->where(function($q) use ($course) {
+                $q->where('cart_items', 'like', '%"course_id":' . $course->id . '%')
+                  ->orWhere('cart_items', 'like', '%"course_id": ' . $course->id . '%')
+                  ->orWhere('cart_items', 'like', '%"id":' . $course->id . '%')
+                  ->orWhere('cart_items', 'like', '%"id": ' . $course->id . '%')
+                  ->orWhere('cart_items', 'like', '%"id":"' . $course->slug . '"%')
+                  ->orWhere('cart_items', 'like', '%"slug":"' . $course->slug . '"%');
+            })
+            ->exists();
+
+        if (!$hasPurchased) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only verified purchasers of this product can submit a review.'
+            ], 403);
+        }
+
+        // Check if user already submitted a rating for this product
+        $existingRating = $course->ratings()
+            ->where('user_id', $user->id)
+            ->first();
+
+        if ($existingRating) {
+            $existingRating->update([
+                'reviewer_name' => $user->name,
+                'rating' => (int) $request->rating,
+                'title' => $request->title ?: null,
+                'comment' => $request->comment,
+                'status' => 'pending',
+                'is_approved' => false,
+                'show_publicly' => false,
+                'is_verified_purchase' => true,
+            ]);
+            $rating = $existingRating;
+            $message = 'Your review has been updated and submitted for approval!';
+        } else {
+            $rating = $course->ratings()->create([
+                'user_id' => $user->id,
+                'reviewer_name' => $user->name,
+                'rating' => (int) $request->rating,
+                'title' => $request->title ?: null,
+                'comment' => $request->comment,
+                'status' => 'pending',
+                'is_approved' => false,
+                'show_publicly' => false,
+                'is_verified_purchase' => true,
+            ]);
+            $message = 'Thank you! Your review has been submitted for approval.';
+        }
 
         return response()->json([
             'success' => true,
