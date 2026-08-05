@@ -56,9 +56,20 @@ i[data-lucide] {
     background-color: var(--bg-light, #FDFBF7);
 }
 
+.product-detail-page .section-container {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
 /* 1. Breadcrumb */
 .pdp-breadcrumb {
-    padding: 16px 0 24px 0;
+    padding: 16px 0 0 0;
+    margin-bottom: 0;
+}
+
+.pdp-main-section {
+    padding-top: 28px;
+    padding-bottom: 40px;
 }
 
 .pdp-breadcrumb-list {

@@ -650,7 +650,7 @@
                     <i data-lucide="users"></i>
                     <span>Manage Customers</span>
                 </a>
-                <a href="#" class="action-box">
+                <a href="{{ route('admin.analytics') }}" class="action-box">
                     <i data-lucide="bar-chart-3"></i>
                     <span>View Reports</span>
                 </a>

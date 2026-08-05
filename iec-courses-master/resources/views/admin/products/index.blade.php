@@ -775,9 +775,9 @@
     <button class="gt-btn-outline" onclick="openModal('importProductsModal')" style="min-height:38px;padding:0 16px;">
         <i data-lucide="upload" style="width:16px;height:16px;"></i> Import
     </button>
-    <button class="gt-btn-primary" onclick="openModal('addProductModal')">
+    <a href="{{ route('admin.products.create') }}" class="gt-btn-primary">
         <i data-lucide="plus"></i> Add New Product
-    </button>
+    </a>
 </x-admin-page-header>
 
 <!-- Product Statistics Row -->

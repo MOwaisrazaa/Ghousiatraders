@@ -510,10 +510,26 @@ class PolaniController extends Controller
 
     public function product(string $slug)
     {
-        $product = Course::with('category')->where('slug', $slug)->firstOrFail();
+        $productModel = Course::with('category')->where('slug', $slug)->firstOrFail();
 
-        return view('polani.product', [
-            'product' => $this->productViewModel($product),
+        $relatedProducts = Course::where('category_id', $productModel->category_id)
+            ->where('id', '!=', $productModel->id)
+            ->where('status', 'active')
+            ->take(4)
+            ->get();
+
+        if ($relatedProducts->count() < 4) {
+            $extra = Course::where('id', '!=', $productModel->id)
+                ->where('status', 'active')
+                ->whereNotIn('id', $relatedProducts->pluck('id'))
+                ->take(4 - $relatedProducts->count())
+                ->get();
+            $relatedProducts = $relatedProducts->concat($extra);
+        }
+
+        return view('ghousiatraders.product-details', [
+            'product' => $this->productViewModel($productModel),
+            'relatedProducts' => $relatedProducts,
             'cartCount' => $this->cartCount(),
         ]);
     }
