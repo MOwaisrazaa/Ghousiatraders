@@ -515,11 +515,11 @@ i[data-lucide] {
     background-color: #D32F2F;
 }
 
-/* Quantity & Purchase Buttons */
+/* Quantity & Purchase Controls */
 .pdp-purchase-actions {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 16px;
     margin-top: 22px;
 }
 
@@ -542,11 +542,12 @@ i[data-lucide] {
     border-radius: 6px;
     overflow: hidden;
     background-color: #FFFFFF;
+    height: 44px;
 }
 
 .qty-btn {
     width: 38px;
-    height: 38px;
+    height: 44px;
     background: transparent;
     border: 0;
     font-size: 1.2rem;
@@ -565,7 +566,7 @@ i[data-lucide] {
 
 .qty-control input {
     width: 44px;
-    height: 38px;
+    height: 44px;
     border: 0;
     text-align: center;
     font-weight: 700;
@@ -578,76 +579,85 @@ i[data-lucide] {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px;
+    width: 100%;
+}
+
+.btn-pdp-wishlist {
+    width: 100%;
+    height: 46px;
+    background-color: var(--bg-card, #FFFFFF);
+    border: 1.5px solid var(--border-color, #EFE9DF);
+    color: var(--primary, #5C3E21);
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0 16px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(92, 62, 33, 0.05);
+}
+
+.btn-pdp-wishlist:hover {
+    border-color: var(--primary, #5C3E21);
+    background-color: #FAF5EE;
+    color: var(--primary, #5C3E21);
+}
+
+.btn-pdp-wishlist.active {
+    background-color: #E27B8A !important;
+    border-color: #E27B8A !important;
+    color: #FFFFFF !important;
+}
+
+.btn-pdp-wishlist.active i,
+.btn-pdp-wishlist.active svg {
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
 }
 
 .btn-pdp-cart {
+    width: 100%;
+    height: 46px;
     background-color: var(--primary, #5C3E21);
     color: #FFFFFF;
     font-weight: 700;
     font-size: 0.95rem;
-    padding: 13px 22px;
+    padding: 0 20px;
     border-radius: 6px;
     border: 0;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(92, 62, 33, 0.15);
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(92, 62, 33, 0.2);
     transition: all 0.25s ease;
 }
 
 .btn-pdp-cart:hover {
     background-color: var(--primary-light, #734F2C);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(92, 62, 33, 0.25);
+    box-shadow: 0 6px 16px rgba(92, 62, 33, 0.3);
 }
 
-.btn-pdp-buy {
-    background-color: #3B2412;
-    color: #FFFFFF;
-    font-weight: 700;
-    font-size: 0.95rem;
-    padding: 13px 22px;
-    border-radius: 6px;
-    border: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: all 0.25s ease;
+.btn-pdp-cart:disabled {
+    background-color: #A09080;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
-.btn-pdp-buy:hover {
-    background-color: #25160A;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-}
-
-.btn-pdp-cart i, .btn-pdp-cart svg,
-.btn-pdp-buy i, .btn-pdp-buy svg {
+.btn-pdp-wishlist i, .btn-pdp-wishlist svg,
+.btn-pdp-cart i, .btn-pdp-cart svg {
     width: 18px;
     height: 18px;
-}
-
-.pdp-wishlist-row {
-    display: flex;
-    justify-content: center;
-}
-
-.btn-wishlist-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: transparent;
-    border: 0;
-    color: var(--text-muted, #7A6655);
-    font-weight: 600;
-    font-size: 0.92rem;
-    cursor: pointer;
-    transition: color 0.2s ease;
+    flex-shrink: 0;
 }
 
 .btn-wishlist-toggle:hover {

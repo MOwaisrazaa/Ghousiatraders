@@ -51,44 +51,8 @@
                     </button>
 
                     <div class="pdp-main-image-wrap">
-                        <button type="button" class="gallery-arrow prev-arrow" id="pdpGalleryPrev" aria-label="Previous Image">
-                            <i data-lucide="chevron-left"></i>
-                        </button>
-
                         <img id="pdpMainImage" class="pdp-main-img" src="{{ $product['image'] }}" alt="{{ $product['name'] }}" loading="eager" onerror="this.src='{{ asset('ghousiatraders/assets/baby_products.png') }}'">
-
-                        <button type="button" class="gallery-arrow next-arrow" id="pdpGalleryNext" aria-label="Next Image">
-                            <i data-lucide="chevron-right"></i>
-                        </button>
                     </div>
-
-                    <!-- Thumbnails Grid -->
-                    @php
-                        $galleryImages = [];
-                        if (!empty($product['image'])) {
-                            $galleryImages[] = $product['image'];
-                        }
-                        if (count($galleryImages) < 2) {
-                            if (str_contains(strtolower($product['category_name']), 'car')) {
-                                $galleryImages[] = asset('ghousiatraders/assets/mercedes_amg_side.png');
-                                $galleryImages[] = asset('ghousiatraders/assets/mercedes_amg_dashboard.png');
-                                $galleryImages[] = asset('ghousiatraders/assets/mercedes_amg_wheel.png');
-                            } elseif (str_contains(strtolower($product['category_name']), 'bike')) {
-                                $galleryImages[] = asset('ghousiatraders/assets/sport_bike.png');
-                                $galleryImages[] = asset('ghousiatraders/assets/blue_adventure_bike.png');
-                            }
-                        }
-                    @endphp
-
-                    @if(count($galleryImages) > 1)
-                        <div class="pdp-thumbnails-grid">
-                            @foreach($galleryImages as $idx => $gImg)
-                                <button type="button" class="pdp-thumb-item {{ $idx === 0 ? 'active' : '' }}" data-img="{{ $gImg }}" data-alt="{{ $product['name'] }} - View {{ $idx + 1 }}">
-                                    <img src="{{ $gImg }}" alt="{{ $product['name'] }} Thumbnail {{ $idx + 1 }}">
-                                </button>
-                            @endforeach
-                        </div>
-                    @endif
                 </div>
             </div>
 
@@ -205,6 +169,7 @@
 
                     <!-- Quantity & Purchasing Controls -->
                     <div class="pdp-purchase-actions">
+                        <!-- Line 1: Quantity Selector -->
                         <div class="pdp-quantity-box">
                             <label class="qty-label" for="qtyInput">Quantity:</label>
                             <div class="qty-control">
@@ -214,7 +179,19 @@
                             </div>
                         </div>
 
+                        <!-- Line 2: Purchasing Buttons Row -->
                         <div class="pdp-buttons-row">
+                            <button type="button" 
+                                    class="btn-pdp-wishlist action-wishlist" 
+                                    id="pdpWishlistToggle"
+                                    data-product-slug="{{ $product['slug'] }}"
+                                    data-name="{{ $product['name'] }}"
+                                    title="Add to Wishlist"
+                                    aria-label="Add to Wishlist">
+                                <i data-lucide="heart" class="wishlist-icon"></i>
+                                <span>Add to Wishlist</span>
+                            </button>
+
                             <button type="button" 
                                     class="btn-pdp-cart add-to-cart-btn action-cart" 
                                     id="pdpAddToCartBtn"
@@ -224,26 +201,6 @@
                                     {{ $stockVal <= 0 ? 'disabled' : '' }}>
                                 <i data-lucide="shopping-cart"></i>
                                 <span>{{ $stockVal <= 0 ? 'Out of Stock' : 'Add to Cart' }}</span>
-                            </button>
-                            
-                            <a href="{{ route('shopping-cart') }}" 
-                               class="btn-pdp-buy" 
-                               id="pdpBuyNowBtn"
-                               style="text-decoration:none;"
-                               onclick="event.preventDefault(); document.getElementById('pdpAddToCartBtn').click(); setTimeout(() => { window.location.href='{{ route('shopping-cart') }}'; }, 400);">
-                                <i data-lucide="chevron-right"></i>
-                                <span>Buy Now</span>
-                            </a>
-                        </div>
-
-                        <div class="pdp-wishlist-row">
-                            <button type="button" 
-                                    class="btn-wishlist-toggle action-wishlist" 
-                                    id="pdpWishlistToggle"
-                                    data-product-slug="{{ $product['slug'] }}"
-                                    data-name="{{ $product['name'] }}">
-                                <i data-lucide="heart" class="wishlist-icon"></i>
-                                <span class="wishlist-text">Add to Wishlist</span>
                             </button>
                         </div>
                     </div>
