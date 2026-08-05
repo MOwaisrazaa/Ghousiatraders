@@ -147,6 +147,45 @@
 
         </div>
 
+        @php
+            $showPaymentLogos = store_setting('show_payment_logos', '1') == '1';
+            $activePaymentMethods = [];
+            if ($showPaymentLogos) {
+                try {
+                    $activePaymentMethods = \App\Models\PaymentMethod::where('is_active', true)->orderBy('sort_order')->get();
+                } catch (\Exception $e) {
+                    $activePaymentMethods = [];
+                }
+            }
+        @endphp
+
+        @if($showPaymentLogos && count($activePaymentMethods) > 0)
+            <div class="footer-payment-section" style="padding: 16px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: 24px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                <span style="font-size: 0.78rem; font-weight: 700; color: rgba(255, 255, 255, 0.7); margin-right: 4px; letter-spacing: 0.04em; text-transform: uppercase;">We Accept:</span>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                    @foreach($activePaymentMethods as $pm)
+                        @php
+                            $logoUrl = $pm->logo_url;
+                        @endphp
+                        <div class="payment-badge-pill" title="{{ $pm->name }}" style="background: #ffffff; padding: 4px 10px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; height: 32px; min-width: 48px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s ease;">
+                            @if($logoUrl)
+                                <img src="{{ $logoUrl }}" alt="{{ $pm->name }}" style="max-height: 22px; max-width: 60px; object-fit: contain; display: block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+                                <span style="display: none; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 700; color: #333333;">
+                                    @if($pm->icon)<i class="{{ $pm->icon }}" style="font-size: 0.85rem;"></i>@endif
+                                    <span>{{ $pm->name }}</span>
+                                </span>
+                            @else
+                                <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 700; color: #333333;">
+                                    @if($pm->icon)<i class="{{ $pm->icon }}" style="font-size: 0.85rem; color: #666666;"></i>@endif
+                                    <span>{{ $pm->name }}</span>
+                                </span>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <!-- Bottom Copyright & Powered By -->
         <div class="footer-bottom">
             <div class="copyright">

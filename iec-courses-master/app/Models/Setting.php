@@ -20,9 +20,10 @@ class Setting extends Model
         if ($setting) {
             // Check if the value is JSON, decode if so
             $decoded = json_decode($setting->value, true);
-            return (json_last_error() === JSON_ERROR_NONE) ? $decoded : $setting->value;
+            $val = (json_last_error() === JSON_ERROR_NONE) ? $decoded : $setting->value;
+            return is_string($val) ? \App\Services\StoreSettingsService::normalizeValue($val) : $val;
         }
-        return $default;
+        return is_string($default) ? \App\Services\StoreSettingsService::normalizeValue($default) : $default;
     }
 
     /**
@@ -30,6 +31,9 @@ class Setting extends Model
      */
     public static function set($key, $value)
     {
+        if (is_string($value)) {
+            $value = \App\Services\StoreSettingsService::normalizeValue($value);
+        }
         $valStr = is_array($value) || is_object($value) ? json_encode($value) : $value;
         self::updateOrCreate(['key' => $key], ['value' => $valStr]);
     }

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,
             GhousiaProductSeeder::class,
             AdminUserSeeder::class,
+            PaymentMethodSeeder::class,
             StoreSettingsSeeder::class,
         ]);
     }

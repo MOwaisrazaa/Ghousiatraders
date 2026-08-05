@@ -117,6 +117,27 @@ class StoreSettingsService
     }
 
     /**
+     * Normalize multiline string values by converting literal entity representations
+     * (e.g. &#13;&#10;, &#13;, &#10;, &amp;#13;&amp;#10;) and Windows/Mac line endings (\r\n, \r)
+     * into standard Unix line breaks (\n).
+     */
+    public static function normalizeValue($value)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        // 1. Unescape any literal or double-encoded HTML entities for line breaks (&#13;, &#10;, &#13;&#10;, &amp;#13;&amp;#10;)
+        $value = preg_replace('/&(?:amp;)?#(?:13|0*13|x0*d);?/i', '', $value);
+        $value = preg_replace('/&(?:amp;)?#(?:10|0*10|x0*a);?/i', "\n", $value);
+
+        // 2. Normalize Windows (\r\n) and Mac (\r) line endings to standard Unix \n
+        $value = str_replace(["\r\n", "\r"], "\n", $value);
+
+        return $value;
+    }
+
+    /**
      * Fetch all settings using a single cached query per request.
      */
     public static function all(): array
@@ -131,9 +152,16 @@ class StoreSettingsService
                 $dbSettings = Setting::all()->pluck('value', 'key')->toArray();
                 foreach ($dbSettings as $k => $v) {
                     $decoded = json_decode($v, true);
-                    $dbSettings[$k] = (json_last_error() === JSON_ERROR_NONE) ? $decoded : $v;
+                    $val = (json_last_error() === JSON_ERROR_NONE) ? $decoded : $v;
+                    $dbSettings[$k] = is_string($val) ? self::normalizeValue($val) : $val;
                 }
-                return array_merge($defaults, $dbSettings);
+                $merged = array_merge($defaults, $dbSettings);
+                foreach ($merged as $mk => $mv) {
+                    if (is_string($mv)) {
+                        $merged[$mk] = self::normalizeValue($mv);
+                    }
+                }
+                return $merged;
             } catch (\Exception $e) {
                 return $defaults;
             }
@@ -149,15 +177,16 @@ class StoreSettingsService
     {
         $all = self::all();
         if (array_key_exists($key, $all) && $all[$key] !== null && $all[$key] !== '') {
-            return $all[$key];
+            return is_string($all[$key]) ? self::normalizeValue($all[$key]) : $all[$key];
         }
 
         if ($default !== null) {
-            return $default;
+            return is_string($default) ? self::normalizeValue($default) : $default;
         }
 
         $defaults = self::defaults();
-        return $defaults[$key] ?? null;
+        $fallback = $defaults[$key] ?? null;
+        return is_string($fallback) ? self::normalizeValue($fallback) : $fallback;
     }
 
     /**
@@ -165,7 +194,8 @@ class StoreSettingsService
      */
     public static function set(string $key, $value): void
     {
-        Setting::set($key, $value);
+        $normalized = is_string($value) ? self::normalizeValue($value) : $value;
+        Setting::set($key, $normalized);
         self::clearCache();
         self::syncFooterSetting();
     }
@@ -176,7 +206,8 @@ class StoreSettingsService
     public static function setMultiple(array $settings): void
     {
         foreach ($settings as $key => $value) {
-            Setting::set($key, $value);
+            $normalized = is_string($value) ? self::normalizeValue($value) : $value;
+            Setting::set($key, $normalized);
         }
         self::clearCache();
         self::syncFooterSetting();

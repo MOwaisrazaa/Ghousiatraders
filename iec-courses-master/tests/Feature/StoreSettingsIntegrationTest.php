@@ -128,4 +128,58 @@ class StoreSettingsIntegrationTest extends TestCase
         $privacyResponse->assertSee('0345-0001122');
         $privacyResponse->assertSee('helpdesk@ghousia.com');
     }
+
+    /** @test */
+    public function multiline_business_hours_does_not_contain_literal_entity_encoded_newlines()
+    {
+        $multilineText = "Monday - Saturday: 10:00 AM - 10:00 PM\r\nSunday: Closed";
+        
+        $this->actingAs($this->adminUser)->post('/admin/settings', [
+            'tab' => 'footer',
+            'footer_business_hours' => $multilineText,
+            'show_payment_logos' => '1',
+        ]);
+
+        $this->assertDatabaseMissing('settings', [
+            'key' => 'footer_business_hours',
+            'value' => "Monday - Saturday: 10:00 AM - 10:00 PM&#13;&#10;Sunday: Closed"
+        ]);
+
+        $hours = store_setting('footer_business_hours');
+        $this->assertStringNotContainsString('&#13;&#10;', $hours);
+        $this->assertStringContainsString("Monday - Saturday: 10:00 AM - 10:00 PM\nSunday: Closed", $hours);
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertDontSee('&#13;&#10;');
+        $response->assertSee('Monday - Saturday: 10:00 AM - 10:00 PM');
+        $response->assertSee('Sunday: Closed');
+    }
+
+    /** @test */
+    public function footer_payment_badges_toggle_and_render_active_methods()
+    {
+        \App\Models\PaymentMethod::updateOrCreate(
+            ['key' => 'cash'],
+            ['name' => 'Cash Payment', 'icon' => 'fas fa-money-bill-wave', 'is_active' => true, 'sort_order' => 1]
+        );
+        \App\Models\PaymentMethod::updateOrCreate(
+            ['key' => 'easypaisa'],
+            ['name' => 'Easypaisa', 'icon' => 'fas fa-wallet', 'is_active' => true, 'sort_order' => 2]
+        );
+
+        StoreSettingsService::set('show_payment_logos', '1');
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('Cash Payment');
+        $response->assertSee('Easypaisa');
+
+        // Turn off show_payment_logos
+        StoreSettingsService::set('show_payment_logos', '0');
+
+        $responseDisabled = $this->get('/');
+        $responseDisabled->assertStatus(200);
+        $responseDisabled->assertDontSee('footer-payment-section');
+    }
 }
