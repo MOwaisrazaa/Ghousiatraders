@@ -375,17 +375,10 @@
 
                     <!-- 2. Dual Stacked Buttons: Download Invoice & Print Receipt -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        @if(Route::has('user.order.details'))
-                            <a href="{{ route('user.order.details', $order->id) }}" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; background: #FFFFFF; border: 1.5px solid #D5C8B8; color: #5C3E21; font-weight: 700; font-size: 0.85rem; border-radius: 10px; text-decoration: none; transition: all 0.2s;">
-                                <i data-lucide="download" style="width: 16px; height: 16px;"></i>
-                                Download Invoice
-                            </a>
-                        @else
-                            <button type="button" onclick="window.print()" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; background: #FFFFFF; border: 1.5px solid #D5C8B8; color: #5C3E21; font-weight: 700; font-size: 0.85rem; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
-                                <i data-lucide="download" style="width: 16px; height: 16px;"></i>
-                                Download Invoice
-                            </button>
-                        @endif
+                        <a href="{{ route('orders.invoice', $order->id) }}" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; background: #FFFFFF; border: 1.5px solid #D5C8B8; color: #5C3E21; font-weight: 700; font-size: 0.85rem; border-radius: 10px; text-decoration: none; transition: all 0.2s;">
+                            <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                            Download Invoice
+                        </a>
 
                         <button type="button" onclick="window.print()" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; background: #FFFFFF; border: 1.5px solid #D5C8B8; color: #5C3E21; font-weight: 700; font-size: 0.85rem; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
                             <i data-lucide="printer" style="width: 16px; height: 16px;"></i>

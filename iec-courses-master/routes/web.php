@@ -251,6 +251,10 @@ Route::get('/payment/success/{order}', [PaymentController::class, 'success'])->n
 Route::get('/payment/cancel/{order}', [PaymentController::class, 'cancel'])->name('payment.cancel');
 Route::get('/payment/pending/{order}', [PaymentController::class, 'pending'])->name('payment.pending');
 
+// Ghousia Traders Order Invoice Routes
+Route::get('/orders/{order}/invoice', [App\Http\Controllers\InvoiceController::class, 'show'])->name('orders.invoice');
+Route::get('/orders/{order}/invoice/pdf', [App\Http\Controllers\InvoiceController::class, 'pdf'])->name('orders.invoice.pdf');
+
 Route::get('/checkout', [PolaniController::class, 'checkout'])
     ->name('checkout');
 Route::get('/course-name', CourseName::class)->middleware('auth');
@@ -367,7 +371,11 @@ Route::middleware('auth')->group(function () {
 
     // Payment Details Routes
     Route::get('/payment-details', [App\Http\Controllers\User\PaymentDetailsController::class, 'index'])->name('user.payment-details');
-    Route::get('/payment-details/order/{order}', [App\Http\Controllers\User\PaymentDetailsController::class, 'show'])->name('user.order.details');
+    Route::get('/payment-details/order/{order}', [App\Http\Controllers\InvoiceController::class, 'show'])->name('user.order.details');
+
+    // Ghousia Traders Order Invoice Routes
+    Route::get('/orders/{order}/invoice', [App\Http\Controllers\InvoiceController::class, 'show'])->name('orders.invoice');
+    Route::get('/orders/{order}/invoice/pdf', [App\Http\Controllers\InvoiceController::class, 'pdf'])->name('orders.invoice.pdf');
 
     // Suggestion and Feedback Routes
     Route::post('/suggestions', [SuggestionController::class, 'store'])->name('suggestions.store');

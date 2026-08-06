@@ -61,7 +61,10 @@ class StoreSettingsService
             'store_logo_dark' => '',
             'store_favicon' => 'ghousiatraders/assets/favicon.png',
             'footer_logo' => '',
-            'store_tagline' => 'Quality you can trust, happiness they deserve.',
+            'store_tagline' => 'Quality You Can Trust',
+            'store_website_url' => 'www.ghousiatraders.com',
+            'invoice_terms' => "Prices include applicable taxes where relevant.\nThis is a computer-generated invoice.\nNo signature is required.\nFor any queries, contact our support team.",
+            'authorized_signature' => '',
 
             // Header Settings
             'topbar_free_shipping_text' => 'Free Shipping on Orders Over PKR 5,000',
@@ -220,6 +223,21 @@ class StoreSettingsService
     {
         self::$cachedSettings = null;
         Cache::forget('store_settings_cache_v3');
+    }
+
+    /**
+     * Get single formatted store address string.
+     */
+    public static function getFormattedAddress(): string
+    {
+        $addrParts = array_filter([
+            self::get('address_line_1'),
+            self::get('address_line_2'),
+            self::get('city'),
+            self::get('state'),
+            self::get('country'),
+        ]);
+        return self::get('footer_address') ?: (implode(', ', $addrParts) ?: 'Shop # 12, Main Market, DHA Phase 6, Lahore, Punjab, Pakistan');
     }
 
     /**
