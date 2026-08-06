@@ -152,7 +152,7 @@
             $activePaymentMethods = [];
             if ($showPaymentLogos) {
                 try {
-                    $activePaymentMethods = \App\Models\PaymentMethod::where('is_active', true)->orderBy('sort_order')->get();
+                    $activePaymentMethods = \App\Models\PaymentMethod::active()->orderBy('sort_order')->get();
                 } catch (\Exception $e) {
                     $activePaymentMethods = [];
                 }

@@ -163,6 +163,8 @@ class SettingController extends Controller
             if (!empty($activeMethods)) {
                 \App\Models\PaymentMethod::whereIn('id', array_keys($activeMethods))->update(['is_active' => true]);
             }
+            StoreSettingsService::clearCache();
+            \Illuminate\Support\Facades\Cache::forget('active_payment_methods');
             return redirect()->to(url('/admin/settings?tab=payment_methods'))
                 ->with('success', 'Payment gateway statuses updated successfully.');
         } else {

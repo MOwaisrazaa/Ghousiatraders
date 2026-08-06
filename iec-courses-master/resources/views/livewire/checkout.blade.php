@@ -139,69 +139,86 @@
                                 <i data-lucide="credit-card" class="header-icon"></i>
                                 <h3>Payment Method</h3>
                             </div>
-                            <div class="payment-method-split">
-                                <!-- Left split: radio methods loop showing saved public name, icon, and short description -->
-                                <div class="payment-radios-column" style="display:flex;flex-direction:column;gap:12px;">
-                                    @foreach($paymentMethods as $pm)
+
+                            @if(count($paymentMethods) > 0)
+                                <div class="payment-method-split">
+                                    <!-- Left split: radio methods loop showing saved public name, icon, and short description -->
+                                    <div class="payment-radios-column" style="display:flex;flex-direction:column;gap:12px;">
+                                        @foreach($paymentMethods as $pm)
+                                            @php
+                                                $isCurSelected = ($paymentMethod === $pm->key) || 
+                                                    ($paymentMethod === 'cod' && $pm->key === 'cash') || 
+                                                    ($paymentMethod === 'cash' && $pm->key === 'cod') || 
+                                                    ($paymentMethod === 'card' && $pm->key === 'stripe') || 
+                                                    ($paymentMethod === 'stripe' && $pm->key === 'card') || 
+                                                    ($paymentMethod === 'bank' && $pm->key === 'banktransfer') || 
+                                                    ($paymentMethod === 'banktransfer' && $pm->key === 'bank');
+                                            @endphp
+                                            <label class="payment-radio-card {{ $isCurSelected ? 'active' : '' }}" style="display:flex;align-items:center;padding:14px;border:1.5px solid {{ $isCurSelected ? '#5C3E21' : '#D5D8DC' }};border-radius:12px;background:{{ $isCurSelected ? '#FFFDF9' : '#FFFFFF' }};cursor:pointer;transition:all 0.2s;">
+                                                <input type="radio" name="paymentMethod" wire:model.live="paymentMethod" value="{{ $pm->key }}" style="accent-color:#5C3E21;width:18px;height:18px;">
+                                                <div style="margin-left:12px;display:flex;align-items:center;gap:14px;flex:1;">
+                                                    <div style="width:40px;height:40px;padding:4px;overflow:hidden;background:#fff;border:1px solid #D5D8DC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                                        @if(isset($pm->logo_url) && $pm->logo_url)
+                                                            <img src="{{ $pm->logo_url }}" alt="{{ $pm->name }}" style="max-width:100%;max-height:100%;object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                                                            <i class="{{ $pm->icon ?: 'fas fa-credit-card' }}" style="font-size:1.2rem;color:#5C3E21;display:none;"></i>
+                                                        @else
+                                                            <i class="{{ $pm->icon ?: 'fas fa-credit-card' }}" style="font-size:1.2rem;color:#5C3E21;"></i>
+                                                        @endif
+                                                    </div>
+                                                    <div>
+                                                        <div style="font-weight:700;font-size:0.9rem;color:#333;">{{ $pm->name }}</div>
+                                                        @if(!empty($pm->description))
+                                                            <div style="font-size:0.78rem;color:#666;margin-top:2px;">{{ $pm->description }}</div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Right split: selected payment instructions -->
+                                    <div class="payment-details-column">
                                         @php
-                                            $isCurSelected = ($paymentMethod === $pm->key) || 
-                                                ($paymentMethod === 'cod' && $pm->key === 'cash') || 
-                                                ($paymentMethod === 'card' && $pm->key === 'stripe') || 
-                                                ($paymentMethod === 'bank' && $pm->key === 'banktransfer');
+                                            $selectedMethodObj = collect($paymentMethods)->first(function($item) use ($paymentMethod) {
+                                                return $item->key === $paymentMethod ||
+                                                       ($paymentMethod === 'cod' && $item->key === 'cash') ||
+                                                       ($paymentMethod === 'cash' && $item->key === 'cod') ||
+                                                       ($paymentMethod === 'card' && $item->key === 'stripe') ||
+                                                       ($paymentMethod === 'stripe' && $item->key === 'card') ||
+                                                       ($paymentMethod === 'bank' && $item->key === 'banktransfer') ||
+                                                       ($paymentMethod === 'banktransfer' && $item->key === 'bank');
+                                            });
                                         @endphp
-                                        <label class="payment-radio-card {{ $isCurSelected ? 'active' : '' }}" style="display:flex;align-items:center;padding:14px;border:1.5px solid {{ $isCurSelected ? '#5C3E21' : '#D5D8DC' }};border-radius:12px;background:{{ $isCurSelected ? '#FFFDF9' : '#FFFFFF' }};cursor:pointer;transition:all 0.2s;">
-                                            <input type="radio" name="paymentMethod" wire:model.live="paymentMethod" value="{{ $pm->key }}" style="accent-color:#5C3E21;width:18px;height:18px;">
-                                            <div style="margin-left:12px;display:flex;align-items:center;gap:14px;flex:1;">
-                                                <div style="width:40px;height:40px;padding:4px;overflow:hidden;background:#fff;border:1px solid #D5D8DC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                                    @if(isset($pm->logo_url) && $pm->logo_url)
-                                                        <img src="{{ $pm->logo_url }}" alt="{{ $pm->name }}" style="max-width:100%;max-height:100%;object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                                                        <i class="{{ $pm->icon ?: 'fas fa-credit-card' }}" style="font-size:1.2rem;color:#5C3E21;display:none;"></i>
-                                                    @else
-                                                        <i class="{{ $pm->icon ?: 'fas fa-credit-card' }}" style="font-size:1.2rem;color:#5C3E21;"></i>
-                                                    @endif
-                                                </div>
-                                                <div>
-                                                    <div style="font-weight:700;font-size:0.9rem;color:#333;">{{ $pm->name }}</div>
-                                                    @if(!empty($pm->description))
-                                                        <div style="font-size:0.78rem;color:#666;margin-top:2px;">{{ $pm->description }}</div>
-                                                    @endif
+
+                                        @if($selectedMethodObj && !empty($selectedMethodObj->instructions))
+                                            <div class="payment-instructions-wrapper" style="padding:16px;background-color:#FFFDF9;border:1.5px solid #E6D7C3;border-left:4px solid #5C3E21;border-radius:12px;">
+                                                <h4 style="font-size:0.88rem;font-weight:800;color:#5C3E21;margin-bottom:8px;display:flex;align-items:center;gap:8px;">
+                                                    <i class="{{ $selectedMethodObj->icon ?: 'fas fa-info-circle' }}"></i> {{ $selectedMethodObj->name }} Instructions
+                                                </h4>
+                                                <div style="font-size:0.82rem;color:#333;line-height:1.5;white-space:pre-line;background:#ffffff;padding:12px;border-radius:8px;border:1px solid #EFE6D8;">
+                                                    {{ $selectedMethodObj->instructions }}
                                                 </div>
                                             </div>
-                                        </label>
-                                    @endforeach
-                                </div>
-
-                                <!-- Right split: selected payment instructions -->
-                                <div class="payment-details-column">
-                                    @php
-                                        $selectedMethodObj = collect($paymentMethods)->first(function($item) use ($paymentMethod) {
-                                            return $item->key === $paymentMethod ||
-                                                   ($paymentMethod === 'cod' && $item->key === 'cash') ||
-                                                   ($paymentMethod === 'card' && $item->key === 'stripe') ||
-                                                   ($paymentMethod === 'bank' && $item->key === 'banktransfer');
-                                        });
-                                    @endphp
-
-                                    @if($selectedMethodObj && !empty($selectedMethodObj->instructions))
-                                        <div class="payment-instructions-wrapper" style="padding:16px;background-color:#FFFDF9;border:1.5px solid #E6D7C3;border-left:4px solid #5C3E21;border-radius:12px;">
-                                            <h4 style="font-size:0.88rem;font-weight:800;color:#5C3E21;margin-bottom:8px;display:flex;align-items:center;gap:8px;">
-                                                <i class="{{ $selectedMethodObj->icon ?: 'fas fa-info-circle' }}"></i> {{ $selectedMethodObj->name }} Instructions
-                                            </h4>
-                                            <div style="font-size:0.82rem;color:#333;line-height:1.5;white-space:pre-line;background:#ffffff;padding:12px;border-radius:8px;border:1px solid #EFE6D8;">
-                                                {{ $selectedMethodObj->instructions }}
+                                        @elseif($selectedMethodObj)
+                                            <div style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:20px;">
+                                                Proceeding with {{ $selectedMethodObj->name }}.
                                             </div>
-                                        </div>
-                                    @elseif($selectedMethodObj)
-                                        <div style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:20px;">
-                                            Proceeding with {{ $selectedMethodObj->name }}.
-                                        </div>
-                                    @else
-                                        <div style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:20px;">
-                                            Please select a payment method on the left to proceed.
-                                        </div>
-                                    @endif
+                                        @else
+                                            <div style="font-size:0.85rem;color:var(--text-muted);text-align:center;padding:20px;">
+                                                Please select a payment method on the left to proceed.
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
+                            @else
+                                <div class="empty-payment-methods-warning" style="padding:20px;background:#FFF3CD;border:1.5px solid #FFEEBA;border-radius:12px;color:#856404;font-size:0.9rem;display:flex;align-items:center;gap:12px;">
+                                    <i class="fas fa-exclamation-triangle" style="font-size:1.4rem;color:#856404;"></i>
+                                    <div>
+                                        <strong>No Payment Methods Available</strong>
+                                        <div style="font-size:0.82rem;margin-top:2px;">There are currently no active payment methods configured. Please contact support or check back later.</div>
+                                    </div>
+                                </div>
+                            @endif
                             @error('paymentMethod') <div style="color: #E11D48; font-size: 0.75rem; margin-top: 8px;">{{ $message }}</div> @enderror
                         </div>
 

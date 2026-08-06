@@ -53,6 +53,9 @@ class PaymentMethodController extends Controller
             'is_active' => $request->has('is_active') ? (bool)$request->input('is_active') : $paymentMethod->is_active,
         ]);
 
+        \App\Services\StoreSettingsService::clearCache();
+        \Illuminate\Support\Facades\Cache::forget('active_payment_methods');
+
         return redirect()->to(url('/admin/settings?tab=payment_methods'))
             ->with('success', $paymentMethod->name . ' updated successfully.')
             ->with('open_accordion', $paymentMethod->id);
@@ -70,6 +73,9 @@ class PaymentMethodController extends Controller
         $paymentMethod->update([
             'is_active' => $newStatus
         ]);
+
+        \App\Services\StoreSettingsService::clearCache();
+        \Illuminate\Support\Facades\Cache::forget('active_payment_methods');
 
         $statusText = $paymentMethod->is_active ? 'Active' : 'Inactive';
         $message = $paymentMethod->name . ' is now ' . $statusText . '.';
@@ -98,6 +104,9 @@ class PaymentMethodController extends Controller
         foreach ($validated['order'] as $index => $id) {
             PaymentMethod::where('id', $id)->update(['sort_order' => $index + 1]);
         }
+
+        \App\Services\StoreSettingsService::clearCache();
+        \Illuminate\Support\Facades\Cache::forget('active_payment_methods');
 
         return response()->json(['success' => true]);
     }

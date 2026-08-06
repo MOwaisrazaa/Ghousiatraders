@@ -162,14 +162,7 @@ class Checkout extends Component
         }
 
         // Load only active payment methods from the database
-        $this->paymentMethods = PaymentMethod::where('is_active', true)
-            ->orderBy('sort_order')
-            ->get();
-
-        // Set default payment method (first active method)
-        if ($this->paymentMethods->isNotEmpty()) {
-            $this->paymentMethod = $this->paymentMethods->first()->key;
-        }
+        $this->loadPaymentMethods();
 
         // Initialize shipping cost
         $this->updatedDeliveryMethod($this->deliveryMethod);
@@ -378,7 +371,19 @@ class Checkout extends Component
     {
         try {
             // Get the selected payment method details
-            $selectedMethod = PaymentMethod::where('key', $this->paymentMethod)->firstOrFail();
+            $selectedMethod = PaymentMethod::active()->where('key', $this->paymentMethod)->first();
+            if (!$selectedMethod) {
+                $fallbackKey = match($this->paymentMethod) {
+                    'cod' => 'cash',
+                    'cash' => 'cod',
+                    'stripe' => 'card',
+                    'card' => 'stripe',
+                    'bank' => 'banktransfer',
+                    'banktransfer' => 'bank',
+                    default => $this->paymentMethod
+                };
+                $selectedMethod = PaymentMethod::active()->where('key', $fallbackKey)->first();
+            }
 
             if ($this->paymentMethod === 'card') {
                 // Initialize Stripe
@@ -430,8 +435,42 @@ class Checkout extends Component
         }
     }
 
+    public function loadPaymentMethods()
+    {
+        $this->paymentMethods = PaymentMethod::active()
+            ->orderBy('sort_order')
+            ->get();
+
+        $activeKeys = $this->paymentMethods->pluck('key')->toArray();
+
+        // Preserve selected payment method if valid; otherwise default to first active method
+        if (empty($this->paymentMethod) || !$this->isMatchingKey($this->paymentMethod, $activeKeys)) {
+            $this->paymentMethod = $this->paymentMethods->first()?->key;
+        }
+    }
+
+    private function isMatchingKey($selectedKey, array $activeKeys): bool
+    {
+        if (in_array($selectedKey, $activeKeys, true)) {
+            return true;
+        }
+        $equivalents = [
+            'cod' => 'cash',
+            'cash' => 'cod',
+            'card' => 'stripe',
+            'stripe' => 'card',
+            'bank' => 'banktransfer',
+            'banktransfer' => 'bank',
+        ];
+        if (isset($equivalents[$selectedKey]) && in_array($equivalents[$selectedKey], $activeKeys, true)) {
+            return true;
+        }
+        return false;
+    }
+
     public function render()
     {
+        $this->loadPaymentMethods();
         return view('livewire.checkout');
     }
 
