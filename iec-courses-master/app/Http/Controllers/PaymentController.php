@@ -173,22 +173,23 @@ class PaymentController extends Controller
 
         if (is_array($cartItems)) {
             foreach ($cartItems as $item) {
-                if (isset($item['course_id'])) {
-                    $product = Course::find($item['course_id']);
+                $product = isset($item['course_id']) ? Course::find($item['course_id']) : null;
+                $name = $product ? $product->name : ($item['name'] ?? 'Item');
+                $slug = $product ? $product->slug : '#';
+                $imagePath = $product ? $product->image_path : ($item['image_path'] ?? null);
+                $quantity = (int) ($item['quantity'] ?? 1);
+                $price = (float) ($item['price'] ?? ($product ? $product->weekly_price : 0));
 
-                    if ($product) {
-                        $quantity = (int) ($item['quantity'] ?? 1);
-                        $price = (float) ($item['price'] ?? $product->weekly_price ?? 0);
-                        $orderedItems[] = [
-                            'name' => $product->name,
-                            'slug' => $product->slug,
-                            'image' => $product->image_path ? asset($product->image_path) : asset('polani/assets/product-noir-elixir.jpg'),
-                            'quantity' => $quantity,
-                            'unit_price' => $price,
-                            'line_total' => $price * $quantity,
-                        ];
-                        $excludeIds[] = $product->id;
-                    }
+                $orderedItems[] = [
+                    'name' => $name,
+                    'slug' => $slug,
+                    'image' => (!empty($imagePath) && file_exists(public_path(ltrim($imagePath, '/')))) ? asset(ltrim($imagePath, '/')) : asset('ghousiatraders/assets/baby_lotion.png'),
+                    'quantity' => $quantity,
+                    'unit_price' => $price,
+                    'line_total' => $price * $quantity,
+                ];
+                if ($product) {
+                    $excludeIds[] = $product->id;
                 }
             }
         }
@@ -199,7 +200,7 @@ class PaymentController extends Controller
                 $orderedItems[] = [
                     'name' => $product->name,
                     'slug' => $product->slug,
-                    'image' => $product->image_path ? asset($product->image_path) : asset('polani/assets/product-noir-elixir.jpg'),
+                    'image' => $product->image_path ? asset($product->image_path) : asset('ghousiatraders/assets/baby_lotion.png'),
                     'quantity' => 1,
                     'unit_price' => (float) ($product->weekly_price ?? 0),
                     'line_total' => (float) ($product->weekly_price ?? 0),
@@ -231,7 +232,7 @@ class PaymentController extends Controller
         $paymentLabel = $this->formatPaymentLabel($order->payment_method);
 
         return [
-            'orderNumber' => sprintf('#PF-%s-%04d', now()->format('Y'), $order->id),
+            'orderNumber' => sprintf('GT-%s-%05d', now()->format('Y'), $order->id),
             'orderDate' => optional($order->created_at)->format('F j, Y') ?? now()->format('F j, Y'),
             'estimatedDelivery' => now()->addDays(4)->format('M j') . ' - ' . now()->addDays(8)->format('M j, Y'),
             'billingAddress' => [
