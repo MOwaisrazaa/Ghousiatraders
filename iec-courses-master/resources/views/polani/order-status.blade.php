@@ -50,10 +50,9 @@
                     <div>
                         <h1 style="font-size: 2.3rem; font-weight: 800; color: #3A2518; margin: 0 0 6px 0; line-height: 1.15; letter-spacing: -0.02em;">Thank You!</h1>
                         <h2 style="font-size: 1.75rem; font-weight: 700; color: #3A2518; margin: 0 0 12px 0; line-height: 1.25;">Your Order Has Been Confirmed.</h2>
-                        <p style="font-size: 0.95rem; color: #66594E; margin: 0; line-height: 1.5;">
-                            We’ve received your order and it’s being processed.<br>
-                            A confirmation email has been sent to<br>
-                            <strong style="color: #3A2518; font-weight: 700;">{{ $custEmail }}</strong>
+                        <p style="font-size: 0.95rem; color: #66594E; margin: 0; line-height: 1.55;">
+                            We have successfully received your order.<br>
+                            Your order is now awaiting processing. We’ll update its status as soon as it moves to the next stage.
                         </p>
                     </div>
                 </div>
@@ -87,53 +86,71 @@
                         <h3 style="font-size: 1.2rem; font-weight: 700; color: #3A2518; margin: 0;">Order Information</h3>
                     </div>
 
-                    <!-- 5 Clean Info Blocks Row -->
-                    <div class="gt-order-info-tiles-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; background: #FAF7F2; padding: 18px; border-radius: 12px; border: 1px solid #F0E8DF;">
+                    <!-- Structured 3-Row Grid Container (Row 1: 2 boxes, Row 2: 2 boxes, Row 3: 1 full-width box) -->
+                    <div class="gt-order-info-cards-grid">
                         
-                        <!-- Tile 1: Order Number -->
-                        <div class="gt-info-tile">
-                            <div style="display: flex; align-items: center; gap: 6px; color: #7A6E65; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 4px;">
-                                <i data-lucide="package" style="width: 14px; height: 14px; color: #8C7561;"></i>
-                                Order Number
+                        <!-- Row 1, Box 1: Order Number -->
+                        <div class="gt-order-info-card">
+                            <div class="gt-card-top-row">
+                                <div class="gt-card-icon-circle">
+                                    <i data-lucide="package" style="width: 18px; height: 18px;"></i>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div class="gt-card-label">Order Number</div>
+                                    <div class="gt-card-value">{{ $orderNo }}</div>
+                                </div>
                             </div>
-                            <div style="font-size: 0.88rem; font-weight: 800; color: #3A2518;">{{ $orderNo }}</div>
                         </div>
 
-                        <!-- Tile 2: Order Date -->
-                        <div class="gt-info-tile">
-                            <div style="display: flex; align-items: center; gap: 6px; color: #7A6E65; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 4px;">
-                                <i data-lucide="calendar" style="width: 14px; height: 14px; color: #8C7561;"></i>
-                                Order Date
+                        <!-- Row 1, Box 2: Order Date -->
+                        <div class="gt-order-info-card">
+                            <div class="gt-card-top-row">
+                                <div class="gt-card-icon-circle">
+                                    <i data-lucide="calendar" style="width: 18px; height: 18px;"></i>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div class="gt-card-label">Order Date</div>
+                                    <div class="gt-card-value">{{ $orderDateStr }}</div>
+                                </div>
                             </div>
-                            <div style="font-size: 0.85rem; font-weight: 700; color: #3A2518; line-height: 1.2;">{{ $orderDateStr }}</div>
                         </div>
 
-                        <!-- Tile 3: Estimated Delivery -->
-                        <div class="gt-info-tile">
-                            <div style="display: flex; align-items: center; gap: 6px; color: #7A6E65; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 4px;">
-                                <i data-lucide="truck" style="width: 14px; height: 14px; color: #8C7561;"></i>
-                                Estimated Delivery
+                        <!-- Row 2, Box 1: Estimated Delivery -->
+                        <div class="gt-order-info-card">
+                            <div class="gt-card-top-row">
+                                <div class="gt-card-icon-circle">
+                                    <i data-lucide="truck" style="width: 18px; height: 18px;"></i>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div class="gt-card-label">Estimated Delivery</div>
+                                    <div class="gt-card-value">{{ $deliveryEstimate }}</div>
+                                </div>
                             </div>
-                            <div style="font-size: 0.85rem; font-weight: 700; color: #3A2518; line-height: 1.2;">{{ $deliveryEstimate }}</div>
                         </div>
 
-                        <!-- Tile 4: Payment Method -->
-                        <div class="gt-info-tile">
-                            <div style="display: flex; align-items: center; gap: 6px; color: #7A6E65; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 4px;">
-                                <i data-lucide="credit-card" style="width: 14px; height: 14px; color: #8C7561;"></i>
-                                Payment Method
+                        <!-- Row 2, Box 2: Payment Method -->
+                        <div class="gt-order-info-card">
+                            <div class="gt-card-top-row">
+                                <div class="gt-card-icon-circle">
+                                    <i data-lucide="credit-card" style="width: 18px; height: 18px;"></i>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div class="gt-card-label">Payment Method</div>
+                                    <div class="gt-card-value">{{ $payMethodName }}</div>
+                                </div>
                             </div>
-                            <div style="font-size: 0.85rem; font-weight: 700; color: #3A2518; line-height: 1.2;">{{ $payMethodName }}</div>
                         </div>
 
-                        <!-- Tile 5: Shipping Address -->
-                        <div class="gt-info-tile">
-                            <div style="display: flex; align-items: center; gap: 6px; color: #7A6E65; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 4px;">
-                                <i data-lucide="map-pin" style="width: 14px; height: 14px; color: #8C7561;"></i>
-                                Shipping Address
-                            </div>
-                            <div style="font-size: 0.82rem; font-weight: 600; color: #3A2518; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                {{ $custAddressStr }}
+                        <!-- Row 3: 1 Full-Width Box for Shipping Address -->
+                        <div class="gt-order-info-card gt-order-info-card-full">
+                            <div class="gt-card-top-row">
+                                <div class="gt-card-icon-circle">
+                                    <i data-lucide="map-pin" style="width: 18px; height: 18px;"></i>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div class="gt-card-label">Shipping Address</div>
+                                    <div class="gt-card-value" style="line-height: 1.4;">{{ $custAddressStr }}</div>
+                                </div>
                             </div>
                         </div>
 
@@ -427,6 +444,72 @@
 </div>
 
 <style>
+    /* Ghousia Traders 3-Row Order Information Layout */
+    .gt-order-info-cards-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+        align-items: stretch !important;
+    }
+
+    .gt-order-info-card {
+        background: #FAF7F2 !important;
+        border: 1px solid #EAE1D3 !important;
+        border-radius: 14px !important;
+        padding: 18px 20px !important;
+        box-sizing: border-box !important;
+        transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease !important;
+    }
+
+    .gt-order-info-card:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 20px rgba(92, 62, 33, 0.08) !important;
+        border-color: #D6C4AE !important;
+        background: #FFFFFF !important;
+    }
+
+    .gt-order-info-card-full {
+        grid-column: 1 / -1 !important;
+    }
+
+    .gt-card-top-row {
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 14px !important;
+    }
+
+    .gt-card-icon-circle {
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 50% !important;
+        background: #F3ECE1 !important;
+        border: 1px solid #E5D9C7 !important;
+        color: #5C3E21 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .gt-card-label {
+        font-size: 0.72rem !important;
+        font-weight: 700 !important;
+        color: #8C7C6D !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.04em !important;
+        margin-bottom: 4px !important;
+        line-height: 1.2 !important;
+    }
+
+    .gt-card-value {
+        font-size: 0.92rem !important;
+        font-weight: 800 !important;
+        color: #3A2518 !important;
+        line-height: 1.35 !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+
     /* Responsive rules for Ghousia Traders Order Confirmation Page */
     @media (max-width: 991px) {
         .gt-order-main-grid {
@@ -439,9 +522,6 @@
         .gt-hero-image-wrapper {
             width: 100% !important;
             height: 180px !important;
-        }
-        .gt-order-info-tiles-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
         }
         .gt-recommendations-grid {
             grid-template-columns: repeat(2, 1fr) !important;
@@ -458,8 +538,11 @@
     }
 
     @media (max-width: 576px) {
-        .gt-order-info-tiles-grid {
+        .gt-order-info-cards-grid {
             grid-template-columns: 1fr !important;
+        }
+        .gt-order-info-card-full {
+            grid-column: auto !important;
         }
         .gt-recommendations-grid {
             grid-template-columns: 1fr !important;
