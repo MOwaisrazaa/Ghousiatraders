@@ -439,7 +439,7 @@
                         </div>
                         <div>
                             <label class="gt-label">Legal Business Name</label>
-                            <input type="text" name="legal_business_name" value="{{ $settings['legal_business_name'] ?? 'Ghousia Traders Private Ltd' }}" class="gt-input" style="width: 100%;">
+                            <input type="text" name="legal_business_name" value="{{ $settings['legal_business_name'] ?? 'Ghousia Traders' }}" class="gt-input" style="width: 100%;">
                         </div>
                     </div>
                     <div class="form-grid-2">

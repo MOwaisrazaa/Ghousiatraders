@@ -28,7 +28,7 @@ class StoreSettingsService
 
             // Store Information - Business Details
             'public_store_name' => 'Ghousia Traders',
-            'legal_business_name' => 'Ghousia Traders Private Ltd',
+            'legal_business_name' => 'Ghousia Traders',
             'short_store_description' => 'Your trusted destination for premium baby care products and exciting ride-on toys.',
             'detailed_business_description' => 'Ghousia Traders provides high-quality baby care items, ride-on bikes, and toy cars across Pakistan. Quality you can trust, happiness they deserve.',
             'support_email' => '',

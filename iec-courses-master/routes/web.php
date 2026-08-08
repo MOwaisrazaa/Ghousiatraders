@@ -253,6 +253,7 @@ Route::get('/payment/pending/{order}', [PaymentController::class, 'pending'])->n
 
 // Ghousia Traders Order Invoice Routes
 Route::get('/orders/{order}/invoice', [App\Http\Controllers\InvoiceController::class, 'show'])->name('orders.invoice');
+Route::get('/orders/{order}/invoice/print', [App\Http\Controllers\InvoiceController::class, 'print'])->name('orders.invoice.print');
 Route::get('/orders/{order}/invoice/pdf', [App\Http\Controllers\InvoiceController::class, 'pdf'])->name('orders.invoice.pdf');
 
 Route::get('/checkout', [PolaniController::class, 'checkout'])
@@ -375,6 +376,7 @@ Route::middleware('auth')->group(function () {
 
     // Ghousia Traders Order Invoice Routes
     Route::get('/orders/{order}/invoice', [App\Http\Controllers\InvoiceController::class, 'show'])->name('orders.invoice');
+    Route::get('/orders/{order}/invoice/print', [App\Http\Controllers\InvoiceController::class, 'print'])->name('orders.invoice.print');
     Route::get('/orders/{order}/invoice/pdf', [App\Http\Controllers\InvoiceController::class, 'pdf'])->name('orders.invoice.pdf');
 
     // Suggestion and Feedback Routes

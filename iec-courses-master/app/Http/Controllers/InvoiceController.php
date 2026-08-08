@@ -25,18 +25,54 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Download the Ghousia Traders invoice as a PDF file.
+     * Display the Ghousia Traders invoice print view (A4 sheet only).
      */
-    public function pdf(Order $order)
+    public function print(Order $order, Request $request)
+    {
+        if (!$request->hasValidSignature()) {
+            $this->authorizeInvoiceAccess($order);
+        }
+
+        $data = $this->buildInvoiceData($order);
+
+        return view('ghousiatraders.invoice-print', $data);
+    }
+
+    /**
+     * Download the Ghousia Traders invoice as a PDF file using headless Chrome.
+     */
+    public function pdf(Order $order, Request $request)
     {
         $this->authorizeInvoiceAccess($order);
 
         $data = $this->buildInvoiceData($order, true);
-
         $invoiceNumber = $data['invoiceNumber'];
         $filename = 'Ghousia_Traders_Invoice_' . str_replace(['#', '/'], '', $invoiceNumber) . '.pdf';
 
-        $pdf = Pdf::loadView('ghousiatraders.invoice-pdf', $data)
+        $tmpDirectory = storage_path('app/tmp');
+        if (!file_exists($tmpDirectory)) {
+            mkdir($tmpDirectory, 0755, true);
+        }
+
+        $timestamp = microtime(true);
+        $pdfPath = $tmpDirectory . '/invoice_' . $order->id . '_' . $timestamp . '.pdf';
+        $htmlPath = $tmpDirectory . '/invoice_' . $order->id . '_' . $timestamp . '.html';
+        $scriptPath = base_path('scripts/generate-invoice-pdf.mjs');
+
+        // Render HTML file directly to avoid single-threaded PHP web server loopback deadlock
+        file_put_contents($htmlPath, view('ghousiatraders.invoice-print', $data)->render());
+
+        $command = sprintf('node %s %s %s 2>&1', escapeshellarg($scriptPath), escapeshellarg($htmlPath), escapeshellarg($pdfPath));
+        exec($command, $output, $returnCode);
+
+        @unlink($htmlPath);
+
+        if ($returnCode === 0 && file_exists($pdfPath)) {
+            return response()->download($pdfPath, $filename)->deleteFileAfterSend(true);
+        }
+
+        // Fallback to DomPDF if headless Chrome fails
+        $pdf = Pdf::loadView('ghousiatraders.invoice-print', $data)
             ->setPaper('a4', 'portrait')
             ->setOption(['isRemoteEnabled' => true, 'isHtml5ParserEnabled' => true]);
 
@@ -93,7 +129,7 @@ class InvoiceController extends Controller
 
         // Store Settings
         $rawStoreName = StoreSettingsService::get('public_store_name', StoreSettingsService::get('legal_business_name', 'Ghousia Traders'));
-        $storeName = trim(preg_replace('/\s+(Private|Pvt\.?|Ltd\.?|Limited|Company)$/i', '', $rawStoreName)) ?: 'Ghousia Traders';
+        $storeName = 'Ghousia Traders';
         $storeTagline = StoreSettingsService::get('store_tagline', 'Quality You Can Trust');
         $storeAddress = StoreSettingsService::getFormattedAddress();
         $storePhone = StoreSettingsService::get('primary_phone', '+92 300 1234567');
