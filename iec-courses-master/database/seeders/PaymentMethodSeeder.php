@@ -19,7 +19,7 @@ class PaymentMethodSeeder extends Seeder
                 'key' => 'cash',
                 'description' => 'Pay with cash on delivery',
                 'icon' => 'fas fa-money-bill-wave',
-                'instructions' => 'You will need to pay cash at the following address: IEC Courses Office, Floor 3, Building 5, Main Street, Islamabad, Pakistan',
+                'instructions' => 'You will need to pay cash at following address: ' . \App\Services\StoreSettingsService::getFormattedAddress(),
                 'is_active' => true,
                 'sort_order' => 1,
                 'details' => [

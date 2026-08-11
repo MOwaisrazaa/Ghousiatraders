@@ -139,7 +139,16 @@ class PaymentController extends Controller
         $paymentMethod = \App\Models\PaymentMethod::where('key', $order->payment_method)->first();
 
         // Get payment instructions
-        $instructions = $paymentMethod ? $paymentMethod->instructions : $this->getDefaultInstructions($order->payment_method);
+        if (in_array(strtolower($order->payment_method ?? ''), ['cash', 'cod'])) {
+            $storeAddress = \App\Services\StoreSettingsService::getFormattedAddress();
+            $instructions = "You will need to pay cash at following address: {$storeAddress}";
+        } else {
+            $instructions = $paymentMethod ? $paymentMethod->instructions : $this->getDefaultInstructions($order->payment_method);
+            if (str_contains($instructions, 'IEC Courses')) {
+                $storeAddress = \App\Services\StoreSettingsService::getFormattedAddress();
+                $instructions = "You will need to pay cash at following address: {$storeAddress}";
+            }
+        }
         $context = $this->buildOrderStatusContext($order);
 
         return view('polani.order-status', [
@@ -264,9 +273,11 @@ class PaymentController extends Controller
 
     private function getDefaultInstructions($paymentMethod)
     {
-        switch ($paymentMethod) {
+        switch (strtolower($paymentMethod ?? '')) {
             case 'cash':
-                return 'Please visit our office to make your cash payment. Remember to bring your order number.';
+            case 'cod':
+                $storeAddress = \App\Services\StoreSettingsService::getFormattedAddress();
+                return "You will need to pay cash at following address: {$storeAddress}";
 
             case 'jazzcash':
                 return 'Please send your payment to our Jazz Cash account: +92 333 1234567 and send the screenshot to +92 312 9876543.';

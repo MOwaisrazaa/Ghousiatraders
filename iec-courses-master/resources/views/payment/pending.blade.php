@@ -63,7 +63,7 @@
                                                 <i class="fas fa-money-bill-wave text-success me-3 icon-medium"></i>
                                                 <div>
                                                     <h6 class="mb-1">Cash Payment</h6>
-                                                    <p class="mb-0">Please visit our office at: IEC Courses Office, Floor 3, Building 5, Main Street, Islamabad, Pakistan</p>
+                                                    <p class="mb-0">You will need to pay cash at following address: {{ \App\Services\StoreSettingsService::getFormattedAddress() }}</p>
                                                 </div>
                                             </div>
                                         @elseif($order->payment_method === 'jazzcash')

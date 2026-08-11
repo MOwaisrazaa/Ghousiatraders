@@ -162,60 +162,60 @@
 
                 <!-- C. We're Here for You Card -->
                 <div class="gt-confirm-card" style="background: #FFFFFF; border: 1px solid #EFEAE3; border-radius: 16px; padding: 24px 28px; box-shadow: 0 4px 16px rgba(92, 62, 33, 0.03);">
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
-                        <div style="flex: 1;">
-                            <h3 style="font-size: 1.2rem; font-weight: 700; color: #3A2518; margin: 0 0 2px 0;">We’re Here for You</h3>
-                            <p style="font-size: 0.85rem; color: #7A6E65; margin: 0 0 20px 0;">Your satisfaction is our priority.</p>
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 700; color: #3A2518; margin: 0 0 2px 0;">We’re Here for You</h3>
+                        <p style="font-size: 0.85rem; color: #7A6E65; margin: 0;">Your satisfaction is our priority.</p>
+                    </div>
 
-                            <!-- 4 Support Feature Blocks (2x2 Grid) -->
-                            <div class="gt-support-blocks-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                                
-                                <div class="gt-support-block" style="display: flex; align-items: flex-start; gap: 12px; background: #FAF7F2; padding: 14px 16px; border-radius: 12px; border: 1px solid #F0E8DF;">
-                                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid #E5DCD0; color: #5C3E21; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                        <i data-lucide="shield-check" style="width: 20px; height: 20px;"></i>
-                                    </div>
-                                    <div>
-                                        <h4 style="font-size: 0.88rem; font-weight: 700; color: #3A2518; margin: 0 0 2px 0;">Secure Payment</h4>
-                                        <p style="font-size: 0.76rem; color: #7A6E65; margin: 0; line-height: 1.3;">Your transactions are safe with us.</p>
-                                    </div>
+                    <div class="gt-support-content-row" style="display: flex; align-items: stretch; gap: 20px;">
+                        <!-- 4 Support Feature Blocks (2x2 Grid) -->
+                        <div class="gt-support-blocks-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1;">
+                            
+                            <div class="gt-support-block" style="display: flex; align-items: flex-start; gap: 12px; background: #FAF7F2; padding: 14px 16px; border-radius: 12px; border: 1px solid #F0E8DF;">
+                                <div style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid #E5DCD0; color: #5C3E21; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <i data-lucide="shield-check" style="width: 20px; height: 20px;"></i>
                                 </div>
-
-                                <div class="gt-support-block" style="display: flex; align-items: flex-start; gap: 12px; background: #FAF7F2; padding: 14px 16px; border-radius: 12px; border: 1px solid #F0E8DF;">
-                                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid #E5DCD0; color: #5C3E21; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                        <i data-lucide="refresh-cw" style="width: 20px; height: 20px;"></i>
-                                    </div>
-                                    <div>
-                                        <h4 style="font-size: 0.88rem; font-weight: 700; color: #3A2518; margin: 0 0 2px 0;">Easy Returns</h4>
-                                        <p style="font-size: 0.76rem; color: #7A6E65; margin: 0; line-height: 1.3;">Hassle-free returns within 7 days.</p>
-                                    </div>
+                                <div>
+                                    <h4 style="font-size: 0.88rem; font-weight: 700; color: #3A2518; margin: 0 0 2px 0;">Secure Payment</h4>
+                                    <p style="font-size: 0.76rem; color: #7A6E65; margin: 0; line-height: 1.3;">Your transactions are safe with us.</p>
                                 </div>
-
-                                <div class="gt-support-block" style="display: flex; align-items: flex-start; gap: 12px; background: #FAF7F2; padding: 14px 16px; border-radius: 12px; border: 1px solid #F0E8DF;">
-                                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid #E5DCD0; color: #5C3E21; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                        <i data-lucide="truck" style="width: 20px; height: 20px;"></i>
-                                    </div>
-                                    <div>
-                                        <h4 style="font-size: 0.88rem; font-weight: 700; color: #3A2518; margin: 0 0 2px 0;">Fast Delivery</h4>
-                                        <p style="font-size: 0.76rem; color: #7A6E65; margin: 0; line-height: 1.3;">Quick & reliable delivery across Pakistan.</p>
-                                    </div>
-                                </div>
-
-                                <div class="gt-support-block" style="display: flex; align-items: flex-start; gap: 12px; background: #FAF7F2; padding: 14px 16px; border-radius: 12px; border: 1px solid #F0E8DF;">
-                                    <div style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid #E5DCD0; color: #5C3E21; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                        <i data-lucide="headphones" style="width: 20px; height: 20px;"></i>
-                                    </div>
-                                    <div>
-                                        <h4 style="font-size: 0.88rem; font-weight: 700; color: #3A2518; margin: 0 0 2px 0;">Customer Support</h4>
-                                        <p style="font-size: 0.76rem; color: #7A6E65; margin: 0; line-height: 1.3;">Need help? We're just a call away.</p>
-                                    </div>
-                                </div>
-
                             </div>
+
+                            <div class="gt-support-block" style="display: flex; align-items: flex-start; gap: 12px; background: #FAF7F2; padding: 14px 16px; border-radius: 12px; border: 1px solid #F0E8DF;">
+                                <div style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid #E5DCD0; color: #5C3E21; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <i data-lucide="refresh-cw" style="width: 20px; height: 20px;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 0.88rem; font-weight: 700; color: #3A2518; margin: 0 0 2px 0;">Easy Returns</h4>
+                                    <p style="font-size: 0.76rem; color: #7A6E65; margin: 0; line-height: 1.3;">Hassle-free returns within 7 days.</p>
+                                </div>
+                            </div>
+
+                            <div class="gt-support-block" style="display: flex; align-items: flex-start; gap: 12px; background: #FAF7F2; padding: 14px 16px; border-radius: 12px; border: 1px solid #F0E8DF;">
+                                <div style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid #E5DCD0; color: #5C3E21; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <i data-lucide="truck" style="width: 20px; height: 20px;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 0.88rem; font-weight: 700; color: #3A2518; margin: 0 0 2px 0;">Fast Delivery</h4>
+                                    <p style="font-size: 0.76rem; color: #7A6E65; margin: 0; line-height: 1.3;">Quick & reliable delivery across Pakistan.</p>
+                                </div>
+                            </div>
+
+                            <div class="gt-support-block" style="display: flex; align-items: flex-start; gap: 12px; background: #FAF7F2; padding: 14px 16px; border-radius: 12px; border: 1px solid #F0E8DF;">
+                                <div style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid #E5DCD0; color: #5C3E21; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <i data-lucide="headphones" style="width: 20px; height: 20px;"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 0.88rem; font-weight: 700; color: #3A2518; margin: 0 0 2px 0;">Customer Support</h4>
+                                    <p style="font-size: 0.76rem; color: #7A6E65; margin: 0; line-height: 1.3;">Need help? We're just a call away.</p>
+                                </div>
+                            </div>
+
                         </div>
 
                         <!-- Right Lifestyle Support Image -->
-                        <div class="gt-support-image-wrapper" style="width: 180px; height: 170px; border-radius: 14px; overflow: hidden; flex-shrink: 0; border: 1px solid #E6DED4; box-shadow: 0 4px 14px rgba(92, 62, 33, 0.05);">
-                            <img src="{{ asset('ghousiatraders/assets/order_confirm_support.jpg') }}" alt="Ghousia Support Visual" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="gt-support-image-wrapper" style="width: 190px; border-radius: 14px; overflow: hidden; flex-shrink: 0; border: 1px solid #E6DED4; box-shadow: 0 4px 14px rgba(92, 62, 33, 0.05); display: flex;">
+                            <img src="{{ asset('ghousiatraders/assets/order_confirm_support.jpg') }}" alt="Ghousia Support Visual" style="width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 13px;">
                         </div>
                     </div>
                 </div>
@@ -331,21 +331,7 @@
                     </a>
                 </div>
 
-                <!-- C. Confirmation / Help Note Card -->
-                <div class="gt-confirm-card" style="background: #FAF6F0; border: 1.5px solid #EADECF; border-radius: 16px; padding: 18px 20px; display: flex; align-items: flex-start; gap: 14px;">
-                    <div style="width: 44px; height: 44px; border-radius: 50%; background: #F3ECE2; border: 1px solid #E5D7C5; color: #5C3E21; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <i data-lucide="mail" style="width: 22px; height: 22px;"></i>
-                    </div>
-                    <div>
-                        <p style="font-size: 0.85rem; color: #3A2518; margin: 0 0 4px 0; line-height: 1.4;">
-                            We’ve sent an order confirmation to<br>
-                            <strong style="color: #3A2518;">{{ $custEmail }}</strong>
-                        </p>
-                        <p style="font-size: 0.76rem; color: #7A6E65; margin: 0; line-height: 1.3;">
-                            Can’t find it? Check your spam folder or contact our support team.
-                        </p>
-                    </div>
-                </div>
+
 
             </div>
 
@@ -441,7 +427,16 @@
         overflow-wrap: break-word !important;
     }
 
-    /* Responsive rules for Ghousia Traders Order Confirmation Page */
+    @media (max-width: 768px) {
+        .gt-support-content-row {
+            flex-direction: column !important;
+        }
+        .gt-support-image-wrapper {
+            width: 100% !important;
+            height: 180px !important;
+        }
+    }
+
     @media (max-width: 991px) {
         .gt-order-main-grid {
             grid-template-columns: 1fr !important;
