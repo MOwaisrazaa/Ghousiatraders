@@ -133,8 +133,16 @@ class InvoiceController extends Controller
         $storeTagline = StoreSettingsService::get('store_tagline', 'Quality You Can Trust');
         $storeAddress = StoreSettingsService::getFormattedAddress();
         $storePhone = StoreSettingsService::get('primary_phone', '+92 300 1234567');
-        $storeEmail = StoreSettingsService::get('support_email', StoreSettingsService::get('sales_email', 'support@ghousiatraders.com'));
-        $storeWebsite = StoreSettingsService::get('store_website_url', 'www.ghousiatraders.com');
+        $storeEmail = StoreSettingsService::get('support_email', StoreSettingsService::get('sales_email', 'info@ghousiatraders.pk'));
+        if (empty($storeEmail) || str_contains($storeEmail, '@ghousiatraders.com')) {
+            $storeEmail = 'info@ghousiatraders.pk';
+        }
+
+        $storeWebsite = StoreSettingsService::get('store_website_url', 'www.ghousiatraders.pk');
+        if (empty($storeWebsite) || str_contains($storeWebsite, '.com')) {
+            $storeWebsite = 'www.ghousiatraders.pk';
+        }
+
         $storeLogo = StoreSettingsService::get('store_logo', 'ghousiatraders/assets/logo.png');
 
         $termsText = StoreSettingsService::get('invoice_terms', "Prices include applicable taxes where relevant.\nThis is a computer-generated invoice.\nNo signature is required.\nFor any queries, contact our support team.");
@@ -185,7 +193,12 @@ class InvoiceController extends Controller
                 $price = (float) ($item['price'] ?? ($product ? $product->weekly_price : 0));
                 $quantity = (int) ($item['quantity'] ?? 1);
                 $lineTotal = $price * $quantity;
-                $imagePath = $product ? $product->image_path : ($item['image_path'] ?? null);
+                
+                $rawImagePath = !empty($item['image_path'])
+                    ? $item['image_path']
+                    : (!empty($item['image']) ? $item['image'] : ($product->image_path ?? null));
+
+                $imageSrc = $this->resolveInvoiceImageSrc($rawImagePath);
 
                 $options = [];
                 if (!empty($item['variation'])) $options[] = $item['variation'];
@@ -199,8 +212,8 @@ class InvoiceController extends Controller
                     'price' => $price,
                     'quantity' => $quantity,
                     'line_total' => $lineTotal,
-                    'image' => (!empty($imagePath) && file_exists(public_path(ltrim($imagePath, '/')))) ? asset(ltrim($imagePath, '/')) : asset('ghousiatraders/assets/baby_products.png'),
-                    'image_local' => (!empty($imagePath) && file_exists(public_path(ltrim($imagePath, '/')))) ? public_path(ltrim($imagePath, '/')) : public_path('ghousiatraders/assets/baby_products.png'),
+                    'image' => $imageSrc,
+                    'image_local' => $imageSrc,
                 ];
             }
         }
@@ -282,5 +295,62 @@ class InvoiceController extends Controller
             <rect x="28" y="28" width="8" height="8" fill="#5C3E21"/>
             <rect x="38" y="38" width="14" height="14" fill="#5C3E21"/>
         </svg>';
+    }
+
+    /**
+     * Resolve a product image path to a reliable Data URI (Base64) or fallback image Data URI.
+     */
+    private function resolveInvoiceImageSrc(?string $imagePath): string
+    {
+        $localPath = null;
+        $defaultFallbackLocal = public_path('ghousiatraders/assets/baby_products.png');
+
+        if (!empty($imagePath) && is_string($imagePath)) {
+            $cleanPath = ltrim(trim($imagePath), '/');
+            $candidates = [
+                public_path($cleanPath),
+                storage_path('app/public/' . $cleanPath),
+                storage_path('app/' . $cleanPath),
+            ];
+
+            if (str_starts_with($cleanPath, 'storage/')) {
+                $stripped = str_replace('storage/', '', $cleanPath);
+                $candidates[] = storage_path('app/public/' . $stripped);
+                $candidates[] = public_path($stripped);
+            }
+
+            foreach ($candidates as $cand) {
+                if (file_exists($cand) && is_file($cand)) {
+                    $localPath = $cand;
+                    break;
+                }
+            }
+        }
+
+        if (!$localPath || !file_exists($localPath)) {
+            $localPath = file_exists($defaultFallbackLocal) ? $defaultFallbackLocal : null;
+        }
+
+        if ($localPath && file_exists($localPath)) {
+            try {
+                $fileContent = @file_get_contents($localPath);
+                if ($fileContent !== false && strlen($fileContent) > 0) {
+                    $ext = strtolower(pathinfo($localPath, PATHINFO_EXTENSION));
+                    $mime = match ($ext) {
+                        'png' => 'image/png',
+                        'jpg', 'jpeg' => 'image/jpeg',
+                        'webp' => 'image/webp',
+                        'gif' => 'image/gif',
+                        'svg' => 'image/svg+xml',
+                        default => 'image/png',
+                    };
+                    return 'data:' . $mime . ';base64,' . base64_encode($fileContent);
+                }
+            } catch (\Throwable $e) {
+                // Fallthrough to asset URL if reading fails
+            }
+        }
+
+        return asset('ghousiatraders/assets/baby_products.png');
     }
 }

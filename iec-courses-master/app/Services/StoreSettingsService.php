@@ -18,7 +18,7 @@ class StoreSettingsService
         return [
             // General
             'store_name' => 'Ghousia Traders',
-            'store_email' => 'info@ghousiatraders.com',
+            'store_email' => 'info@ghousiatraders.pk',
             'store_phone' => '0321-1234567',
             'store_currency' => 'PKR',
             'store_timezone' => 'Asia/Karachi',
@@ -31,8 +31,8 @@ class StoreSettingsService
             'legal_business_name' => 'Ghousia Traders',
             'short_store_description' => 'Your trusted destination for premium baby care products and exciting ride-on toys.',
             'detailed_business_description' => 'Ghousia Traders provides high-quality baby care items, ride-on bikes, and toy cars across Pakistan. Quality you can trust, happiness they deserve.',
-            'support_email' => '',
-            'sales_email' => 'sales@ghousiatraders.com',
+            'support_email' => 'info@ghousiatraders.pk',
+            'sales_email' => 'info@ghousiatraders.pk',
             'primary_phone' => '0321-1234567',
             'secondary_phone' => '0322-9876543',
             'whatsapp_number' => '0321-1234567',
@@ -62,7 +62,7 @@ class StoreSettingsService
             'store_favicon' => 'ghousiatraders/assets/favicon.png',
             'footer_logo' => '',
             'store_tagline' => 'Quality You Can Trust',
-            'store_website_url' => 'www.ghousiatraders.com',
+            'store_website_url' => 'www.ghousiatraders.pk',
             'invoice_terms' => "Prices include applicable taxes where relevant.\nThis is a computer-generated invoice.\nNo signature is required.\nFor any queries, contact our support team.",
             'authorized_signature' => '',
 

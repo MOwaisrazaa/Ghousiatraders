@@ -4,12 +4,9 @@
     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 30px; margin-bottom: 24px;">
         <!-- Left: Logo & Store Address -->
         <div style="max-width: 480px;">
-            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
-                <img src="{{ $storeLogo }}" alt="Ghousia Traders" style="height: 52px; width: auto; object-fit: contain;" onerror="this.onerror=null; this.src='/ghousiatraders/assets/logo.png';">
-                <div>
-                    <h2 style="font-family: 'Lora', serif; font-size: 1.6rem; font-weight: 700; color: #3A2518; margin: 0; line-height: 1.1;">Ghousia Traders</h2>
-                    <p style="font-size: 0.8rem; color: #7A6E65; margin: 2px 0 0 0;">{{ $storeTagline }}</p>
-                </div>
+            <div style="margin-bottom: 12px;">
+                <h2 style="font-family: 'Lora', serif; font-size: 1.65rem; font-weight: 800; color: #3A2518; margin: 0; line-height: 1.15;">Ghousia Traders</h2>
+                <p style="font-size: 0.82rem; color: #7A6E65; margin: 4px 0 0 0; font-weight: 500;">{{ $storeTagline }}</p>
             </div>
             
             <div style="font-size: 0.84rem; color: #55483D; line-height: 1.45;">
@@ -110,7 +107,9 @@
                         <td style="padding: 14px 16px; text-align: center; font-weight: 700; color: #7A6E65;">{{ $item['sn'] }}</td>
                         <td style="padding: 14px 16px;">
                             <div style="display: flex; align-items: center; gap: 12px;">
-                                <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" style="width: 42px; height: 42px; object-fit: contain; border-radius: 6px; border: 1px solid #EFEAE3; background: #fff; padding: 2px;" onerror="this.onerror=null; this.src='/ghousiatraders/assets/baby_products.png';">
+                                <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #EFEAE3; background: #FFFFFF; flex-shrink: 0; padding: 2px; box-sizing: border-box; overflow: hidden;">
+                                    <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+                                </div>
                                 <div>
                                     <div style="font-weight: 800; color: #3A2518; line-height: 1.3;">{{ $item['name'] }}</div>
                                     @if(!empty($item['options']))
