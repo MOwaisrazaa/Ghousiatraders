@@ -353,11 +353,6 @@ class OrderController extends Controller
             $growth = $thisWeekCount > 0 ? 100.0 : 0.0;
         }
         
-        // Fallback for static demo data: if growth is 0 and total count is positive, mock a pleasant positive rate
-        if ($totalCount > 0 && $growth == 0.0) {
-            $growth = round(crc32($status ?? 'total') % 15 + 5.5, 1);
-        }
-        
         return [
             'count' => $totalCount,
             'growth' => abs(round($growth, 1)),

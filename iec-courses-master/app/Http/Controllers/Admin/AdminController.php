@@ -52,98 +52,108 @@ class AdminController extends Controller
             ];
         }
 
-        $startDateInput = $request->input('start_date', '2024-05-12');
-        $endDateInput = $request->input('end_date', '2024-05-18');
-        
-        try {
-            $startDate = \Carbon\Carbon::parse($startDateInput)->startOfDay();
-            $endDate = \Carbon\Carbon::parse($endDateInput)->endOfDay();
-        } catch (\Exception $e) {
-            $startDate = \Carbon\Carbon::parse('2024-05-12')->startOfDay();
-            $endDate = \Carbon\Carbon::parse('2024-05-18')->endOfDay();
+        $startDateInput = $request->input('start_date', '');
+        $endDateInput = $request->input('end_date', '');
+
+        $hasDateFilter = !empty($startDateInput) && !empty($endDateInput);
+        $startDate = null;
+        $endDate = null;
+
+        if ($hasDateFilter) {
+            try {
+                $startDate = \Carbon\Carbon::parse($startDateInput)->startOfDay();
+                $endDate = \Carbon\Carbon::parse($endDateInput)->endOfDay();
+            } catch (\Exception $e) {
+                $hasDateFilter = false;
+            }
         }
 
-        // DB stats with date range filtering
-        $dbSales = Order::whereBetween('created_at', [$startDate, $endDate])->sum('final_total');
-        $dbOrders = Order::whereBetween('created_at', [$startDate, $endDate])->count();
-        $dbCustomers = User::count();
-        $dbProducts = Course::count();
+        // DB stats from actual valid storefront orders
+        $salesQuery = Order::where('status', '!=', 'cancelled');
+        $ordersQuery = Order::where('status', '!=', 'cancelled');
+
+        if ($hasDateFilter && $startDate && $endDate) {
+            $salesQuery->whereBetween('created_at', [$startDate, $endDate]);
+            $ordersQuery->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $totalSales = (float) $salesQuery->sum('final_total');
+        $totalOrders = (int) $ordersQuery->count();
+        $totalCustomers = User::whereDoesntHave('roles', function($q) {
+            $q->whereIn('name', ['Admin', 'Super Admin']);
+        })->count();
+        $totalProducts = Course::count();
         
-        // Fallbacks for visually complete representation (matches reference values)
-        $totalSales = $dbSales > 0 ? $dbSales : 2458650;
-        $totalOrders = $dbOrders > 0 ? $dbOrders : 1248;
-        $totalCustomers = $dbCustomers > 0 ? $dbCustomers : 856;
-        $totalProducts = $dbProducts > 0 ? $dbProducts : 320;
-        $avgOrderValue = $totalOrders > 0 ? ($totalSales / $totalOrders) : 1970;
+        $avgOrderValue = $totalOrders > 0 ? ($totalSales / $totalOrders) : 0.0;
 
         // Sales Overview chart data
         $chartLabels = [];
         $chartData = [];
-        $current = $startDate->copy();
-        $idx = 0;
-        $referenceCurve = [30000, 150000, 170000, 310000, 290000, 400000, 310000, 150000];
-        
-        while ($current->lte($endDate)) {
-            $dayLabel = $current->format('M d');
-            $chartLabels[] = $dayLabel;
-            
-            $daySales = Order::whereDate('created_at', $current->format('Y-m-d'))->sum('final_total');
-            if ($daySales > 0) {
-                $chartData[] = $daySales;
-            } else {
-                $chartData[] = $referenceCurve[$idx % count($referenceCurve)];
+
+        if ($hasDateFilter && $startDate && $endDate) {
+            $current = $startDate->copy();
+            while ($current->lte($endDate)) {
+                $dayLabel = $current->format('M d');
+                $chartLabels[] = $dayLabel;
+                
+                $daySales = Order::where('status', '!=', 'cancelled')
+                    ->whereDate('created_at', $current->format('Y-m-d'))
+                    ->sum('final_total');
+                $chartData[] = (float) $daySales;
+                
+                $current->addDay();
             }
-            
-            $current->addDay();
-            $idx++;
+        } else {
+            // Default 7 days chart (last 7 days including today)
+            for ($i = 6; $i >= 0; $i--) {
+                $day = \Carbon\Carbon::today()->subDays($i);
+                $chartLabels[] = $day->format('M d');
+                $daySales = Order::where('status', '!=', 'cancelled')
+                    ->whereDate('created_at', $day->format('Y-m-d'))
+                    ->sum('final_total');
+                $chartData[] = (float) $daySales;
+            }
         }
 
-        // Order Status summary counts
-        $dbDelivered = Order::where('status', 'completed')->count();
-        $dbProcessing = Order::whereIn('status', ['pending', 'paid'])->count();
-        $dbShipped = Order::where('status', 'shipped')->count();
-        $dbPending = Order::where('status', 'pending')->count();
-        
-        $deliveredCount = $dbDelivered > 0 ? $dbDelivered : 668;
-        $processingCount = $dbProcessing > 0 ? $dbProcessing : 256;
-        $shippedCount = $dbShipped > 0 ? $dbShipped : 198;
-        $pendingCount = $dbPending > 0 ? $dbPending : 126;
-        
-        $statusTotal = $deliveredCount + $processingCount + $shippedCount + $pendingCount;
+        // Order Status summary counts from real orders
+        $statusCountsQuery = Order::query();
+        if ($hasDateFilter && $startDate && $endDate) {
+            $statusCountsQuery->whereBetween('created_at', [$startDate, $endDate]);
+        }
 
-        // Recent Orders list
+        $deliveredCount = (clone $statusCountsQuery)->whereIn('status', ['completed', 'delivered'])->count();
+        $processingCount = (clone $statusCountsQuery)->whereIn('status', ['paid', 'processing'])->count();
+        $shippedCount = (clone $statusCountsQuery)->whereIn('status', ['shipped', 'out_for_delivery', 'out for delivery'])->count();
+        $pendingCount = (clone $statusCountsQuery)->where('status', 'pending')->count();
+        
+        $statusTotal = (clone $statusCountsQuery)->count();
+
+        // Recent Orders list (real orders only, no fake fallbacks)
         $recentOrders = Order::latest()->take(5)->get()->map(function($o) {
             $billing = json_decode($o->billing_address, true) ?: [];
+            $customerName = trim(($billing['first_name'] ?? '') . ' ' . ($billing['last_name'] ?? ''));
+            if (!$customerName && $o->user) {
+                $customerName = $o->user->name;
+            }
             return [
                 'id' => $o->id,
-                'customer' => ($billing['first_name'] ?? 'Guest') . ' ' . ($billing['last_name'] ?? ''),
+                'customer' => $customerName ?: 'Customer',
                 'amount' => $o->final_total,
                 'status' => $o->status ?: 'pending',
                 'statusLabel' => match($o->status) {
-                    'completed' => 'Delivered',
-                    'shipped' => 'Shipped',
-                    'paid' => 'Processing',
+                    'completed', 'delivered' => 'Delivered',
+                    'shipped', 'out_for_delivery', 'out for delivery' => 'Shipped',
+                    'paid', 'processing' => 'Processing',
                     'pending' => 'Pending',
                     default => 'Cancelled'
                 }
             ];
         });
-        
-        // Fallback recent orders if DB is empty
-        if ($recentOrders->isEmpty()) {
-            $recentOrders = collect([
-                ['id' => '00125', 'customer' => 'Ali Raza', 'amount' => 2450, 'status' => 'completed', 'statusLabel' => 'Delivered'],
-                ['id' => '00124', 'customer' => 'Fatima Noor', 'amount' => 1850, 'status' => 'paid', 'statusLabel' => 'Processing'],
-                ['id' => '00123', 'customer' => 'Ahmed Khan', 'amount' => 3250, 'status' => 'shipped', 'statusLabel' => 'Shipped'],
-                ['id' => '00122', 'customer' => 'Hira Malik', 'amount' => 950, 'status' => 'pending', 'statusLabel' => 'Pending'],
-                ['id' => '00121', 'customer' => 'Usman Tariq', 'amount' => 1650, 'status' => 'completed', 'statusLabel' => 'Delivered'],
-            ]);
-        }
 
-        // Best Selling products calculations
+        // Best Selling products calculations (real storefront orders only)
         $productSales = [];
-        $dbOrdersForBestSellers = Order::all();
-        foreach ($dbOrdersForBestSellers as $o) {
+        $validOrders = Order::where('status', '!=', 'cancelled')->get();
+        foreach ($validOrders as $o) {
             $items = json_decode($o->cart_items, true) ?: [];
             foreach ($items as $item) {
                 $courseId = $item['course_id'] ?? null;
@@ -159,18 +169,17 @@ class AdminController extends Controller
         
         $bestSellers = Course::all()->map(function($product) use ($productSales) {
             $sales = $productSales[$product->id] ?? null;
-            $product->sold = $sales ? $sales['sold'] : (($product->id * 23) % 45) + 12;
-            $product->revenue = $sales ? $sales['revenue'] : $product->sold * ($product->weekly_price ?: 1250);
+            $product->sold = $sales ? $sales['sold'] : 0;
+            $product->revenue = $sales ? $sales['revenue'] : 0.0;
             return $product;
-        })->sortByDesc('revenue')->take(5);
+        })->filter(fn($p) => $p->sold > 0)->sortByDesc('revenue')->take(5);
 
-        // Low stock products calculations
-        $lowStockProducts = Course::all()->map(function($product) {
-            $product->stock = (($product->id * 7) % 13) + 2;
-            return $product;
-        })->filter(function($product) {
-            return $product->stock <= 8;
-        })->sortBy('stock')->take(4);
+        // Low stock products calculations (real stock column)
+        $lowStockProducts = Course::whereNotNull('stock')
+            ->where('stock', '<=', 8)
+            ->orderBy('stock', 'asc')
+            ->take(4)
+            ->get();
 
         return view('admin.dashboard', compact(
             'user', 'totalSales', 'totalOrders', 'totalCustomers', 'totalProducts', 'avgOrderValue',

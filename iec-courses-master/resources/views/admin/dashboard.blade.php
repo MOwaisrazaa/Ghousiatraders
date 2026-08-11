@@ -429,10 +429,6 @@
             </div>
             <div>
                 <h3 class="stat-box-value">PKR {{ number_format($totalSales) }}</h3>
-                <div class="stat-box-growth">
-                    <span class="growth-up"><i data-lucide="arrow-up-right" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i> 23.5%</span>
-                    <span class="growth-text">vs last week</span>
-                </div>
             </div>
         </div>
 
@@ -444,10 +440,6 @@
             </div>
             <div>
                 <h3 class="stat-box-value">{{ number_format($totalOrders) }}</h3>
-                <div class="stat-box-growth">
-                    <span class="growth-up"><i data-lucide="arrow-up-right" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i> 18.7%</span>
-                    <span class="growth-text">vs last week</span>
-                </div>
             </div>
         </div>
 
@@ -459,10 +451,6 @@
             </div>
             <div>
                 <h3 class="stat-box-value">{{ number_format($totalCustomers) }}</h3>
-                <div class="stat-box-growth">
-                    <span class="growth-up"><i data-lucide="arrow-up-right" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i> 15.3%</span>
-                    <span class="growth-text">vs last week</span>
-                </div>
             </div>
         </div>
 
@@ -474,10 +462,6 @@
             </div>
             <div>
                 <h3 class="stat-box-value">{{ number_format($totalProducts) }}</h3>
-                <div class="stat-box-growth">
-                    <span class="growth-up"><i data-lucide="arrow-up-right" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i> 8.2%</span>
-                    <span class="growth-text">vs last week</span>
-                </div>
             </div>
         </div>
 
@@ -489,10 +473,6 @@
             </div>
             <div>
                 <h3 class="stat-box-value">PKR {{ number_format($avgOrderValue) }}</h3>
-                <div class="stat-box-growth">
-                    <span class="growth-up"><i data-lucide="arrow-up-right" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i> 12.1%</span>
-                    <span class="growth-text">vs last week</span>
-                </div>
             </div>
         </div>
 
@@ -505,20 +485,21 @@
         <div class="dash-card">
             <div class="dash-card-header">
                 <span class="dash-card-title">Sales Overview</span>
-                <button type="button" class="dash-card-filter-btn">This Week</button>
             </div>
             
             <div style="margin-bottom:14px;">
                 <h3 style="font-size:1.6rem; font-weight:800; color:var(--gt-primary);">PKR {{ number_format($totalSales) }}</h3>
-                <div style="font-size:0.75rem; color:var(--gt-success); font-weight:700; margin-top:2px;">
-                    <i data-lucide="arrow-up-right" style="width:12px; height:12px; display:inline-block; vertical-align:middle;"></i> 23.5%
-                    <span style="color:var(--gt-text-muted); font-weight:500;">vs last period</span>
-                </div>
             </div>
 
             <!-- Canvas wrapper -->
             <div style="position:relative; height:200px; width:100%; flex:1;">
-                <canvas id="salesOverviewChart"></canvas>
+                @if($totalSales > 0 || array_sum($chartData) > 0)
+                    <canvas id="salesOverviewChart"></canvas>
+                @else
+                    <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: var(--gt-text-muted); font-size: 0.85rem; font-weight: 600;">
+                        No sales data available
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -539,19 +520,19 @@
                 <div class="doughnut-legend" style="flex: 1; min-width: 130px; margin-top: 0;">
                     <div class="legend-item">
                         <span><span class="legend-color-dot" style="background:#10b981;"></span> Delivered</span>
-                        <strong>{{ $deliveredCount }} ({{ round(($deliveredCount/$statusTotal)*100, 1) }}%)</strong>
+                        <strong>{{ $deliveredCount }} ({{ $statusTotal > 0 ? round(($deliveredCount/$statusTotal)*100, 1) : 0 }}%)</strong>
                     </div>
                     <div class="legend-item">
                         <span><span class="legend-color-dot" style="background:#f59e0b;"></span> Processing</span>
-                        <strong>{{ $processingCount }} ({{ round(($processingCount/$statusTotal)*100, 1) }}%)</strong>
+                        <strong>{{ $processingCount }} ({{ $statusTotal > 0 ? round(($processingCount/$statusTotal)*100, 1) : 0 }}%)</strong>
                     </div>
                     <div class="legend-item">
                         <span><span class="legend-color-dot" style="background:#3b82f6;"></span> Shipped</span>
-                        <strong>{{ $shippedCount }} ({{ round(($shippedCount/$statusTotal)*100, 1) }}%)</strong>
+                        <strong>{{ $shippedCount }} ({{ $statusTotal > 0 ? round(($shippedCount/$statusTotal)*100, 1) : 0 }}%)</strong>
                     </div>
                     <div class="legend-item">
                         <span><span class="legend-color-dot" style="background:#6b7280;"></span> Pending</span>
-                        <strong>{{ $pendingCount }} ({{ round(($pendingCount/$statusTotal)*100, 1) }}%)</strong>
+                        <strong>{{ $pendingCount }} ({{ $statusTotal > 0 ? round(($pendingCount/$statusTotal)*100, 1) : 0 }}%)</strong>
                     </div>
                 </div>
             </div>
@@ -566,7 +547,7 @@
             </div>
 
             <div class="orders-stack">
-                @foreach($recentOrders as $orderItem)
+                @forelse($recentOrders as $orderItem)
                     <a href="{{ route('admin.orders') }}" class="order-stack-item" style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
                         <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
                             <span class="order-stack-id" style="font-weight: 800; color: var(--gt-primary); flex-shrink: 0;">#GT-{{ $orderItem['id'] }}</span>
@@ -577,7 +558,11 @@
                             <span class="status-pill status-pill-{{ $orderItem['status'] }}" style="flex-shrink: 0;">{{ $orderItem['statusLabel'] }}</span>
                         </div>
                     </a>
-                @endforeach
+                @empty
+                    <div style="padding: 24px; text-align: center; color: var(--gt-text-muted); font-size: 0.85rem; font-weight: 600;">
+                        No orders found
+                    </div>
+                @endforelse
             </div>
             <a href="{{ route('admin.orders') }}" class="view-all-orders-btn">View All Orders &rarr;</a>
         </div>
@@ -603,9 +588,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($bestSellers as $seller)
+                        @forelse($bestSellers as $seller)
                             @php
-                                $catName = $seller->category ? $seller->category->name : 'Baby Care';
+                                $catName = $seller->category ? $seller->category->name : 'General';
                             @endphp
                             <tr>
                                 <td>
@@ -618,7 +603,13 @@
                                 <td><span style="font-weight:700; color:var(--gt-text);">{{ $seller->sold }}</span></td>
                                 <td><span style="font-weight:800; color:var(--gt-primary);">PKR {{ number_format($seller->revenue) }}</span></td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" style="text-align:center; padding:24px; color:var(--gt-text-muted); font-size:0.85rem; font-weight:600;">
+                                    No sales data available
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -664,9 +655,9 @@
                 <a href="{{ route('admin.products') }}" class="dash-card-filter-btn" style="text-decoration:none;">View All</a>
             </div>
             <div class="low-stock-list">
-                @foreach($lowStockProducts as $lowItem)
+                @forelse($lowStockProducts as $lowItem)
                     @php
-                        $lowCatName = $lowItem->category ? $lowItem->category->name : 'Baby Care';
+                        $lowCatName = $lowItem->category ? $lowItem->category->name : 'General';
                     @endphp
                     <div class="low-stock-item">
                         <div class="prod-cell">
@@ -678,7 +669,11 @@
                         </div>
                         <span class="stock-count-badge">Stock: {{ $lowItem->stock }}</span>
                     </div>
-                @endforeach
+                @empty
+                    <div style="padding: 24px; text-align: center; color: var(--gt-text-muted); font-size: 0.85rem; font-weight: 600;">
+                        All products adequately stocked
+                    </div>
+                @endforelse
             </div>
         </div>
 

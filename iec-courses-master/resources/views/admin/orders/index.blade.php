@@ -959,7 +959,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" style="text-align:center; padding:30px; font-weight:700; color:var(--gt-text-muted);">No orders found matching the filter selection.</td>
+                        <td colspan="8" style="text-align:center; padding:30px; font-weight:700; color:var(--gt-text-muted);">No orders found.</td>
                     </tr>
                 @endforelse
             </tbody>
