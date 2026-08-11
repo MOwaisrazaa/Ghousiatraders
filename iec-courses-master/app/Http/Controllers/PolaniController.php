@@ -721,14 +721,17 @@ class PolaniController extends Controller
 
     private function buildTrackOrderContext(Order $order): array
     {
-        $status = $order->status ?: 'pending';
+        $status = strtolower($order->status ?: 'pending');
         $statusMap = [
-            'pending' => ['Placed', 1, 'Your order has been received and is awaiting confirmation.'],
-            'paid' => ['Confirmed', 2, 'Your order is confirmed and is being prepared.'],
-            'shipped' => ['Shipped', 3, 'Your order has been shipped and is on the way.'],
-            'completed' => ['Delivered', 4, 'Your order has been completed successfully.'],
-            'failed' => ['Cancelled', 0, 'Your order was cancelled.'],
-            'rejected' => ['Cancelled', 0, 'Your order was rejected.'],
+            'pending'   => ['Pending', 1, 'Your order has been received and is awaiting processing.'],
+            'paid'      => ['Processing', 2, 'Your order is confirmed and is being processed.'],
+            'processing'=> ['Processing', 2, 'Your order is confirmed and is being processed.'],
+            'shipped'   => ['Shipped', 3, 'Your order has been shipped and is on the way.'],
+            'completed' => ['Delivered', 4, 'Your order has been delivered successfully.'],
+            'delivered' => ['Delivered', 4, 'Your order has been delivered successfully.'],
+            'failed'    => ['Cancelled', 0, 'Your order was cancelled.'],
+            'rejected'  => ['Cancelled', 0, 'Your order was cancelled.'],
+            'cancelled' => ['Cancelled', 0, 'Your order was cancelled.'],
         ];
 
         [$label, $step, $message] = $statusMap[$status] ?? ['Processing', 2, 'Your order is being processed.'];
@@ -746,7 +749,7 @@ class PolaniController extends Controller
                 return [
                     'name' => $course->name,
                     'slug' => $course->slug,
-                    'image' => $course->image_path ? asset($course->image_path) : asset('polani/assets/product-noir-elixir.jpg'),
+                    'image' => $course->image_path ? asset($course->image_path) : asset('ghousiatraders/assets/baby_lotion.png'),
                     'quantity' => $quantity,
                     'price' => $price,
                     'total' => $price * $quantity,
@@ -761,7 +764,8 @@ class PolaniController extends Controller
         }
 
         return [
-            'orderNumber' => sprintf('#PF-%s-%04d', now()->format('Y'), $order->id),
+            'rawOrder' => $order,
+            'orderNumber' => sprintf('GT-%s-%05d', optional($order->created_at)->format('Y') ?? now()->format('Y'), $order->id),
             'orderId' => $order->id,
             'status' => $status,
             'statusLabel' => $label,

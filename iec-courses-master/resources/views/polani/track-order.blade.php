@@ -365,34 +365,7 @@
         width: fit-content;
     }
 
-    .tcs-logo {
-        display: inline-flex;
-        align-items: center;
-        font-weight: 900;
-        font-size: 1.1rem;
-        letter-spacing: -0.02em;
-    }
-    .tcs-logo span:first-child {
-        color: #e11d48;
-    }
-    .tcs-logo span:last-child {
-        color: #2563eb;
-        font-style: italic;
-    }
 
-    .contact-courier-btn {
-        border: 1px solid rgba(215, 166, 74, 0.45);
-        color: #44240f;
-        padding: 8px 16px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        border-radius: 6px;
-        text-decoration: none;
-        transition: all 0.2s ease;
-        min-height: 38px;
-        display: inline-flex;
-        align-items: center;
-    }
 
     .contact-courier-btn:hover {
         background: rgba(215, 166, 74, 0.1);
@@ -883,150 +856,11 @@
             <!-- Left Column Content -->
             <div class="tracking-left-column">
                 
-                <!-- Order Status Timeline Card -->
-                <div class="tracking-card">
-                    <div class="tracking-card-header">
-                        <i data-lucide="clipboard-list"></i>
-                        <h3 class="tracking-card-title">Order Status</h3>
-                    </div>
-                    
-                    @php
-                      $orderDate = \Carbon\Carbon::parse($order['orderDate']);
-                      $confirmTime = $orderDate->format('d M, h:i A');
-                      $packedTime = $orderDate->copy()->addHours(5)->format('d M, h:i A');
-                      $shippedTime = $orderDate->copy()->addDays(1)->addHours(2)->format('d M, h:i A');
-                      $deliveryTime = $orderDate->copy()->addDays(2)->addHours(4)->format('d M, h:i A');
-                      
-                      $statusStep = (int) ($order['statusStep'] ?? 1);
-                      if ($statusStep === 0) {
-                          $statusStep = 1;
-                      }
-                      
-                      // Calculate active timeline line percentage
-                      $linePercent = match($statusStep) {
-                          1 => 0,
-                          2 => 33.33,
-                          3 => 66.66,
-                          4 => 100,
-                          default => 0
-                      };
-                    @endphp
-                    
-                    <div class="order-status-details">
-                        <div class="status-detail-item">
-                            <span class="status-detail-label">Order No.</span>
-                            <span class="status-detail-value">#GT-{{ $order['orderId'] }}</span>
-                        </div>
-                        <div class="status-detail-item">
-                            <span class="status-detail-label">Order Date</span>
-                            <span class="status-detail-value">{{ $orderDate->format('d M Y') }}</span>
-                        </div>
-                        <div class="status-detail-item">
-                            <span class="status-detail-label">Est. Delivery</span>
-                            <span class="status-detail-value">{{ $orderDate->copy()->addDays(4)->format('d M Y') }}</span>
-                        </div>
-                        <div class="status-detail-item">
-                            <span class="status-detail-label">Current Status</span>
-                            <span class="status-detail-value" style="color:#d7a64a;">{{ $order['statusLabel'] }}</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Horizontal Timeline -->
-                    <div class="timeline-progress-wrapper">
-                        <div class="timeline-line"></div>
-                        <div class="timeline-line-active" style="width: calc({{ $linePercent }}% - 10px);"></div>
-                        
-                        <div class="timeline-steps">
-                            <!-- Step 1: Confirmed -->
-                            <div class="timeline-step @if($statusStep > 1) completed @elseif($statusStep === 1) current @endif">
-                                <div class="timeline-circle">
-                                    @if($statusStep > 1)
-                                        <i data-lucide="check"></i>
-                                    @else
-                                        <i data-lucide="truck"></i>
-                                    @endif
-                                </div>
-                                <span class="timeline-step-label">Order Confirmed</span>
-                                <span class="timeline-step-date">{{ $confirmTime }}</span>
-                            </div>
-                            
-                            <!-- Step 2: Packed -->
-                            <div class="timeline-step @if($statusStep > 2) completed @elseif($statusStep === 2) current @endif">
-                                <div class="timeline-circle">
-                                    @if($statusStep > 2)
-                                        <i data-lucide="check"></i>
-                                    @elseif($statusStep === 2)
-                                        <i data-lucide="truck"></i>
-                                    @else
-                                        <i data-lucide="package"></i>
-                                    @endif
-                                </div>
-                                <span class="timeline-step-label">Packed</span>
-                                <span class="timeline-step-date">{{ $statusStep >= 2 ? $packedTime : 'Pending' }}</span>
-                            </div>
-                            
-                            <!-- Step 3: Shipped -->
-                            <div class="timeline-step @if($statusStep > 3) completed @elseif($statusStep === 3) current @endif">
-                                <div class="timeline-circle">
-                                    @if($statusStep > 3)
-                                        <i data-lucide="check"></i>
-                                    @elseif($statusStep === 3)
-                                        <i data-lucide="truck"></i>
-                                    @else
-                                        <i data-lucide="plane"></i>
-                                    @endif
-                                </div>
-                                <span class="timeline-step-label">Shipped</span>
-                                <span class="timeline-step-date">{{ $statusStep >= 3 ? $shippedTime : 'Pending' }}</span>
-                            </div>
-                            
-                            <!-- Step 4: Out for Delivery -->
-                            <div class="timeline-step @if($statusStep > 4) completed @elseif($statusStep === 4) current @endif">
-                                <div class="timeline-circle">
-                                    @if($statusStep > 4)
-                                        <i data-lucide="check"></i>
-                                    @else
-                                        <i data-lucide="truck"></i>
-                                    @endif
-                                </div>
-                                <span class="timeline-step-label">Out for Delivery</span>
-                                <span class="timeline-step-date">{{ $statusStep >= 4 ? $deliveryTime : 'Pending' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Shipment Details Card -->
-                <div class="tracking-card">
-                    <div class="shipment-details-row">
-                        <div class="shipment-items-grid">
-                            <div class="shipment-item">
-                                <span class="shipment-label">Courier</span>
-                                <div class="tcs-logo"><span>T</span><span>CS</span></div>
-                            </div>
-                            <div class="shipment-item">
-                                <span class="shipment-label">Tracking ID</span>
-                                <span class="shipment-value">TCS-903{{ $order['orderId'] }}28</span>
-                            </div>
-                            <div class="shipment-item">
-                                <span class="shipment-label">Current Status</span>
-                                <span class="shipment-status-badge">{{ $order['statusLabel'] }}</span>
-                            </div>
-                            <div class="shipment-item">
-                                <span class="shipment-label">Location</span>
-                                <span class="shipment-value">{{ $billing['city'] ?? 'Lahore Hub' }}</span>
-                            </div>
-                            <div class="shipment-item">
-                                <span class="shipment-label">Last Update</span>
-                                <span class="shipment-value">Today, 10:45 AM</span>
-                            </div>
-                        </div>
-                        <a href="tel:03211234567" class="contact-courier-btn">Contact Courier</a>
-                    </div>
-                </div>
+                <!-- Order Status Card -->
+                <x-order-progress :order="$order" />
 
                 <!-- Ordered Items Card -->
-                <div class="tracking-card">
+                <div class="tracking-card" style="margin-top: 24px;">
                     <div class="tracking-card-header">
                         <i data-lucide="shopping-bag"></i>
                         <h3 class="tracking-card-title">Ordered Items</h3>
@@ -1063,55 +897,6 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
-                <!-- Delivery Updates Timeline Card -->
-                <div class="tracking-card">
-                    <div class="tracking-card-header">
-                        <i data-lucide="clock"></i>
-                        <h3 class="tracking-card-title">Delivery Updates</h3>
-                    </div>
-                    <div class="delivery-updates-list">
-                        <!-- Update 4 -->
-                        <div class="update-item @if($statusStep >= 4) active @endif">
-                            <div class="update-bullet"></div>
-                            <div class="update-time-col">{{ $statusStep >= 4 ? $deliveryTime : '' }}</div>
-                            <div class="update-content-col">
-                                <span class="update-heading">Out for delivery</span>
-                                <span class="update-description">Your order is out for delivery and will reach you today.</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Update 3 -->
-                        <div class="update-item @if($statusStep >= 3) past @endif">
-                            <div class="update-bullet"></div>
-                            <div class="update-time-col">{{ $statusStep >= 3 ? $shippedTime : '' }}</div>
-                            <div class="update-content-col">
-                                <span class="update-heading">Shipped</span>
-                                <span class="update-description">Your order has been shipped from Lahore Hub.</span>
-                            </div>
-                        </div>
-
-                        <!-- Update 2 -->
-                        <div class="update-item @if($statusStep >= 2) past @endif">
-                            <div class="update-bullet"></div>
-                            <div class="update-time-col">{{ $statusStep >= 2 ? $packedTime : '' }}</div>
-                            <div class="update-content-col">
-                                <span class="update-heading">Packed</span>
-                                <span class="update-description">Your order has been packed and is ready to ship.</span>
-                            </div>
-                        </div>
-
-                        <!-- Update 1 -->
-                        <div class="update-item @if($statusStep >= 1) past @endif">
-                            <div class="update-bullet"></div>
-                            <div class="update-time-col">{{ $confirmTime }}</div>
-                            <div class="update-content-col">
-                                <span class="update-heading">Order Confirmed</span>
-                                <span class="update-description">We've received your order and are preparing it.</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

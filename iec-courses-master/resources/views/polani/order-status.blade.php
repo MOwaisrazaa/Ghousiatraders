@@ -158,69 +158,7 @@
                 </div>
 
                 <!-- B. Order Progress Card -->
-                <div class="gt-confirm-card" style="background: #FFFFFF; border: 1px solid #EFEAE3; border-radius: 16px; padding: 24px 28px; box-shadow: 0 4px 16px rgba(92, 62, 33, 0.03);">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                        <i data-lucide="clock" style="width: 22px; height: 22px; color: #5C3E21;"></i>
-                        <h3 style="font-size: 1.2rem; font-weight: 700; color: #3A2518; margin: 0;">Order Progress</h3>
-                    </div>
-                    <p style="font-size: 0.85rem; color: #7A6E65; margin: 0 0 24px 0;">We’ll keep you updated every step of the way.</p>
-
-                    <!-- Horizontal Progress Timeline (5 Steps) -->
-                    <div class="gt-progress-stepper-wrapper" style="position: relative; padding: 0 10px;">
-                        <div class="gt-stepper-line" style="position: absolute; top: 22px; left: 40px; right: 40px; height: 3px; background: #EFE8DF; z-index: 1;">
-                            <div class="gt-stepper-line-active" style="height: 100%; background: #5C3E21; width: {{ max(0, min(100, ($stepStatus - 1) * 25)) }}%;"></div>
-                        </div>
-
-                        <div class="gt-stepper-nodes" style="display: flex; justify-content: space-between; position: relative; z-index: 2;">
-                            
-                            <!-- Step 1: Order Confirmed -->
-                            <div class="gt-step-node" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                                <div class="gt-step-icon {{ $stepStatus >= 1 ? 'completed' : '' }}" style="width: 44px; height: 44px; border-radius: 50%; background: {{ $stepStatus >= 1 ? '#5C3E21' : '#FFFFFF' }}; border: 2px solid {{ $stepStatus >= 1 ? '#5C3E21' : '#DCD2C5' }}; color: {{ $stepStatus >= 1 ? '#FFFFFF' : '#A09386' }}; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
-                                    <i data-lucide="check-circle-2" style="width: 20px; height: 20px;"></i>
-                                </div>
-                                <span style="font-size: 0.85rem; font-weight: 700; color: #3A2518;">Order Confirmed</span>
-                                <span style="font-size: 0.72rem; color: #8A7E74; margin-top: 2px;">{{ $stepStatus >= 1 ? (optional($order->created_at)->format('M j, g:i A') ?? 'Completed') : 'Pending' }}</span>
-                            </div>
-
-                            <!-- Step 2: Packed -->
-                            <div class="gt-step-node" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                                <div class="gt-step-icon {{ $stepStatus >= 2 ? 'completed' : '' }}" style="width: 44px; height: 44px; border-radius: 50%; background: {{ $stepStatus >= 2 ? '#5C3E21' : '#FFFFFF' }}; border: 2px solid {{ $stepStatus >= 2 ? '#5C3E21' : '#DCD2C5' }}; color: {{ $stepStatus >= 2 ? '#FFFFFF' : '#A09386' }}; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
-                                    <i data-lucide="package" style="width: 20px; height: 20px;"></i>
-                                </div>
-                                <span style="font-size: 0.85rem; font-weight: 700; color: #3A2518;">Packed</span>
-                                <span style="font-size: 0.72rem; color: #8A7E74; margin-top: 2px;">{{ $stepStatus >= 2 ? 'Processing' : 'Pending' }}</span>
-                            </div>
-
-                            <!-- Step 3: Shipped -->
-                            <div class="gt-step-node" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                                <div class="gt-step-icon {{ $stepStatus >= 3 ? 'completed' : '' }}" style="width: 44px; height: 44px; border-radius: 50%; background: {{ $stepStatus >= 3 ? '#5C3E21' : '#FFFFFF' }}; border: 2px solid {{ $stepStatus >= 3 ? '#5C3E21' : '#DCD2C5' }}; color: {{ $stepStatus >= 3 ? '#FFFFFF' : '#A09386' }}; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
-                                    <i data-lucide="truck" style="width: 20px; height: 20px;"></i>
-                                </div>
-                                <span style="font-size: 0.85rem; font-weight: 700; color: #3A2518;">Shipped</span>
-                                <span style="font-size: 0.72rem; color: #8A7E74; margin-top: 2px;">{{ $stepStatus >= 3 ? 'In Transit' : 'Pending' }}</span>
-                            </div>
-
-                            <!-- Step 4: Out for Delivery -->
-                            <div class="gt-step-node" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                                <div class="gt-step-icon {{ $stepStatus >= 4 ? 'completed' : '' }}" style="width: 44px; height: 44px; border-radius: 50%; background: {{ $stepStatus >= 4 ? '#5C3E21' : '#FFFFFF' }}; border: 2px solid {{ $stepStatus >= 4 ? '#5C3E21' : '#DCD2C5' }}; color: {{ $stepStatus >= 4 ? '#FFFFFF' : '#A09386' }}; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
-                                    <i data-lucide="map-pin" style="width: 20px; height: 20px;"></i>
-                                </div>
-                                <span style="font-size: 0.85rem; font-weight: 700; color: #3A2518;">Out for Delivery</span>
-                                <span style="font-size: 0.72rem; color: #8A7E74; margin-top: 2px;">{{ $stepStatus >= 4 ? 'Out for Delivery' : 'Pending' }}</span>
-                            </div>
-
-                            <!-- Step 5: Delivered -->
-                            <div class="gt-step-node" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                                <div class="gt-step-icon {{ $stepStatus >= 5 ? 'completed' : '' }}" style="width: 44px; height: 44px; border-radius: 50%; background: {{ $stepStatus >= 5 ? '#5C3E21' : '#FFFFFF' }}; border: 2px solid {{ $stepStatus >= 5 ? '#5C3E21' : '#DCD2C5' }}; color: {{ $stepStatus >= 5 ? '#FFFFFF' : '#A09386' }}; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
-                                    <i data-lucide="home" style="width: 20px; height: 20px;"></i>
-                                </div>
-                                <span style="font-size: 0.85rem; font-weight: 700; color: #3A2518;">Delivered</span>
-                                <span style="font-size: 0.72rem; color: #8A7E74; margin-top: 2px;">{{ $stepStatus >= 5 ? 'Delivered' : 'Pending' }}</span>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+                <x-order-progress :order="$order" />
 
                 <!-- C. We're Here for You Card -->
                 <div class="gt-confirm-card" style="background: #FFFFFF; border: 1px solid #EFEAE3; border-radius: 16px; padding: 24px 28px; box-shadow: 0 4px 16px rgba(92, 62, 33, 0.03);">
