@@ -49,13 +49,15 @@ class OrderController extends Controller
 
         // Apply Status Filter
         if ($request->filled('status') && $request->status !== 'all') {
-            $statusVal = $request->status;
+            $statusVal = strtolower($request->status);
             if ($statusVal === 'processing') {
-                $query->where('status', 'paid');
+                $query->whereIn('status', ['paid', 'processing']);
             } elseif ($statusVal === 'delivered') {
-                $query->where('status', 'completed');
+                $query->whereIn('status', ['completed', 'delivered']);
+            } elseif ($statusVal === 'shipped') {
+                $query->whereIn('status', ['shipped', 'out_for_delivery', 'out for delivery']);
             } elseif ($statusVal === 'cancelled') {
-                $query->whereIn('status', ['rejected', 'cancelled']);
+                $query->whereIn('status', ['rejected', 'cancelled', 'failed']);
             } else {
                 $query->where('status', $statusVal);
             }
@@ -94,10 +96,10 @@ class OrderController extends Controller
         $tabCounts = [
             'all' => Order::count(),
             'pending' => Order::where('status', 'pending')->count(),
-            'processing' => Order::where('status', 'paid')->count(),
-            'shipped' => Order::where('status', 'shipped')->count(),
-            'delivered' => Order::where('status', 'completed')->count(),
-            'cancelled' => Order::whereIn('status', ['rejected', 'cancelled'])->count(),
+            'processing' => Order::whereIn('status', ['paid', 'processing'])->count(),
+            'shipped' => Order::whereIn('status', ['shipped', 'out_for_delivery', 'out for delivery'])->count(),
+            'delivered' => Order::whereIn('status', ['completed', 'delivered'])->count(),
+            'cancelled' => Order::whereIn('status', ['rejected', 'cancelled', 'failed'])->count(),
         ];
 
         // Stats Row Data (6 statistics cards)
