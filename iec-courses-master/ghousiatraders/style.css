@@ -4304,8 +4304,17 @@ img {
 /* ==========================================================================
    26. Wishlist Page Styles
    ========================================================================== */
+.wishlist-page-main,
+.cart-page-main {
+    padding: 15px 0 60px 0;
+    min-height: calc(100vh - 420px);
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .wishlist-hero {
-    padding: 40px 0 0 0;
+    padding: 0;
+    margin-bottom: 25px;
 }
 
 .wishlist-hero-card {

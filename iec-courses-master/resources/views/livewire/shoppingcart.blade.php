@@ -1,4 +1,4 @@
-<div class="cart-body-section" data-cart-page style="background-color: var(--bg-light); padding: {{ $cartitems->count() > 0 ? '40px 0 60px' : '0 0 20px' }};">
+<div class="cart-body-section" data-cart-page style="background-color: var(--bg-light); padding: {{ $cartitems->count() > 0 ? '25px 0 60px' : '0 0 20px' }};">
     <div class="section-container">
         @if($cartitems->count() > 0)
             <div class="cart-layout-grid">

@@ -4565,22 +4565,23 @@ img {
 /* ==========================================================================
    26. Wishlist Page Styles
    ========================================================================== */
-.wishlist-page-main {
-    padding: 30px 0 60px 0;
+.wishlist-page-main,
+.cart-page-main {
+    padding: 15px 0 60px 0;
     min-height: calc(100vh - 420px);
     width: 100%;
     box-sizing: border-box;
 }
 
 .wishlist-hero {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .wishlist-hero-card {
     background-color: #FDFBF7;
     border: 1.5px solid rgba(215, 166, 74, 0.3);
     border-radius: 20px;
-    padding: 40px 50px;
+    padding: 50px 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -4965,7 +4966,7 @@ img {
     border-radius: var(--radius-xl, 16px);
     box-shadow: 0 10px 30px rgba(53, 27, 13, 0.05);
     border: 1px solid rgba(226, 123, 138, 0.15);
-    margin: 20px auto 40px auto;
+    margin: 15px auto 40px auto;
     width: 100%;
     max-width: 680px;
     box-sizing: border-box;
