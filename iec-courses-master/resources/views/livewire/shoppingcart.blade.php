@@ -1,4 +1,4 @@
-<div class="cart-body-section" data-cart-page style="background-color: var(--bg-light); padding: 60px 0;">
+<div class="cart-body-section" data-cart-page style="background-color: var(--bg-light); padding: {{ $cartitems->count() > 0 ? '40px 0 60px' : '0 0 20px' }};">
     <div class="section-container">
         @if($cartitems->count() > 0)
             <div class="cart-layout-grid">
@@ -124,13 +124,16 @@
             </div>
         @else
             <!-- Empty State -->
-            <div class="wishlist-empty-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); width: 100%;">
-                <div class="empty-icon-wrapper" style="width: 80px; height: 80px; background-color: #FAF5F5; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                    <i data-lucide="shopping-cart" style="width: 36px; height: 36px;"></i>
+            <div class="wishlist-empty-state" id="cartEmptyState">
+                <div class="empty-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
                 </div>
-                <h2 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--text-dark); margin-bottom: 10px;">Your cart is empty</h2>
-                <p style="color: var(--text-muted); margin-bottom: 25px; max-width: 400px;">Explore our catalog of premium baby care and exciting ride-on toys to start shopping!</p>
-                <a href="{{ route('polani.collection') }}" class="btn btn-primary" style="text-decoration: none;">Go to Shop</a>
+                <h2 class="empty-state-title">Your cart is empty</h2>
+                <p class="empty-state-desc">Explore our catalog of premium baby care and exciting ride-on toys to start shopping!</p>
+                <a href="{{ route('polani.collection') }}" class="btn btn-primary btn-shop-now">
+                    <i class="fas fa-shopping-bag" style="margin-right: 8px;"></i>
+                    <span>Go to Shop</span>
+                </a>
             </div>
         @endif
     </div>
