@@ -827,19 +827,226 @@
 
         .unread-badge {
             position: absolute;
-            top: 6px;
-            right: 6px;
-            background: #ef4444;
-            color: #ffffff;
+            top: 4px;
+            right: 4px;
+            background: #EF4444;
+            color: #FFFFFF;
             font-size: 0.65rem;
             font-weight: 800;
-            width: 15px;
-            height: 15px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid #351B0D;
+            line-height: 1;
+            z-index: 2;
+        }
+
+        /* Notification Dropdown Styling */
+        .admin-notification-wrapper {
+            position: relative;
+        }
+
+        .admin-notif-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: -10px;
+            width: 360px;
+            max-width: 90vw;
+            background: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(53, 27, 13, 0.22), 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(223, 172, 77, 0.35);
+            z-index: 1050;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: notifFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .admin-notif-dropdown.show {
+            display: flex;
+        }
+
+        @keyframes notifFadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .notif-dropdown-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #351B0D;
+            color: #FFFFFF;
+            border-bottom: 1px solid rgba(223, 172, 77, 0.25);
+        }
+
+        .notif-header-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: #FFF8EE;
+        }
+
+        .notif-mark-all-btn {
+            background: transparent;
+            border: none;
+            color: #DFAC4D;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+
+        .notif-mark-all-btn:hover {
+            background: rgba(223, 172, 77, 0.18);
+            color: #FFFFFF;
+        }
+
+        .notif-dropdown-body {
+            max-height: 380px;
+            overflow-y: auto;
+            background-color: #FAF6F0;
+        }
+
+        .notif-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid #EFE6D8;
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.15s ease;
+            position: relative;
+        }
+
+        .notif-item:hover {
+            background-color: #F3EBDC;
+        }
+
+        .notif-item.unread {
+            background-color: #FFFDF8;
+        }
+
+        .notif-item.unread::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #DFAC4D;
+        }
+
+        .notif-icon-box {
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1.5px solid #351b0d;
+            flex-shrink: 0;
+            background-color: #EFE6D8;
+            color: #351B0D;
+        }
+
+        .notif-icon-box.type-order { background-color: #FEF3C7; color: #D97706; }
+        .notif-icon-box.type-customer { background-color: #DBEAFE; color: #2563EB; }
+        .notif-icon-box.type-review { background-color: #FEF9C3; color: #CA8A04; }
+        .notif-icon-box.type-ticket { background-color: #F3E8FF; color: #9333EA; }
+        .notif-icon-box.type-low_stock { background-color: #FFEDD5; color: #EA580C; }
+        .notif-icon-box.type-out_of_stock { background-color: #FEE2E2; color: #DC2626; }
+
+        .notif-content-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notif-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2px;
+        }
+
+        .notif-title {
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: #351B0D;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .notif-time {
+            font-size: 0.72rem;
+            color: #8C7B70;
+            white-space: nowrap;
+            margin-left: 6px;
+        }
+
+        .notif-message {
+            font-size: 0.79rem;
+            color: #5C4A3E;
+            line-height: 1.35;
+            margin: 0;
+            word-break: break-word;
+        }
+
+        .notif-empty-state {
+            padding: 30px 20px;
+            text-align: center;
+            color: #8C7B70;
+        }
+
+        .notif-empty-state i {
+            width: 36px;
+            height: 36px;
+            color: #CBD5E1;
+            margin-bottom: 8px;
+        }
+
+        .notif-empty-state p {
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .notif-dropdown-footer {
+            padding: 10px 16px;
+            background: #351B0D;
+            text-align: center;
+            border-top: 1px solid rgba(223, 172, 77, 0.25);
+        }
+
+        .notif-view-all-link {
+            color: #DFAC4D;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.15s ease;
+        }
+
+        .notif-view-all-link:hover {
+            color: #FFFFFF;
         }
 
         .topbar-divider {
@@ -1286,14 +1493,43 @@
                         <i data-lucide="eye"></i>
                         <span>View Store</span>
                     </a>
-                    <button type="button" class="topbar-icon-btn">
-                        <i data-lucide="bell"></i>
-                        <span class="unread-badge">5</span>
-                    </button>
-                    <button type="button" class="topbar-icon-btn">
-                        <i data-lucide="message-square"></i>
-                        <span class="unread-badge">2</span>
-                    </button>
+                    
+                    <!-- Notification Bell Wrapper -->
+                    <div class="admin-notification-wrapper">
+                        <button type="button" class="topbar-icon-btn" id="adminBellBtn" aria-label="Notifications" title="Notifications">
+                            <i data-lucide="bell"></i>
+                            <span class="unread-badge" id="adminBellBadge" style="display: none;"></span>
+                        </button>
+
+                        <!-- Notification Dropdown Menu -->
+                        <div class="admin-notif-dropdown" id="adminNotifDropdown">
+                            <div class="notif-dropdown-header">
+                                <div class="notif-header-title">
+                                    <i data-lucide="bell" style="width:16px; height:16px; color:#DFAC4D;"></i>
+                                    <span>Notifications</span>
+                                </div>
+                                <button type="button" class="notif-mark-all-btn" id="adminMarkAllReadBtn">
+                                    <i data-lucide="check-check" style="width:13px; height:13px;"></i>
+                                    <span>Mark all as read</span>
+                                </button>
+                            </div>
+
+                            <div class="notif-dropdown-body" id="adminNotifList">
+                                <div class="notif-empty-state">
+                                    <i data-lucide="bell-off"></i>
+                                    <p>Loading notifications...</p>
+                                </div>
+                            </div>
+
+                            <div class="notif-dropdown-footer">
+                                <a href="{{ route('admin.notifications.index') }}" class="notif-view-all-link">
+                                    <span>View All Notifications</span>
+                                    <i data-lucide="arrow-right" style="width:14px; height:14px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="topbar-divider"></div>
                     <div class="admin-user-header" id="headerProfileBtn">
                         <div class="avatar-initials">
@@ -1495,6 +1731,178 @@
                     errorToast.style.transform = 'translateY(-10px)';
                     setTimeout(() => { errorToast.remove(); }, 500);
                 }, 4000);
+            }
+
+            // --- Admin Notifications Engine ---
+            const bellBtn = document.getElementById('adminBellBtn');
+            const bellBadge = document.getElementById('adminBellBadge');
+            const dropdown = document.getElementById('adminNotifDropdown');
+            const notifList = document.getElementById('adminNotifList');
+            const markAllBtn = document.getElementById('adminMarkAllReadBtn');
+
+            if (bellBtn && dropdown) {
+                // Toggle Dropdown
+                bellBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('show');
+                    if (dropdown.classList.contains('show')) {
+                        fetchNotifications();
+                    }
+                });
+
+                // Close dropdown on outside click
+                document.addEventListener('click', function(e) {
+                    if (!dropdown.contains(e.target) && !bellBtn.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                    }
+                });
+
+                function getIconName(type) {
+                    switch (type) {
+                        case 'order': return 'shopping-bag';
+                        case 'customer': return 'user-plus';
+                        case 'review': return 'star';
+                        case 'ticket': return 'life-buoy';
+                        case 'low_stock': return 'alert-triangle';
+                        case 'out_of_stock': return 'alert-circle';
+                        default: return 'bell';
+                    }
+                }
+
+                function escapeHtml(str) {
+                    if (!str) return '';
+                    return String(str)
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;');
+                }
+
+                function updateBadge(count) {
+                    if (!bellBadge) return;
+                    if (count > 0) {
+                        bellBadge.textContent = count > 99 ? '99+' : count;
+                        bellBadge.style.display = 'flex';
+                    } else {
+                        bellBadge.style.display = 'none';
+                        bellBadge.textContent = '';
+                    }
+                }
+
+                function renderNotificationList(items) {
+                    if (!notifList) return;
+
+                    if (!items || items.length === 0) {
+                        notifList.innerHTML = `
+                            <div class="notif-empty-state">
+                                <i data-lucide="bell-off"></i>
+                                <p>No activity notifications yet</p>
+                            </div>
+                        `;
+                        if (window.lucide) window.lucide.createIcons();
+                        return;
+                    }
+
+                    let html = '';
+                    items.forEach(item => {
+                        const icon = getIconName(item.type);
+                        const unreadClass = item.is_read ? '' : 'unread';
+                        
+                        html += `
+                            <a href="${item.url}" class="notif-item ${unreadClass}" data-id="${item.id}">
+                                <div class="notif-icon-box type-${item.type}">
+                                    <i data-lucide="${icon}"></i>
+                                </div>
+                                <div class="notif-content-area">
+                                    <div class="notif-title-row">
+                                        <span class="notif-title">${escapeHtml(item.title)}</span>
+                                        <span class="notif-time">${escapeHtml(item.time_ago)}</span>
+                                    </div>
+                                    <p class="notif-message">${escapeHtml(item.message)}</p>
+                                </div>
+                            </a>
+                        `;
+                    });
+
+                    notifList.innerHTML = html;
+
+                    if (window.lucide) window.lucide.createIcons();
+
+                    notifList.querySelectorAll('.notif-item').forEach(el => {
+                        el.addEventListener('click', function(e) {
+                            const id = this.getAttribute('data-id');
+                            if (id) {
+                                markAsRead(id);
+                            }
+                        });
+                    });
+                }
+
+                function fetchNotifications() {
+                    fetch("{{ route('admin.notifications.fetch') }}", {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            updateBadge(data.unread_count);
+                            renderNotificationList(data.notifications);
+                        }
+                    })
+                    .catch(err => console.error('Notification fetch error:', err));
+                }
+
+                function markAsRead(id) {
+                    fetch("{{ route('admin.notifications.mark-read') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ id: id })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            updateBadge(data.unread_count);
+                        }
+                    })
+                    .catch(err => console.error('Mark read error:', err));
+                }
+
+                if (markAllBtn) {
+                    markAllBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        fetch("{{ route('admin.notifications.mark-all-read') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                updateBadge(0);
+                                if (notifList) {
+                                    notifList.querySelectorAll('.notif-item').forEach(el => el.classList.remove('unread'));
+                                }
+                            }
+                        })
+                        .catch(err => console.error('Mark all read error:', err));
+                    });
+                }
+
+                // Initial fetch
+                fetchNotifications();
+
+                // Poll every 30 seconds
+                setInterval(fetchNotifications, 30000);
             }
         });
     </script>

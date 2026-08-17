@@ -473,6 +473,12 @@ Route::middleware(['auth', 'check.role:Admin,Super Admin', 'super.admin.bypass']
 
     Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'index'])->name('admin.dashboard');
 
+    // Admin Notifications routes
+    Route::get('/notifications', [App\Http\Controllers\Admin\AdminNotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::get('/notifications/fetch', [App\Http\Controllers\Admin\AdminNotificationController::class, 'fetch'])->name('admin.notifications.fetch');
+    Route::post('/notifications/mark-read', [App\Http\Controllers\Admin\AdminNotificationController::class, 'markRead'])->name('admin.notifications.mark-read');
+    Route::post('/notifications/mark-all-read', [App\Http\Controllers\Admin\AdminNotificationController::class, 'markAllRead'])->name('admin.notifications.mark-all-read');
+
     // Traffic Analytics
     Route::get('/analytics', [App\Http\Controllers\Admin\TrafficAnalyticsController::class, 'index'])
         ->name('admin.analytics');
