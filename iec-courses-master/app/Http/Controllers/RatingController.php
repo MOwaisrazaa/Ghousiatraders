@@ -69,7 +69,9 @@ class RatingController extends Controller
             })
             ->exists();
 
-        if (!$hasPurchased) {
+        $isAdmin = $user->isAdmin() || $user->isSuperAdmin() || $user->hasRole(['Admin', 'Super Admin']);
+
+        if (!$hasPurchased && !$isAdmin) {
             return response()->json([
                 'success' => false,
                 'message' => 'Only verified purchasers of this product can submit a review.'
@@ -90,7 +92,7 @@ class RatingController extends Controller
                 'status' => 'pending',
                 'is_approved' => false,
                 'show_publicly' => false,
-                'is_verified_purchase' => true,
+                'is_verified_purchase' => $hasPurchased,
             ]);
             $rating = $existingRating;
             $message = 'Your review has been updated and submitted for approval!';
@@ -104,7 +106,7 @@ class RatingController extends Controller
                 'status' => 'pending',
                 'is_approved' => false,
                 'show_publicly' => false,
-                'is_verified_purchase' => true,
+                'is_verified_purchase' => $hasPurchased,
             ]);
             $message = 'Thank you! Your review has been submitted for approval.';
         }

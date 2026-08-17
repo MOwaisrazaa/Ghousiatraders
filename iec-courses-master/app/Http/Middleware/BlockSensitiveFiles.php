@@ -148,7 +148,7 @@ class BlockSensitiveFiles
 
             // Check if user has appropriate role or permissions
             $user = auth()->user();
-            if ($user->hasRole('Admin') || $user->hasRole('Super Admin')) {
+            if ($user->isAdmin() || $user->isSuperAdmin() || $user->hasRole(['Admin', 'Super Admin'])) {
                 return; // Continue with request
             }
 

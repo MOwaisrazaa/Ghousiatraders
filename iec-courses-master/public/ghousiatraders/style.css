@@ -4574,7 +4574,8 @@ img {
 }
 
 .wishlist-hero {
-    margin-bottom: 25px;
+    
+    margin-bottom: 0 !important;
 }
 
 .wishlist-hero-card {

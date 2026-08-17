@@ -134,6 +134,57 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user has one or more roles by name or role string.
+     *
+     * @param string|array $roles
+     * @return bool
+     */
+    public function hasRole($roles): bool
+    {
+        if (is_array($roles)) {
+            foreach ($roles as $role) {
+                if ($this->hasRole($role)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        $roleStr = (string) $roles;
+
+        // Check primary role attribute column
+        if ($this->role && strcasecmp((string) $this->role, $roleStr) === 0) {
+            return true;
+        }
+
+        // Check is_admin attribute for admin roles
+        if (!empty($this->is_admin) && in_array(strtolower($roleStr), ['admin', 'super admin', 'administrator', 'manager'], true)) {
+            return true;
+        }
+
+        // Check isSuperAdmin / isAdmin helper logic
+        if (strcasecmp($roleStr, 'Super Admin') === 0 && $this->isSuperAdmin()) {
+            return true;
+        }
+
+        if (strcasecmp($roleStr, 'Admin') === 0 && $this->isAdmin()) {
+            return true;
+        }
+
+        // Check many-to-many roles relationship
+        try {
+            if ($this->relationLoaded('roles')) {
+                return $this->roles->contains(function ($r) use ($roleStr) {
+                    return strcasecmp((string) $r->name, $roleStr) === 0;
+                });
+            }
+            return $this->roles()->where('name', $roleStr)->orWhere('name', strtolower($roleStr))->exists();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Check if user has permission for a specific module/action or page.
      * Super Admin always has full access.
      */

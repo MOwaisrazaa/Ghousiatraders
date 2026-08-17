@@ -4314,7 +4314,7 @@ img {
 
 .wishlist-hero {
     padding: 0;
-    margin-bottom: 25px;
+    margin-bottom: 0 !important;
 }
 
 .wishlist-hero-card {

@@ -355,9 +355,6 @@
                     <button class="pdp-tab-btn" role="tab" aria-selected="false" id="tab-btn-specifications" onclick="switchPdpTab('specifications')">
                         Specifications
                     </button>
-                    <button class="pdp-tab-btn" role="tab" aria-selected="false" id="tab-btn-reviews" onclick="switchPdpTab('reviews')">
-                        Reviews ({{ $ratingCount }})
-                    </button>
                     <button class="pdp-tab-btn" role="tab" aria-selected="false" id="tab-btn-shipping" onclick="switchPdpTab('shipping')">
                         Shipping &amp; Returns
                     </button>
@@ -413,55 +410,7 @@
                         </table>
                     </div>
 
-                    <!-- Tab 3: Reviews Panel -->
-                    <div class="pdp-tab-panel" id="tab-reviews" role="tabpanel" style="display: none;">
-                        <div class="reviews-tab-content">
-                            <div class="reviews-summary-box">
-                                <div class="summary-score">{{ number_format($averageRating, 1) }}</div>
-                                <div class="summary-stars">
-                                    @php $tabAvg = round($averageRating); @endphp
-                                    @for($s = 1; $s <= 5; $s++)
-                                        <i data-lucide="star" class="{{ $s <= $tabAvg ? 'star-filled' : '' }}" style="{{ $s <= $tabAvg ? 'fill:#DFAC4D; color:#DFAC4D;' : 'color:#CBD5E1;' }}"></i>
-                                    @endfor
-                                    <span>Based on {{ $ratingCount }} {{ $ratingCount == 1 ? 'Customer Review' : 'Customer Reviews' }}</span>
-                                </div>
-                            </div>
 
-                            <div class="tab-reviews-list">
-                                @forelse($approvedRatings as $tRev)
-                                    @php
-                                        $tName = $tRev->user?->name ?: ($tRev->reviewer_name ?: 'Customer');
-                                        $tParts = explode(' ', trim($tName));
-                                        $tInitials = strtoupper(substr($tParts[0] ?? 'C', 0, 1) . substr($tParts[1] ?? '', 0, 1));
-                                    @endphp
-                                    <div class="review-card-item">
-                                        <div class="review-card-header">
-                                            <div class="reviewer-avatar">{{ $tInitials }}</div>
-                                            <div class="reviewer-meta">
-                                                <h5>{{ $tName }} @if($tRev->is_verified_purchase) <span class="verified-badge"><i data-lucide="check"></i> Verified Purchase</span> @endif</h5>
-                                                <div class="review-stars">
-                                                    @for($ts = 1; $ts <= 5; $ts++)
-                                                        <i data-lucide="star" class="{{ $ts <= $tRev->rating ? 'star-filled' : '' }}" style="{{ $ts <= $tRev->rating ? 'fill:#DFAC4D; color:#DFAC4D;' : 'color:#CBD5E1;' }}"></i>
-                                                    @endfor
-                                                </div>
-                                            </div>
-                                            <span class="review-date">{{ $tRev->created_at ? $tRev->created_at->format('M d, Y') : '' }}</span>
-                                        </div>
-                                        @if(!empty($tRev->title))
-                                            <h5 style="margin-bottom: 4px; font-weight:700; color:#3E2A18;">{{ $tRev->title }}</h5>
-                                        @endif
-                                        <p class="review-body">
-                                            {{ $tRev->comment }}
-                                        </p>
-                                    </div>
-                                @empty
-                                    <div class="pdp-reviews-empty-state">
-                                        <p>No customer reviews yet. Be the first verified customer to review this product.</p>
-                                    </div>
-                                @endforelse
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Tab 4: Shipping & Returns -->
                     <div class="pdp-tab-panel" id="tab-shipping" role="tabpanel" style="display: none;">
@@ -500,7 +449,7 @@
                         </a>
                     </div>
                 @else
-                    @if(!$userHasPurchased && !auth()->user()->hasRole(['Admin', 'Super Admin']))
+                    @if(!$userHasPurchased && !(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin() || auth()->user()->hasRole(['Admin', 'Super Admin'])))
                         <div class="review-purchased-notice">
                             <div class="notice-icon">
                                 <i data-lucide="shield-alert"></i>
@@ -657,12 +606,11 @@
                             </p>
                         </div>
                     @empty
-                        <div class="pdp-reviews-empty-state">
-                            <div class="empty-icon-box">
-                                <i data-lucide="message-square-quote"></i>
+                        <div class="pdp-reviews-empty-state" style="text-align: center; padding: 40px 20px;">
+                            <div class="empty-icon-box" style="margin-bottom: 12px; color: #CBD5E1;">
+                                <i data-lucide="message-square-quote" style="width: 48px; height: 48px; display: inline-block;"></i>
                             </div>
-                            <h3>No customer reviews yet</h3>
-                            <p>Be the first verified customer to review this product.</p>
+                            <h3 style="font-size: 1.1rem; font-weight: 700; color: #4A3B32; margin: 0;">No customer reviews yet.</h3>
                         </div>
                     @endforelse
                 </div>
@@ -814,7 +762,8 @@
             }
 
             starBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
                     const selectedVal = parseInt(this.getAttribute('data-value'));
                     ratingHiddenInput.value = selectedVal;
                     updateStarDisplay(selectedVal);
@@ -833,6 +782,10 @@
                     updateStarDisplay(currentVal);
                 });
             }
+
+            // Ensure initial load matches saved value
+            const initialRating = parseInt(ratingHiddenInput.value) || 5;
+            updateStarDisplay(initialRating);
         }
 
         // AJAX Review Form Submission
@@ -842,12 +795,18 @@
         const toastBox = document.getElementById('reviewFormToast');
 
         if (reviewForm) {
+            const isUpdateMode = submitBtnText && submitBtnText.textContent.trim().toLowerCase().includes('update');
+            const defaultBtnText = isUpdateMode ? 'Update Your Review' : 'Submit Review';
+
             reviewForm.addEventListener('submit', function(e) {
                 e.preventDefault();
 
+                // Clear previous inline error messages
+                document.querySelectorAll('.field-error-msg').forEach(el => el.remove());
+
                 if (submitBtn) {
                     submitBtn.disabled = true;
-                    if (submitBtnText) submitBtnText.textContent = 'Submitting...';
+                    if (submitBtnText) submitBtnText.textContent = isUpdateMode ? 'Updating...' : 'Submitting...';
                 }
 
                 if (toastBox) {
@@ -865,9 +824,9 @@
                     },
                     body: formData
                 })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
+                .then(async res => {
+                    const data = await res.json().catch(() => ({ success: false, message: 'Server error' }));
+                    if (res.ok && data.success) {
                         if (toastBox) {
                             toastBox.className = 'review-form-toast toast-success';
                             toastBox.textContent = data.message || 'Review submitted successfully!';
@@ -882,12 +841,28 @@
                     } else {
                         if (toastBox) {
                             toastBox.className = 'review-form-toast toast-error';
-                            toastBox.textContent = data.message || 'Error submitting review.';
+                            toastBox.textContent = data.message || 'Submission failed. Please check your inputs.';
                             toastBox.style.display = 'block';
+                        }
+                        // Display inline validation errors
+                        if (data.errors) {
+                            for (const [field, messages] of Object.entries(data.errors)) {
+                                const inputElement = reviewForm.querySelector(`[name="${field}"]`);
+                                if (inputElement) {
+                                    const errSpan = document.createElement('span');
+                                    errSpan.className = 'field-error-msg';
+                                    errSpan.style.color = '#DC2626';
+                                    errSpan.style.fontSize = '0.82rem';
+                                    errSpan.style.display = 'block';
+                                    errSpan.style.marginTop = '4px';
+                                    errSpan.textContent = Array.isArray(messages) ? messages[0] : messages;
+                                    inputElement.parentNode.appendChild(errSpan);
+                                }
+                            }
                         }
                         if (submitBtn) {
                             submitBtn.disabled = false;
-                            if (submitBtnText) submitBtnText.textContent = 'Submit Review';
+                            if (submitBtnText) submitBtnText.textContent = defaultBtnText;
                         }
                     }
                 })
@@ -899,7 +874,7 @@
                     }
                     if (submitBtn) {
                         submitBtn.disabled = false;
-                        if (submitBtnText) submitBtnText.textContent = 'Submit Review';
+                        if (submitBtnText) submitBtnText.textContent = defaultBtnText;
                     }
                 });
             });

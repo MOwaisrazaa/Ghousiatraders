@@ -1647,7 +1647,7 @@ i[data-lucide] {
     padding: 2px;
     cursor: pointer;
     color: #CBD5E1;
-    transition: color 0.15s ease, transform 0.15s ease;
+    transition: transform 0.15s ease;
 }
 
 .star-select-btn i, .star-select-btn svg {
@@ -1655,10 +1655,24 @@ i[data-lucide] {
     height: 24px;
 }
 
-.star-select-btn.selected,
-.star-select-btn:hover {
-    color: #DFAC4D;
-    fill: #DFAC4D;
+.star-select-btn svg,
+.star-select-btn svg polygon,
+.star-select-btn svg path {
+    fill: transparent !important;
+    stroke: #CBD5E1 !important;
+    color: #CBD5E1 !important;
+    transition: fill 0.15s ease, stroke 0.15s ease, color 0.15s ease;
+}
+
+.star-select-btn.selected svg,
+.star-select-btn.selected svg polygon,
+.star-select-btn.selected svg path,
+.star-select-btn:hover svg,
+.star-select-btn:hover svg polygon,
+.star-select-btn:hover svg path {
+    fill: #DFAC4D !important;
+    stroke: #DFAC4D !important;
+    color: #DFAC4D !important;
 }
 
 .star-select-btn:hover {
