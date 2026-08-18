@@ -2370,13 +2370,55 @@ img {
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--text-dark);
-    margin-bottom: 12px;
+    margin-bottom: 6px;
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     height: 2.8em;
+}
+.product-card-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+.product-card-rating .rating-stars-gold {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: #DFAC4D;
+}
+.product-card-rating .rating-stars-gold svg,
+.product-card-rating .rating-stars-gold i {
+    width: 13px;
+    height: 13px;
+}
+.product-card-rating .star-filled {
+    fill: #DFAC4D;
+    color: #DFAC4D;
+}
+.product-card-rating .star-empty {
+    fill: none;
+    color: #D4C5B3;
+}
+.product-card-rating .rating-score {
+    font-weight: 700;
+    color: var(--text-dark, #351B0D);
+    font-size: 0.78rem;
+}
+.product-card-rating .rating-count {
+    color: #8C7B70;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+.product-card-rating .rating-empty-label {
+    color: #8C7B70;
+    font-size: 0.73rem;
+    font-style: italic;
 }
 .product-footer {
     display: flex;
@@ -4809,5 +4851,126 @@ img {
 @media (max-width: 480px) {
     .wishlist-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Storefront Header Customer Name & Profile Dropdown Styles */
+.profile-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.customer-avatar-circle {
+    background: rgba(223, 172, 77, 0.18) !important;
+    border: 1.5px solid #DFAC4D !important;
+    color: #DFAC4D !important;
+    font-weight: 800 !important;
+    font-size: 0.82rem !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+.profile-action-item:hover .customer-avatar-circle {
+    background: #DFAC4D !important;
+    color: #351B0D !important;
+    border-color: #DFAC4D !important;
+}
+
+.customer-name-label {
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    color: #FFFDF8 !important;
+    max-width: 85px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: inline-block !important;
+    text-align: center;
+}
+
+.profile-action-item:hover .customer-name-label {
+    color: #DFAC4D !important;
+}
+
+@media (max-width: 768px) {
+    .customer-name-label {
+        max-width: 75px !important;
+    }
+}
+
+.profile-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: #ffffff;
+    border: 1px solid rgba(223, 172, 77, 0.35);
+    border-radius: 8px;
+    min-width: 170px;
+    box-shadow: 0 8px 24px rgba(53, 27, 13, 0.18);
+    z-index: 1000;
+    margin-top: 8px;
+    padding: 6px 0;
+    animation: dropdownFadeIn 0.2s ease;
+}
+
+.profile-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 14px;
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border-left: 1px solid rgba(223, 172, 77, 0.35);
+    border-top: 1px solid rgba(223, 172, 77, 0.35);
+    transform: rotate(45deg);
+}
+
+.profile-dropdown-menu.active {
+    display: block !important;
+}
+
+.profile-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    color: #351B0D;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+    text-align: left;
+}
+
+.profile-dropdown-item:hover {
+    background-color: #FAF6F0;
+    color: #DFAC4D;
+}
+
+.profile-dropdown-item.logout-item {
+    color: #EF4444;
+}
+
+.profile-dropdown-item.logout-item:hover {
+    background-color: #FEE2E2;
+    color: #DC2626;
+}
+
+.profile-dropdown-divider {
+    height: 1px;
+    background-color: #EFE6D8;
+    margin: 4px 0;
+}
+
+@media (hover: hover) {
+    .profile-dropdown-container:hover .profile-dropdown-menu {
+        display: block;
     }
 }

@@ -8,11 +8,15 @@
         $price = $product['price'] ?? 0;
         $image = $product['image'] ?? asset('ghousiatraders/assets/baby_products.png');
         $tag = $product['badge'] ?? null;
+        $ratingCount = (int) ($product['rating_count'] ?? $product['reviews'] ?? 0);
+        $averageRating = (float) ($product['average_rating'] ?? $product['rating'] ?? 0.0);
     } else {
         $slug = $product->slug;
         $name = $product->name;
         $price = $product->weekly_price; // Mapped from database column
         $image = $product->image_path ? asset($product->image_path) : asset('ghousiatraders/assets/baby_products.png');
+        $ratingCount = (int) $product->rating_count;
+        $averageRating = (float) $product->average_rating;
         
         // Custom badge assignment based on price thresholds or tags
         $tag = null;
@@ -25,6 +29,7 @@
 
     $detailUrl = route('polani.product', ['slug' => $slug]);
     $addCartUrl = route('polani.cart.add', ['slug' => $slug]);
+    $roundedRating = (int) round($averageRating);
 @endphp
 
 <div class="product-card">
@@ -46,6 +51,28 @@
                 {{ $name }}
             </a>
         </h3>
+
+        <!-- Real Rating Row -->
+        <div class="product-card-rating">
+            <div class="rating-stars-gold">
+                @for($i = 1; $i <= 5; $i++)
+                    @if($i <= $roundedRating)
+                        <i data-lucide="star" class="star-filled"></i>
+                    @else
+                        <i data-lucide="star" class="star-empty"></i>
+                    @endif
+                @endfor
+            </div>
+            <span class="rating-text">
+                @if($ratingCount > 0)
+                    <strong class="rating-score">{{ number_format($averageRating, 1) }}</strong>
+                    <span class="rating-count">({{ $ratingCount }})</span>
+                @else
+                    <span class="rating-empty-label">No reviews yet</span>
+                @endif
+            </span>
+        </div>
+
         <div class="product-footer">
             <span class="product-price">
                 PKR {{ number_format($price) }}

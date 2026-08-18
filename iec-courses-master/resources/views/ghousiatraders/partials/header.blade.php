@@ -79,21 +79,27 @@
                 <span>{{ store_setting('track_order_btn_label', 'Track Order') }}</span>
             </a>
 
-            <!-- Account Icon -->
+            <!-- Account Icon / Customer Avatar + Name -->
             @auth
+                @php
+                    $uName = auth()->user()->name ?? 'User';
+                    $words = explode(' ', trim($uName));
+                    $custInitials = '';
+                    foreach ($words as $w) {
+                        if (!empty($w)) {
+                            $custInitials .= strtoupper(substr($w, 0, 1));
+                        }
+                    }
+                    $custInitials = substr($custInitials, 0, 2) ?: 'U';
+                @endphp
                 <div class="profile-dropdown-container">
-                    <a href="#" class="header-action-item" id="profileDropdownBtn" aria-label="Account" title="Profile: {{ auth()->user()->name }}">
-                        <div class="action-btn">
-                            <i data-lucide="user"></i>
+                    <a href="#" class="header-action-item profile-action-item" id="profileDropdownBtn" aria-label="Customer Account" title="{{ $uName }}">
+                        <div class="action-btn customer-avatar-circle">
+                            <span>{{ $custInitials }}</span>
                         </div>
-                        <span class="action-label">Account</span>
+                        <span class="action-label customer-name-label">{{ $uName }}</span>
                     </a>
                     <div class="profile-dropdown-menu" id="profileDropdownMenu">
-                        <a href="{{ route('users.profile') }}" class="profile-dropdown-item">
-                            <i data-lucide="user" style="width: 14px; height: 14px;"></i>
-                            <span>My Profile</span>
-                        </a>
-                        <div class="profile-dropdown-divider"></div>
                         <form method="POST" action="{{ route('logout') }}" id="logout-form" style="display: none;">
                             @csrf
                         </form>

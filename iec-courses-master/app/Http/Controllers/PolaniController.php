@@ -100,6 +100,8 @@ class PolaniController extends Controller
             'is_featured' => (bool) $course->is_featured,
             'rating' => $course->average_rating,
             'reviews' => $course->rating_count,
+            'average_rating' => $course->average_rating,
+            'rating_count' => $course->rating_count,
             'category_slug' => $categoryFilter,
             'category_name' => $category,
             'image' => asset($imagePath),
@@ -284,7 +286,7 @@ class PolaniController extends Controller
     private function categoryPage(string $categoryName, string $title, string $description, string $heroImage, string $heroPosition = 'center', string $pageKey = 'collection')
     {
         $products = Course::query()
-            ->with('category')
+            ->with(['category', 'approvedRatings'])
             ->where('status', 'active')
             ->whereHas('category', function ($query) use ($categoryName) {
                 $query->where('name', $categoryName);
@@ -309,7 +311,7 @@ class PolaniController extends Controller
     public function home()
     {
         $products = Course::query()
-            ->with('category')
+            ->with(['category', 'approvedRatings'])
             ->where('status', 'active')
             ->whereHas('category', function ($query) {
                 $query->whereIn('slug', ['baby-care', 'bo-bikes', 'bo-cars']);
@@ -319,7 +321,7 @@ class PolaniController extends Controller
             ->get();
 
         $babyCareProducts = Course::query()
-            ->with('category')
+            ->with(['category', 'approvedRatings'])
             ->where('status', 'active')
             ->whereHas('category', function ($query) {
                 $query->where('slug', 'baby-care');
@@ -329,7 +331,7 @@ class PolaniController extends Controller
             ->map(fn (Course $course) => $this->productViewModel($course));
 
         $bikesProducts = Course::query()
-            ->with('category')
+            ->with(['category', 'approvedRatings'])
             ->where('status', 'active')
             ->whereHas('category', function ($query) {
                 $query->where('slug', 'bo-bikes');
@@ -339,7 +341,7 @@ class PolaniController extends Controller
             ->map(fn (Course $course) => $this->productViewModel($course));
 
         $carsProducts = Course::query()
-            ->with('category')
+            ->with(['category', 'approvedRatings'])
             ->where('status', 'active')
             ->whereHas('category', function ($query) {
                 $query->where('slug', 'bo-cars');
@@ -352,7 +354,7 @@ class PolaniController extends Controller
 
         $homepageSections = \App\Models\HomepageSection::query()
             ->with(['products' => function($query) {
-                $query->with('category')->where('status', 'active')->orderByDesc('homepage_section_product.created_at');
+                $query->with(['category', 'approvedRatings'])->where('status', 'active')->orderByDesc('homepage_section_product.created_at');
             }])
             ->where('is_active', true)
             ->orderBy('order')

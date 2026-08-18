@@ -132,9 +132,26 @@ class Course extends Model
     /**
      * Get all ratings for this course
      */
+    /**
+     * Get all ratings for this course
+     */
     public function ratings()
     {
         return $this->morphMany(Rating::class, 'rateable');
+    }
+
+    /**
+     * Get approved/public non-rejected ratings for this course
+     */
+    public function approvedRatings()
+    {
+        return $this->morphMany(Rating::class, 'rateable')
+            ->where('status', '!=', 'rejected')
+            ->where(function($q) {
+                $q->where('status', 'approved')
+                  ->orWhere('is_approved', true)
+                  ->orWhere('show_publicly', true);
+            });
     }
 
     /**
@@ -142,6 +159,21 @@ class Course extends Model
      */
     public function getAverageRatingAttribute()
     {
+        if (isset($this->attributes['approved_ratings_avg_rating'])) {
+            return round((float) $this->attributes['approved_ratings_avg_rating'], 1);
+        }
+        if ($this->relationLoaded('approvedRatings')) {
+            $avg = $this->approvedRatings->avg('rating');
+            return $avg ? round((float) $avg, 1) : 0;
+        }
+        if ($this->relationLoaded('ratings')) {
+            $approved = $this->ratings->where('status', '!=', 'rejected')->filter(function($r) {
+                return $r->status === 'approved' || $r->is_approved || $r->show_publicly;
+            });
+            $avg = $approved->avg('rating');
+            return $avg ? round((float) $avg, 1) : 0;
+        }
+
         $avg = $this->ratings()
             ->where('status', '!=', 'rejected')
             ->where(function($q) {
@@ -159,6 +191,18 @@ class Course extends Model
      */
     public function getRatingCountAttribute()
     {
+        if (isset($this->attributes['approved_ratings_count'])) {
+            return (int) $this->attributes['approved_ratings_count'];
+        }
+        if ($this->relationLoaded('approvedRatings')) {
+            return $this->approvedRatings->count();
+        }
+        if ($this->relationLoaded('ratings')) {
+            return $this->ratings->where('status', '!=', 'rejected')->filter(function($r) {
+                return $r->status === 'approved' || $r->is_approved || $r->show_publicly;
+            })->count();
+        }
+
         return $this->ratings()
             ->where('status', '!=', 'rejected')
             ->where(function($q) {
