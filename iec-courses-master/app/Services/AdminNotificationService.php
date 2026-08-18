@@ -93,7 +93,6 @@ class AdminNotificationService
             foreach ($reviews as $r) {
                 $reviewer = $r->user ? $r->user->name : ($r->reviewer_name ?: 'Customer');
                 $productName = $r->rateable ? $r->rateable->name : 'Product';
-                $statusTag = ($r->status === 'pending' || !$r->is_approved) ? ' (Pending Approval)' : '';
                 $notifId = "review_{$r->id}";
 
                 $notifications[] = [
@@ -101,7 +100,7 @@ class AdminNotificationService
                     'type' => 'review',
                     'icon' => 'star',
                     'title' => 'New Review Submitted',
-                    'message' => "{$reviewer} submitted a {$r->rating}-star review for {$productName}.{$statusTag}",
+                    'message' => "{$reviewer} submitted a {$r->rating}-star review for {$productName}.",
                     'url' => route('admin.reviews.index'),
                     'created_at' => $r->created_at ? $r->created_at->toIso8601String() : now()->toIso8601String(),
                     'time_ago' => $r->created_at ? $r->created_at->diffForHumans() : 'Recently',

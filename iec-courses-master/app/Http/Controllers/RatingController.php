@@ -89,13 +89,13 @@ class RatingController extends Controller
                 'rating' => (int) $request->rating,
                 'title' => $request->title ?: null,
                 'comment' => $request->comment,
-                'status' => 'pending',
-                'is_approved' => false,
-                'show_publicly' => false,
+                'status' => 'approved',
+                'is_approved' => true,
+                'show_publicly' => true,
                 'is_verified_purchase' => $hasPurchased,
             ]);
             $rating = $existingRating;
-            $message = 'Your review has been updated and submitted for approval!';
+            $message = 'Your review has been updated and published successfully!';
         } else {
             $rating = $course->ratings()->create([
                 'user_id' => $user->id,
@@ -103,12 +103,12 @@ class RatingController extends Controller
                 'rating' => (int) $request->rating,
                 'title' => $request->title ?: null,
                 'comment' => $request->comment,
-                'status' => 'pending',
-                'is_approved' => false,
-                'show_publicly' => false,
+                'status' => 'approved',
+                'is_approved' => true,
+                'show_publicly' => true,
                 'is_verified_purchase' => $hasPurchased,
             ]);
-            $message = 'Thank you! Your review has been submitted for approval.';
+            $message = 'Thank you! Your review has been published successfully.';
         }
 
         return response()->json([

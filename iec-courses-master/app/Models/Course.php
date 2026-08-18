@@ -143,6 +143,7 @@ class Course extends Model
     public function getAverageRatingAttribute()
     {
         $avg = $this->ratings()
+            ->where('status', '!=', 'rejected')
             ->where(function($q) {
                 $q->where('status', 'approved')
                   ->orWhere('is_approved', true)
@@ -159,6 +160,7 @@ class Course extends Model
     public function getRatingCountAttribute()
     {
         return $this->ratings()
+            ->where('status', '!=', 'rejected')
             ->where(function($q) {
                 $q->where('status', 'approved')
                   ->orWhere('is_approved', true)

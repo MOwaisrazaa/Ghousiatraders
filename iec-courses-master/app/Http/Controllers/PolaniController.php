@@ -162,6 +162,7 @@ class PolaniController extends Controller
         // Ratings query
         $sort = request('sort', 'newest');
         $ratingsQuery = $productModel->ratings()
+            ->where('status', '!=', 'rejected')
             ->where(function($q) {
                 $q->where('status', 'approved')
                   ->orWhere('is_approved', true)
@@ -189,6 +190,7 @@ class PolaniController extends Controller
 
         // Calculate star breakdown for 5, 4, 3, 2, 1 stars
         $allApprovedRatings = $productModel->ratings()
+            ->where('status', '!=', 'rejected')
             ->where(function($q) {
                 $q->where('status', 'approved')
                   ->orWhere('is_approved', true)
