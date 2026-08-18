@@ -21,8 +21,8 @@ class ReviewController extends Controller
      */
     public function index(Request $request)
     {
-        // 1. Base query including product (rateable) and customer (user) relations
-        $baseQuery = Rating::with(['rateable', 'user']);
+        // 1. Base query including product (rateable with category) and customer (user) relations
+        $baseQuery = Rating::with(['rateable.category', 'user']);
 
         // 2. Statistics counts (always evaluated before search query filters)
         $totalReviewsCount = (clone $baseQuery)->count();

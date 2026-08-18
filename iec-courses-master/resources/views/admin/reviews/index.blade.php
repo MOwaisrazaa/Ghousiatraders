@@ -813,9 +813,18 @@
                             $initials = substr($initials, 0, 2);
                             
                             // Morph relation resolves to Product (Course)
-                            $product = $r->rateable;
+                            $product = $r->rateable ?: $r->product;
                             $productName = $product ? $product->name : 'Unnamed Product';
-                            $productCategory = $product && $product->category ? $product->category->name : 'Ride On Toys';
+                            $productCategory = ($product && $product->category) ? $product->category->name : 'Ride On Toys';
+
+                            // Real product primary image resolution with fallback
+                            if ($product && !empty($product->image_path)) {
+                                $productImg = str_starts_with($product->image_path, 'http')
+                                    ? $product->image_path
+                                    : asset(ltrim($product->image_path, '/'));
+                            } else {
+                                $productImg = asset('ghousiatraders/assets/toy_jeep.png');
+                            }
                             
                             $reviewData = [
                                 'id' => $r->id,
@@ -823,6 +832,7 @@
                                 'reviewer_email' => $reviewerEmail,
                                 'product_name' => $productName,
                                 'product_category' => $productCategory,
+                                'product_image' => $productImg,
                                 'rating' => $r->rating,
                                 'comment' => $r->comment,
                                 'status' => $r->status,
@@ -836,7 +846,7 @@
                             </td>
                             <td>
                                 <div style="display:flex;align-items:center;gap:10px;">
-                                    <img src="{{ asset('ghousiatraders/assets/toy_jeep.png') }}" class="product-thumbnail-sm" alt="product thumbnail">
+                                    <img src="{{ $productImg }}" class="product-thumbnail-sm" alt="{{ $productName }}">
                                     <div style="display:flex;flex-direction:column;line-height:1.2;">
                                         <strong style="font-size:0.82rem;font-weight:700;color:var(--gt-primary);">{{ $productName }}</strong>
                                         <span style="font-size:0.7rem;color:var(--gt-text-muted);">{{ $productCategory }}</span>
@@ -997,7 +1007,7 @@
         </div>
         <div class="gt-modal-body" style="padding:20px;">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;border-bottom:1.5px solid var(--gt-border);padding-bottom:16px;">
-                <img src="{{ asset('ghousiatraders/assets/toy_jeep.png') }}" style="width:50px;height:50px;border-radius:8px;" alt="product thumbnail">
+                <img id="viewReviewProductImg" src="{{ asset('ghousiatraders/assets/toy_jeep.png') }}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;" alt="product thumbnail">
                 <div style="display:flex;flex-direction:column;line-height:1.2;">
                     <strong id="viewReviewProductName" style="font-size:0.95rem;color:var(--gt-primary);font-weight:800;"></strong>
                     <span id="viewReviewProductCategory" style="font-size:0.75rem;color:var(--gt-text-muted);"></span>
@@ -1285,6 +1295,11 @@
         window.openViewModal = function(r) {
             document.getElementById('viewReviewProductName').innerText = r.product_name;
             document.getElementById('viewReviewProductCategory').innerText = r.product_category;
+            
+            const modalImg = document.getElementById('viewReviewProductImg');
+            if (modalImg && r.product_image) {
+                modalImg.src = r.product_image;
+            }
             
             // Status badge
             const statusBadge = document.getElementById('viewReviewStatus');
