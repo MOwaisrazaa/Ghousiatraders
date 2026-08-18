@@ -5125,6 +5125,43 @@ img {
     display: inline-block;
 }
 
+.header-customer-name-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(223, 172, 77, 0.35);
+    color: #FFFDF8;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.header-customer-name-btn:hover {
+    background: rgba(223, 172, 77, 0.18);
+    border-color: #DFAC4D;
+    color: #DFAC4D;
+}
+
+.customer-name-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    color: inherit;
+}
+
+@media (max-width: 768px) {
+    .customer-name-text {
+        max-width: 90px;
+    }
+}
+
 .customer-avatar-circle {
     background: rgba(223, 172, 77, 0.18) !important;
     border: 1.5px solid #DFAC4D !important;
