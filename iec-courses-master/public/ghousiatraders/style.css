@@ -252,7 +252,7 @@ img {
 .main-header.scrolled {
     background: #351b0d;
     box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
-    padding-bottom: 16px;
+    padding-bottom: 26px;
 }
 
 .main-header-row {
@@ -267,7 +267,7 @@ img {
 }
 
 .main-header.scrolled .main-header-row {
-    padding: 10px 24px;
+    padding: 12px 24px;
 }
 
 .logo {
@@ -476,7 +476,7 @@ img {
 }
 
 .main-header.scrolled .floating-nav-container {
-    bottom: -18px;
+    bottom: -22px;
 }
 
 .floating-nav-capsule {
