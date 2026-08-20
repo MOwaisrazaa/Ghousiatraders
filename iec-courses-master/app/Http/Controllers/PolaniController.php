@@ -317,7 +317,7 @@ class PolaniController extends Controller
                 $query->whereIn('slug', ['baby-care', 'bo-bikes', 'bo-cars']);
             })
             ->latest('id')
-            ->take(8)
+            ->take(4)
             ->get();
 
         $babyCareProducts = Course::query()
@@ -327,6 +327,7 @@ class PolaniController extends Controller
                 $query->where('slug', 'baby-care');
             })
             ->latest('id')
+            ->take(4)
             ->get()
             ->map(fn (Course $course) => $this->productViewModel($course));
 
@@ -337,6 +338,7 @@ class PolaniController extends Controller
                 $query->where('slug', 'bo-bikes');
             })
             ->latest('id')
+            ->take(4)
             ->get()
             ->map(fn (Course $course) => $this->productViewModel($course));
 
@@ -347,6 +349,7 @@ class PolaniController extends Controller
                 $query->where('slug', 'bo-cars');
             })
             ->latest('id')
+            ->take(4)
             ->get()
             ->map(fn (Course $course) => $this->productViewModel($course));
 
@@ -364,7 +367,7 @@ class PolaniController extends Controller
                     'title' => $section->title,
                     'slug' => $section->slug,
                     'bg_theme' => $section->bg_theme,
-                    'products' => $section->products->map(fn (Course $course) => $this->productViewModel($course))
+                    'products' => $section->products->take(4)->map(fn (Course $course) => $this->productViewModel($course))
                 ];
             });
 

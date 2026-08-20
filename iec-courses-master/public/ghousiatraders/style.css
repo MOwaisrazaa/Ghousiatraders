@@ -2523,8 +2523,8 @@ img {
 }
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
 }
 .product-card {
     background-color: var(--bg-card);

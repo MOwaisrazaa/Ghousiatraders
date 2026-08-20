@@ -148,7 +148,7 @@
             </div>
 
             <div class="products-grid">
-                @foreach($products->take(5) as $product)
+                @foreach($products->take(4) as $product)
                     @include('ghousiatraders.components.product-card', ['product' => $product])
                 @endforeach
             </div>
@@ -170,7 +170,7 @@
                 </div>
 
                 <div class="products-grid">
-                    @foreach($babyCareProducts->take(5) as $product)
+                    @foreach($babyCareProducts->take(4) as $product)
                         @include('ghousiatraders.components.product-card', ['product' => $product])
                     @endforeach
                 </div>
@@ -193,7 +193,7 @@
                 </div>
 
                 <div class="products-grid">
-                    @foreach($bikesProducts->take(5) as $product)
+                    @foreach($bikesProducts->take(4) as $product)
                         @include('ghousiatraders.components.product-card', ['product' => $product])
                     @endforeach
                 </div>
@@ -216,7 +216,7 @@
                 </div>
 
                 <div class="products-grid">
-                    @foreach($carsProducts->take(5) as $product)
+                    @foreach($carsProducts->take(4) as $product)
                         @include('ghousiatraders.components.product-card', ['product' => $product])
                     @endforeach
                 </div>
