@@ -2320,6 +2320,7 @@ img {
     flex-direction: column;
     box-shadow: var(--shadow-sm);
     transition: all var(--transition-normal);
+    min-height: 330px;
 }
 .product-card:hover {
     transform: translateY(-8px) scale(1.02);
@@ -2346,11 +2347,11 @@ img {
     color: var(--text-light);
 }
 .product-img-wrapper {
-    height: 160px;
+    height: 175px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     overflow: hidden;
 }
 .product-img-wrapper img {
@@ -2367,23 +2368,23 @@ img {
     flex-grow: 1;
 }
 .product-name {
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 700;
     color: var(--text-dark);
-    margin-bottom: 6px;
-    line-height: 1.4;
+    margin-bottom: 8px;
+    line-height: 1.35;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    height: 2.8em;
+    min-height: 2.6em;
 }
 .product-card-rating {
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-bottom: 10px;
-    font-size: 0.75rem;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
     line-height: 1;
 }
 .product-card-rating .rating-stars-gold {
