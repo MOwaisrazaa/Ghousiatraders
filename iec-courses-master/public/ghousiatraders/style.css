@@ -4187,7 +4187,200 @@ img {
 /* Large Mobile / Small Tablet (max-width: 768px) */
 @media (max-width: 768px) {
     .top-bar {
-        display: none; /* Hide top bar for screen optimization */
+        display: none !important; /* Hide top bar for screen optimization */
+    }
+
+    /* Main Header Container */
+    .main-header {
+        position: relative;
+        z-index: 1000;
+        background: #351B0D;
+    }
+
+    .main-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        gap: 8px;
+        position: relative;
+    }
+
+    /* 1. Hide Account/User Avatar, Name & Dropdown from Top Header on Mobile */
+    .profile-dropdown-container,
+    .header-action-item.profile-action-item,
+    .header-action-item[href*="sign-in"],
+    .header-actions .header-action-item:has(i[data-lucide="user"]) {
+        display: none !important;
+    }
+
+    .track-order-outline-btn {
+        display: none !important;
+    }
+
+    /* 2. Left Side: Hamburger Menu Toggle */
+    .mobile-menu-toggle {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border-radius: 50%;
+        background: transparent;
+        border: 1px solid rgba(245, 211, 147, 0.3);
+        color: #F5D393;
+        flex-shrink: 0;
+        cursor: pointer;
+        z-index: 5;
+    }
+
+    .mobile-menu-toggle svg,
+    .mobile-menu-toggle i {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* 3. Center: Ghousia Traders Logo */
+    .brand-logo-link, .logo {
+        max-width: 125px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 1;
+        z-index: 5;
+    }
+
+    .logo svg, .logo img {
+        max-width: 120px;
+        max-height: 38px;
+        height: auto;
+    }
+
+    /* 4. Right Side: Wishlist & Cart Actions */
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+        margin-left: auto;
+        z-index: 5;
+    }
+
+    .action-label, .customer-name-label {
+        display: none !important;
+    }
+
+    .header-action-item {
+        padding: 0;
+        margin: 0;
+        text-decoration: none;
+    }
+
+    .action-btn.badge-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: transparent;
+        border: 1px solid rgba(245, 211, 147, 0.3);
+        color: #F5D393;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .action-btn.badge-btn svg,
+    .action-btn.badge-btn i {
+        width: 16px;
+        height: 16px;
+    }
+
+    .action-btn.badge-btn .badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: #C68C2E;
+        color: #FFFFFF;
+        font-size: 0.65rem;
+        font-weight: 700;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        border: 1px solid #351B0D;
+    }
+
+    /* 5. Second Row: Search Bar Full Width */
+    .desktop-search-container {
+        display: none !important;
+    }
+
+    .mobile-search-row {
+        display: block !important;
+        padding: 4px 12px 8px 12px;
+        width: 100%;
+    }
+
+    .mobile-search-row .header-search-form {
+        width: 100%;
+    }
+
+    .mobile-search-row .header-search-input-wrapper {
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 100%;
+        background: #FFFFFF;
+        border: 1px solid #E8DCC8;
+        border-radius: 20px;
+        padding: 3px 6px 3px 12px;
+        height: 38px;
+    }
+
+    .mobile-search-row .search-input-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        color: #8C7667;
+    }
+
+    .mobile-search-row .header-search-input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 0.82rem;
+        padding-left: 24px;
+        padding-right: 75px;
+        color: #351B0D;
+    }
+
+    .mobile-search-row .header-search-submit-btn {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #C68C2E;
+        color: #FFF;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 16px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    /* 6. Floating Navigation Capsule hiding on mobile to prevent double nav */
+    .floating-nav-container {
+        display: none !important;
     }
 
     .hero-title {

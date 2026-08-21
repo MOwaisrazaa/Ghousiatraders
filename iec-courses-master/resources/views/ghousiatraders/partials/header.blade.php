@@ -240,10 +240,46 @@
             
             <div class="mobile-drawer-divider"></div>
             
-            <a href="{{ route('polani.track-order') }}" class="mobile-drawer-link mobile-track-order-link {{ request()->routeIs('polani.track-order') ? 'active' : '' }}">
-                <i data-lucide="truck"></i>
-                <span>{{ store_setting('track_order_btn_label', 'Track Order') }}</span>
-            </a>
+            @auth
+                <div class="mobile-drawer-user-info" style="padding: 12px 16px; background: #FAF6F0; border-radius: 12px; margin-bottom: 10px; border: 1px solid #EFE6D8;">
+                    <div style="font-size: 0.7rem; color: #8C7667; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 2px;">Signed in as</div>
+                    <div style="font-size: 0.95rem; color: #351B0D; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ auth()->user()->name ?? 'User' }}</div>
+                </div>
+
+                @if(Route::has('users.profile'))
+                    <a href="{{ route('users.profile') }}" class="mobile-drawer-link {{ request()->routeIs('users.profile') ? 'active' : '' }}">
+                        <i data-lucide="user"></i>
+                        <span>My Profile / Account</span>
+                    </a>
+                @elseif(Route::has('profile'))
+                    <a href="{{ route('profile') }}" class="mobile-drawer-link {{ request()->routeIs('profile') ? 'active' : '' }}">
+                        <i data-lucide="user"></i>
+                        <span>My Profile / Account</span>
+                    </a>
+                @endif
+
+                <a href="{{ route('polani.track-order') }}" class="mobile-drawer-link {{ request()->routeIs('polani.track-order') ? 'active' : '' }}">
+                    <i data-lucide="truck"></i>
+                    <span>Track Order</span>
+                </a>
+                <a href="{{ route('polani.wishlist') }}" class="mobile-drawer-link {{ request()->routeIs('polani.wishlist') ? 'active' : '' }}">
+                    <i data-lucide="heart"></i>
+                    <span>Wishlist</span>
+                </a>
+                <a href="#" class="mobile-drawer-link logout-link" style="color: #DC2626;" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </a>
+            @else
+                <a href="{{ route('polani.track-order') }}" class="mobile-drawer-link {{ request()->routeIs('polani.track-order') ? 'active' : '' }}">
+                    <i data-lucide="truck"></i>
+                    <span>Track Order</span>
+                </a>
+                <a href="{{ route('sign-in') }}" class="mobile-drawer-link {{ request()->routeIs('sign-in') ? 'active' : '' }}">
+                    <i data-lucide="user"></i>
+                    <span>Sign In / Account</span>
+                </a>
+            @endauth
         </nav>
     </div>
 </div>
