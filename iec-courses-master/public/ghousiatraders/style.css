@@ -4129,6 +4129,15 @@ img {
     }
     .products-grid {
         grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+    .product-card {
+        min-height: auto;
+        padding: 16px 14px;
+    }
+    .product-img-wrapper {
+        height: 175px;
+        margin-bottom: 14px;
     }
     .special-offer-card {
         flex-direction: column;
@@ -4181,8 +4190,6 @@ img {
         display: none; /* Hide top bar for screen optimization */
     }
 
-
-
     .hero-title {
         font-size: 2.4rem;
     }
@@ -4217,6 +4224,25 @@ img {
     }
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+    .product-card {
+        min-height: auto;
+        padding: 14px 12px;
+    }
+    .product-img-wrapper {
+        height: 155px;
+        margin-bottom: 10px;
+    }
+    .product-name {
+        font-size: 0.88rem;
+        min-height: auto;
+        margin-bottom: 6px;
+        line-height: 1.3;
+    }
+    .product-card-rating {
+        margin-bottom: 10px;
+        font-size: 0.75rem;
     }
 
     /* Catalog Page */
@@ -4405,7 +4431,26 @@ img {
         grid-template-columns: 1fr;
     }
     .products-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .product-card {
+        min-height: auto;
+        padding: 12px 10px;
+    }
+    .product-img-wrapper {
+        height: 135px;
+        margin-bottom: 8px;
+    }
+    .product-name {
+        font-size: 0.82rem;
+        min-height: auto;
+        margin-bottom: 6px;
+        line-height: 1.3;
+    }
+    .product-card-rating {
+        margin-bottom: 8px;
+        font-size: 0.7rem;
     }
     .offer-center {
         flex-direction: column;
@@ -5604,6 +5649,25 @@ img {
     }
     .sf-action-card {
         padding: 14px 16px 18px 16px;
+    }
+}
+
+/* Narrow Mobile Screen Layout (max-width: 360px) */
+@media (max-width: 360px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    .product-card {
+        padding: 10px 8px;
+        min-height: auto;
+    }
+    .product-img-wrapper {
+        height: 115px;
+        margin-bottom: 6px;
+    }
+    .product-name {
+        font-size: 0.78rem;
     }
 }
 
