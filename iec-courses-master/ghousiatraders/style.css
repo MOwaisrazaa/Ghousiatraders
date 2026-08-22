@@ -1863,80 +1863,128 @@ img {
 }
 
 @media (max-width: 767px) {
+    .homepage-hero {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        background-color: #F8F1E7;
+        margin-bottom: 0;
+    }
     .hero-slide {
-        height: 370px;
+        height: auto;
+        min-height: 330px;
+        max-height: 380px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+    .hero-slide__bg-img {
+        object-position: 85% center;
     }
     .hero-slide__container {
-        padding: 0 24px;
+        padding: 24px 20px 20px 20px;
+        height: auto;
     }
     .hero-slide__gradient-overlay {
         background: linear-gradient(to right, 
-            rgba(248, 241, 231, 0.97) 0%, 
-            rgba(248, 241, 231, 0.92) 60%, 
-            rgba(248, 241, 231, 0.40) 100%
+            rgba(248, 241, 231, 0.96) 0%, 
+            rgba(248, 241, 231, 0.88) 48%, 
+            rgba(248, 241, 231, 0.25) 78%,
+            transparent 100%
         );
     }
-    .hero-slide__heading {
-        font-size: 2.0rem;
+    .hero-slide__content {
+        max-width: 320px;
+        padding: 0;
     }
-    .hero-slide__btn {
-        padding: 11px 24px;
-        font-size: 0.9rem;
+    .hero-slide__eyebrow {
+        gap: 8px;
+        margin-bottom: 10px;
     }
-}
-
-@media (max-width: 575px) {
-    .hero-slide {
-        height: 350px;
+    .hero-slide__line {
+        width: 28px;
     }
-    .hero-slide__container {
-        padding: 0 18px;
-    }
-    .hero-slide__gradient-overlay {
-        background: linear-gradient(to right, 
-            rgba(248, 241, 231, 0.98) 0%, 
-            rgba(248, 241, 231, 0.92) 65%, 
-            rgba(248, 241, 231, 0.50) 100%
-        );
+    .hero-slide__leaf-icon {
+        width: 16px;
+        height: 16px;
     }
     .hero-slide__eyebrow-text {
         font-size: 0.72rem;
         letter-spacing: 1.2px;
     }
-    .hero-slide__line {
-        width: 25px;
+    .hero-slide__heading {
+        font-size: 1.85rem;
+        line-height: 1.18;
+        margin-bottom: 10px;
+        letter-spacing: -0.3px;
     }
-    .hero-slide__leaf-icon {
-        width: 15px;
-        height: 15px;
+    .hero-slide__desc {
+        font-size: 0.88rem;
+        line-height: 1.45;
+        margin-bottom: 16px;
+        max-width: 290px;
+    }
+    .hero-slide__actions {
+        margin-bottom: 0;
+    }
+    .hero-slide__btn {
+        padding: 10px 22px;
+        font-size: 0.85rem;
+        border-radius: 25px;
+        box-shadow: 0 4px 12px rgba(92, 62, 33, 0.15);
+    }
+}
+
+@media (max-width: 575px) {
+    .hero-slide {
+        min-height: 310px;
+        max-height: 360px;
+    }
+    .hero-slide__container {
+        padding: 20px 16px 16px 16px;
+    }
+    .hero-slide__content {
+        max-width: 270px;
+    }
+    .hero-slide__bg-img {
+        object-position: 88% center;
     }
     .hero-slide__heading {
-        font-size: 1.75rem;
-        margin-bottom: 12px;
+        font-size: 1.65rem;
+        margin-bottom: 8px;
     }
     .hero-slide__desc {
         font-size: 0.82rem;
-        margin-bottom: 18px;
-        line-height: 1.45;
-    }
-    .hero-slide__actions {
-        margin-bottom: 20px;
+        margin-bottom: 14px;
+        max-width: 250px;
     }
     .hero-slide__btn {
-        padding: 10px 20px;
-        font-size: 0.85rem;
+        padding: 9px 20px;
+        font-size: 0.82rem;
     }
 }
 
 @media (max-width: 390px) {
     .hero-slide {
-        height: 335px;
+        min-height: 295px;
+        max-height: 340px;
+    }
+    .hero-slide__container {
+        padding: 16px 12px 14px 12px;
+    }
+    .hero-slide__content {
+        max-width: 240px;
     }
     .hero-slide__heading {
-        font-size: 1.55rem;
+        font-size: 1.5rem;
     }
     .hero-slide__desc {
-        font-size: 0.80rem;
+        font-size: 0.78rem;
+        margin-bottom: 12px;
+    }
+    .hero-slide__btn {
+        padding: 8px 18px;
+        font-size: 0.8rem;
     }
 }
 
@@ -4027,7 +4075,7 @@ img {
 
     /* 3. Center: Ghousia Traders Logo */
     .brand-logo-link, .logo {
-        max-width: 125px;
+        max-width: 165px;
         margin: 0 auto;
         display: flex;
         align-items: center;
@@ -4037,8 +4085,8 @@ img {
     }
 
     .logo svg, .logo img {
-        max-width: 120px;
-        max-height: 38px;
+        max-width: 160px;
+        max-height: 48px;
         height: auto;
     }
 
@@ -4196,8 +4244,72 @@ img {
         border-right: none;
         padding-right: 0;
     }
+    /* Shop by Category Section Mobile Optimization */
+    .category-section {
+        padding: 24px 0;
+    }
+    .category-section .section-divider-header {
+        margin-bottom: 18px;
+    }
+    .category-section .section-title-serif {
+        font-size: 1.55rem;
+    }
     .category-grid {
         grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .category-card {
+        height: 135px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        display: flex;
+    }
+    .cat-image-side {
+        width: 43%;
+        height: 100%;
+        overflow: hidden;
+    }
+    .cat-image-side img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px 0 0 12px;
+    }
+    .cat-info-side {
+        width: 57%;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        background-color: #FAF6F0;
+    }
+    .cat-icon-box i,
+    .cat-icon-box svg {
+        width: 20px;
+        height: 20px;
+    }
+    .cat-title {
+        font-size: 1.1rem;
+        line-height: 1.25;
+        margin-bottom: 2px;
+    }
+    .cat-btn {
+        align-self: flex-start;
+        padding: 6px 14px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 20px;
+    }
+    .cat-btn svg,
+    .cat-btn i {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
     }
     .products-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -4404,6 +4516,26 @@ img {
     }
 
     /* Homepage */
+    .category-section .section-title-serif {
+        font-size: 1.4rem;
+    }
+    .category-grid {
+        gap: 10px;
+    }
+    .category-card {
+        height: 125px;
+    }
+    .cat-info-side {
+        padding: 10px 12px;
+        gap: 4px;
+    }
+    .cat-title {
+        font-size: 1.02rem;
+    }
+    .cat-btn {
+        padding: 5px 12px;
+        font-size: 0.78rem;
+    }
     .feature-bar-grid {
         grid-template-columns: 1fr;
     }
